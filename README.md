@@ -1,0 +1,2 @@
+# idleshell
+replication of shell
