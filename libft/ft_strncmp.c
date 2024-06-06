@@ -40,3 +40,29 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 		return (-1);
 	return (0);
 }
+
+int	ft_strcmp(const char *s1, const char *s2)
+{
+	unsigned char	*us1;
+	unsigned char	*us2;
+
+	us1 = (unsigned char *) s1;
+	us2 = (unsigned char *) s2;
+	while (*us1 != 0 && *us2 != 0)
+	{
+		if (*us1 != *us2)
+		{
+			if (*us1 > *us2)
+				return (1);
+			else
+				return (-1);
+		}
+		us1++;
+		us2++;
+	}
+	if (*us1 != 0)
+		return (1);
+	if (*us2 != 0)
+		return (-1);
+	return (0);
+}

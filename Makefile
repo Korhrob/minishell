@@ -1,7 +1,8 @@
 CC			=	cc
 CFLAGS		=	-Wall -Werror -Wextra
 LDFLAG		=	#-g -fsanitize=address
-NAME		=	idleshell
+RDLINE		=	-lreadline
+NAME		=	idleshell #rename to minishell later
 SRC			=	main.c
 OBJ			=	$(SRC:.c=.o)
 LIBFT		=	libft
@@ -13,7 +14,7 @@ $(NAME): $(OBJ)
 	@echo "\x1b[0;2m"
 	$(MAKE) -C $(LIBFT)
 	@echo "\x1b[0;92m"
-	$(CC) -o $(NAME) $(OBJ) $(LIBFT_LIB) $(LDFLAG)
+	$(CC) -o $(NAME) $(OBJ) $(LIBFT_LIB) $(LDFLAG) $(RDLINE)
 	@echo $(NAME)
 
 %.o: %.c

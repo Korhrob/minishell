@@ -60,12 +60,10 @@ int	ft_print_space(int fd, char c, int size)
 
 int	ft_print_nbr_bonus(int fd, const char *s, va_list args, char prefix)
 {
-	int		temp;
 	int		count;
 	int		size;
 	int		n;
 
-	temp = 0;
 	count = 0;
 	n = va_arg(args, int);
 	size = ft_get_int(s) - ft_int_len(n);
@@ -86,12 +84,10 @@ int	ft_print_nbr_bonus(int fd, const char *s, va_list args, char prefix)
 
 int	ft_print_str_bonus(int fd, const char *s, va_list args)
 {
-	int		temp;
 	int		count;
 	int		size;
 	char	*str;
 
-	temp = 0;
 	count = 0;
 	size = ft_get_int(s);
 	while (*s >= '0' && *s <= '9')
