@@ -33,10 +33,10 @@ void	record_history(char *line)
 		ft_printf("error: no perms\n");
 		return ;
 	}
-	ft_putchar_fd('\t', fd);
+	ft_putstr_fd("  ", fd);
 	count = history_line_count();
 	ft_putstr_fd(ft_itoa(count), fd);
-	ft_putchar_fd('\t', fd);
+	ft_putstr_fd("  ", fd);
 	ft_putstr_fd(line, fd);
 	ft_putchar_fd('\n', fd);
 	close(fd);
