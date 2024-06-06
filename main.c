@@ -1,28 +1,11 @@
-#include "libft/libft.h"
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-#include <sys/stat.h>
-
-void	record_history(char *line)
-{
-	int	fd;
-
-	fd = open(".history", O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-	if (fd == -1)
-		ft_printf("error: no perms\n");
-	ft_putchar_fd('\t', fd);
-	// get .history line count
-	// add linecount 
-	ft_putstr_fd(ft_itoa(0), fd);
-	ft_putchar_fd('\t', fd);
-	ft_putstr_fd(line, fd);
-	ft_putchar_fd('\n', fd);
-	close(fd);
-}
+#include "libft/libft.h"
+#include "minishell.h"
 
 void	do_builtin(char *arg)
 {
