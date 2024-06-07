@@ -8,8 +8,9 @@
 #include "libft/libft.h"
 #include "minishell.h"
 
-// test comment 4
+// this is not a test comment
 // test comment
+// My changes no thery are mine
 // execute all commands here
 // should return how many args we advanced
 void	do_command(char **args)
