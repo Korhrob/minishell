@@ -8,53 +8,65 @@
 #include "libft/libft.h"
 #include "minishell.h"
 
-#define BULTIN_CD "cd"
-#define BULTIN_ENV "env"
-#define BULTIN_HELP "help"
-#define BULTIN_EXIT "exit"
-
-void	do_builtin(char *arg)
+// execute all commands here
+// should return how many args we advanced
+void	do_command(char **args)
 {
-	if (ft_strcmp(arg, BULTIN_EXIT) == 0)
-		exit(0);
-	ft_printf("builtin %s\n", arg);
+	if (ft_strcmp(*args, "history") == 0)
+		print_history(args + 1);
+	//ft_printf("do command %s\n", *args);
 }
 
-int	is_builtin(char *arg)
+// exectue all builtin commands here
+// should return how many args we advanced
+void	do_builtin(char **args, int cmd)
 {
+	if (cmd == EXIT)
+		exit(0);
+	ft_printf("builtin %s\n", *args);
+}
+
+// gets and returns enum if current string is builtin command
+int	get_builtin(char *args)
+{
+	int			i;
 	static char	*builtin[] = {
 		BULTIN_CD,
 		BULTIN_ENV,
 		BULTIN_HELP,
 		BULTIN_EXIT,
 	};
-	int	i;
 
 	i = 0;
 	while (i < 4)
 	{
-		if (ft_strcmp(arg, builtin[i]) == 0)
-			return (1);
+		if (ft_strcmp(args, builtin[i]) == 0)
+			return (i);
 		i++;
 	}
-	return (0);
+	return (-1);
 }
 
+// execute args 1 by 1
+// TODO: do commands should advance args array if they have optional parameters
 int	execute_args(char **args)
 {
+	int	builtin;
+
 	(void) args;
-	
 	while (*args != NULL)
 	{
-		if (is_builtin(*args))
-			do_builtin(*args);
-		// else
-		// do_command(*args);
+		builtin = get_builtin(*args);
+		if (builtin != -1)
+			do_builtin(args, builtin);
+		else
+			do_command(args);
 		args++;
 	}
 	return (-1);
 }
 
+// read stdin and split the line
 void	shell_interactive(void)
 {
 	char	*line;
