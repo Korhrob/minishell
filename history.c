@@ -4,7 +4,7 @@
 #include "libft/libft.h"
 #include <readline/history.h>
 
-static int history_line_count(void)
+static int	history_line_count(void)
 {
 	int		count;
 	int		fd;
@@ -27,7 +27,6 @@ void	record_history(char *line)
 {
 	int	fd;
 	int	count;
-	(void)count;
 
 	fd = open(".history", O_WRONLY | O_CREAT | O_APPEND, 
 			S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
@@ -36,6 +35,7 @@ void	record_history(char *line)
 		ft_printf("error: no perms\n");
 		return ;
 	}
+	add_history(line);
 	ft_putstr_fd("  ", fd);
 	count = history_line_count();
 	ft_putstr_fd(ft_itoa(count), fd);
@@ -129,9 +129,17 @@ void	print_history(char **next_arg)
 	int		count;
 
 	count = -1;
-	if (*next_arg != NULL && ft_isdigit(**next_arg))
-		count = ft_atoi(*next_arg);
-	// if its not digit, should print error
+	if (*next_arg != NULL)
+	{
+		ft_printf("next_arg = %s\n", *next_arg);
+		if (ft_isdigit_str(*next_arg))
+			count = ft_atoi(*next_arg);
+		else
+		{
+			ft_printf("numeric argument required\n");
+			return ;
+		}
+	}
 	if (count == -1)
 		print_history_all();
 	else

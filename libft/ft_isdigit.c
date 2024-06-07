@@ -16,3 +16,15 @@ int	ft_isdigit(int c)
 		return (1);
 	return (0);
 }
+
+// returns 1 if entire string consists of digits
+int	ft_isdigit_str(char *str)
+{
+	while (str != 0)
+	{
+		if (ft_isdigit(*str) == 0)
+			return (0);
+		str++;
+	}
+	return (1);
+}

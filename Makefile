@@ -27,6 +27,7 @@ clean:
 fclean: clean
 	rm -f $(NAME)
 	$(MAKE) -C $(LIBFT) fclean
+	rm -f .history
 
 re: clean all
 
