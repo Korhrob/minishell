@@ -8,7 +8,7 @@
 #include "libft/libft.h"
 #include "minishell.h"
 
-// stop stealng my changes
+// this is not a test comment
 // test comment
 // My changes no thery are mine
 // execute all commands here
