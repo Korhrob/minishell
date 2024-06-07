@@ -82,9 +82,6 @@ t_list	**read_to_list(int fd, int mode)
 	line = get_next_line(fd);
 	while (line != NULL)
 	{
-		line = get_next_line(fd);
-		if (line == NULL)
-			break ;
 		ele = ft_lstnew(line);
 		if (ele == NULL)
 			break ;
@@ -92,18 +89,22 @@ t_list	**read_to_list(int fd, int mode)
 			ft_lstadd_back(list, ele);
 		else
 			ft_lstadd_front(list, ele);
+		line = get_next_line(fd);
 	}
 	return (list);
 }
 
 // print n number of history starting from most recent
-void	printn_history(int n)
+void	print_history_n(int n)
 {
 	int		fd;
 	int		skip;
 	t_list	**list;
 	t_list	*cur;
 
+	(void)n;
+	(void)skip;
+	(void)cur;
 	fd = open(".history", O_RDONLY);
 	if (fd == -1)
 	{
@@ -112,16 +113,18 @@ void	printn_history(int n)
 	}
 	list = read_to_list(fd, 0);
 	close(fd);
+	if (list == NULL)
+		return ;
 	cur = *list;
 	skip = ft_lstsize(*list) - n;
-	while (skip-- > 0)
+	while (skip-- > 0 && cur->next != NULL)
 		cur = cur->next;
 	while (n-- > 0 && cur != NULL)
 	{
 		ft_printf("%s", cur->content);
 		cur = cur->next;
 	}
-	//ft_lst_free(list);
+	ft_lst_clean(list, 1);
 }
 
 void	print_history(char **next_arg)
@@ -131,7 +134,6 @@ void	print_history(char **next_arg)
 	count = -1;
 	if (*next_arg != NULL)
 	{
-		ft_printf("next_arg = %s\n", *next_arg);
 		if (ft_isdigit_str(*next_arg))
 			count = ft_atoi(*next_arg);
 		else
@@ -143,5 +145,5 @@ void	print_history(char **next_arg)
 	if (count == -1)
 		print_history_all();
 	else
-		printn_history(count);
+		print_history_n(count);
 }

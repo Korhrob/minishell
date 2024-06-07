@@ -1,6 +1,6 @@
 CC			=	cc
 CFLAGS		=	-Wall -Werror -Wextra
-LDFLAG		=	#-g -fsanitize=address
+LDFLAG		=	-g -fsanitize=address
 RDLINE		=	-lreadline
 NAME		=	idleshell #rename to minishell later
 SRC			=	main.c history.c signal.c
