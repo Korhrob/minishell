@@ -1,7 +1,8 @@
 CC			=	cc
 CFLAGS		=	-Wall -Werror -Wextra
 LDFLAG		=	-g -fsanitize=address
-RDLINE		=	-lreadline
+RL			=	-lreadline
+RL_PATH		=	# -L ~/.brew/opt/readline/lib # brew readline
 NAME		=	idleshell #rename to minishell later
 SRC			=	main.c history.c signal.c
 OBJ			=	$(SRC:.c=.o)
@@ -14,7 +15,7 @@ $(NAME): $(OBJ)
 	@echo "\x1b[0;2m"
 	$(MAKE) -C $(LIBFT)
 	@echo "\x1b[0;92m"
-	$(CC) -o $(NAME) $(OBJ) $(LIBFT_LIB) $(LDFLAG) $(RDLINE)
+	$(CC) -o $(NAME) $(OBJ) $(LIBFT_LIB) $(LDFLAG) $(RL) $(RL_PATH)
 	@echo $(NAME)
 
 %.o: %.c

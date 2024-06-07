@@ -28,16 +28,13 @@ void	record_history(char *line)
 	int	fd;
 	int	count;
 
+	add_history(line);
 	fd = open(".history", O_WRONLY | O_CREAT | O_APPEND, 
 			S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 	if (fd == -1)
-	{
-		ft_printf("error: no perms\n");
 		return ;
-	}
-	add_history(line);
-	ft_putstr_fd("  ", fd);
 	count = history_line_count();
+	ft_putstr_fd("  ", fd);
 	ft_putstr_fd(ft_itoa(count), fd);
 	ft_putstr_fd("  ", fd);
 	ft_putstr_fd(line, fd);
@@ -45,7 +42,7 @@ void	record_history(char *line)
 	close(fd);
 }
 
-// print all history starting from oldest
+// print all history starting from the beginning
 void	print_history_all(void)
 {
 	int		fd;
@@ -53,10 +50,7 @@ void	print_history_all(void)
 
 	fd = open(".history", O_RDONLY);
 	if (fd == -1)
-	{
-		ft_printf("error: no history");
 		return ;
-	}
 	line = get_next_line(fd);
 	while (line != NULL)
 	{
@@ -94,7 +88,7 @@ t_list	**read_to_list(int fd, int mode)
 	return (list);
 }
 
-// print n number of history starting from most recent
+// print n number of most recent history
 void	print_history_n(int n)
 {
 	int		fd;
@@ -102,9 +96,6 @@ void	print_history_n(int n)
 	t_list	**list;
 	t_list	*cur;
 
-	(void)n;
-	(void)skip;
-	(void)cur;
 	fd = open(".history", O_RDONLY);
 	if (fd == -1)
 	{
