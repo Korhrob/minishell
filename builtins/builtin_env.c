@@ -1,16 +1,13 @@
 #include "builtins.h"
 
-void	cmd_env()
+void	cmd_env(t_runtime *runtime)
 {
-	char	**env = environ;
-	char	*current_env;
-	char	*chr;
+	int	i;
 
-	while (*env != NULL)
+	i = 0;
+	while (runtime->env[i] != NULL)
 	{
-		current_env = *env;
-		chr = getenv(current_env);
-		ft_printf("%s\n", current_env);
-		env++;
+		ft_printf("%s\n", runtime->env[i]);
+		i++;
 	}
 }

@@ -1,7 +1,5 @@
 #include "builtins.h"
 
-extern char	**environ;
-
 // Fetches the current directory and prints it
 void	cmd_pwd()
 {
