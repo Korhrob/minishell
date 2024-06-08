@@ -101,19 +101,19 @@ char	**ft_split_quotes(const char *s, char c, int flag)
 	int		wordcount;
 	int		count;
 
-	if (s == 0)
-		return (0);
+	if (s == NULL)
+		return (NULL);
 	while (*s == c)
 		s++;
 	wordcount = ft_word_count(s, c);
 	wordarr = ft_calloc(wordcount + 1, sizeof(char *));
-	if (wordarr == 0)
-		return (0);
+	if (wordarr == NULL)
+		return (NULL);
 	count = 0;
 	while (count < wordcount)
 	{
 		wordarr[count] = ft_word(s, c, flag);
-		if (wordarr[count] == 0)
+		if (wordarr[count] == NULL)
 			return (ft_clean(wordarr, count));
 		s = ft_next_word(s, c);
 		count++;

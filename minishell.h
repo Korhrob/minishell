@@ -14,11 +14,21 @@ typedef enum e_builtin_cmd
 	EXIT
 }	t_builtin_cmd;
 
+// parse
+
+char	**pipe_cut(char **args);
+
 // history
+
 void	record_history(char *line);
 void	print_history(char **args);
 
 // signals
-void    test();
+
+void	signal_signint(int signal);
+
+// readline JANK
+
+extern void	rl_replace_line(const char *, int);
 
 #endif

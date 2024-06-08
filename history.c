@@ -30,7 +30,6 @@ void	record_history(char *line)
 	int		count;
 	char	*i;
 
-	return ;
 	add_history(line);
 	fd = open(".history", O_WRONLY | O_CREAT | O_APPEND, 0777);
 	if (fd == -1)

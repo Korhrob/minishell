@@ -2,9 +2,9 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <signal.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-#include <signal.h>
 #include "libft/libft.h"
 #include "minishell.h"
 
@@ -47,32 +47,6 @@ int	get_builtin(char *args)
 	return (-1);
 }
 
-char	**pipe_cut(char **args)
-{
-	char	**pipe_args;
-	int		count;
-	int		i;
-
-	count = 0;
-	while (args[count] != NULL)
-	{
-		if (ft_strcmp(args[count], "|") == 0)
-			break ;
-		count++;
-	}
-	pipe_args = malloc(sizeof(char *) * (count));
-	if (pipe_args == NULL)
-		return (NULL);
-	i = 0;
-	while (i < count)
-	{
-		pipe_args[i] = args[i];
-		i++;
-	}
-	pipe_args[i] = 0;
-	return (pipe_args);
-}
-
 // execute args 1 by 1
 // args are split into sub
 int	execute_args(char **args)
@@ -95,6 +69,7 @@ int	execute_args(char **args)
 		if (*args != NULL)
 			args++;
 		free(pipe_args);
+		// wait all children here?
 	}
 	return (-1);
 }
@@ -112,6 +87,8 @@ void	shell_interactive(void)
 		line = readline("idleshell$ ");
 		if (line == NULL)
 			break ;
+		if (*line == 0)
+			continue ;
 		record_history(line);
 		args = ft_split_quotes(line, ' ', 0);
 		status = execute_args(args);
@@ -130,6 +107,7 @@ void	shell_no_interactive(void)
 
 int	main(void)
 {
+	signal(SIGINT, signal_signint);
 	if (isatty(STDIN_FILENO) == 1)
 		shell_interactive();
 	else
