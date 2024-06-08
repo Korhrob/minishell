@@ -4,7 +4,8 @@ LDFLAG		=	#-g -fsanitize=address
 RDLINE		=	-lreadline
 NAME		=	idleshell #rename to minishell later
 SRC			=	main.c history.c signal.c
-OBJ			=	$(SRC:.c=.o)
+BUILTINS	=	builtins/builtin_pwd.c builtins/builtin_cd.c builtins/builtin_env.c
+OBJ			=	$(SRC:.c=.o) $(BUILTINS:.c=.o)
 LIBFT		=	libft
 LIBFT_LIB	=	$(LIBFT)/libft.a
 

@@ -7,10 +7,9 @@
 #include <signal.h>
 #include "libft/libft.h"
 #include "minishell.h"
+#include "builtins/builtins.h"
 
-// this is not a test comment
-// test comment
-// My changes no thery are mine
+
 // execute all commands here
 // should return how many args we advanced
 void	do_command(char **args)
@@ -26,7 +25,14 @@ void	do_builtin(char **args, int cmd)
 {
 	if (cmd == EXIT)
 		exit(0);
-	ft_printf("builtin %s\n", *args);
+	else if (cmd == PWD)
+		cmd_pwd();
+	else if (cmd == CD)
+		cmd_cd(args);
+	else if (cmd == ENV)
+		cmd_env();
+	else
+		ft_printf("builtin %s\n", *args);
 }
 
 // gets and returns enum if current string is builtin command
@@ -38,10 +44,13 @@ int	get_builtin(char *args)
 		BULTIN_ENV,
 		BULTIN_HELP,
 		BULTIN_EXIT,
+		BULTIN_PWD,
+		BULTIN_UNSET,
+		BULTIN_EXPORT,
 	};
 
 	i = 0;
-	while (i < 4)
+	while (i <= EXPORT)
 	{
 		if (ft_strcmp(args, builtin[i]) == 0)
 			return (i);
