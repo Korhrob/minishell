@@ -1,6 +1,6 @@
 CC			=	cc
 CFLAGS		=	-Wall -Werror -Wextra
-LDFLAG		=	-g -fsanitize=address
+LDFLAG		=	# -g -fsanitize=address
 RL			=	-lreadline
 RL_PATH		=	# -L ~/.brew/opt/readline/lib # brew readline
 NAME		=	idleshell #rename to minishell later

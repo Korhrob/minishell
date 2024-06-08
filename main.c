@@ -14,7 +14,7 @@ void	do_command(char **args)
 {
 	if (ft_strcmp(*args, "history") == 0)
 		print_history(args + 1);
-	//ft_printf("do command %s\n", *args);
+	ft_printf("do command %s\n", *args);
 }
 
 // exectue all builtin commands here
@@ -47,21 +47,54 @@ int	get_builtin(char *args)
 	return (-1);
 }
 
+char	**pipe_cut(char **args)
+{
+	char	**pipe_args;
+	int		count;
+	int		i;
+
+	count = 0;
+	while (args[count] != NULL)
+	{
+		if (ft_strcmp(args[count], "|") == 0)
+			break ;
+		count++;
+	}
+	pipe_args = malloc(sizeof(char *) * (count));
+	if (pipe_args == NULL)
+		return (NULL);
+	i = 0;
+	while (i < count)
+	{
+		pipe_args[i] = args[i];
+		i++;
+	}
+	pipe_args[i] = 0;
+	return (pipe_args);
+}
+
 // execute args 1 by 1
-// TODO: do commands should advance args array if they have optional parameters
+// args are split into sub
 int	execute_args(char **args)
 {
-	int	builtin;
+	char	**pipe_args;
+	int		builtin;
 
-	(void) args;
 	while (*args != NULL)
 	{
-		builtin = get_builtin(*args);
+		pipe_args = pipe_cut(args);
+		if (pipe_args == NULL)
+			return (-1);
+		builtin = get_builtin(*pipe_args);
 		if (builtin != -1)
-			do_builtin(args, builtin);
+			do_builtin(pipe_args, builtin);
 		else
-			do_command(args);
-		args++;
+			do_command(pipe_args);
+		while (*args != NULL && ft_strcmp(*args, "|") != 0)
+			args++;
+		if (*args != NULL)
+			args++;
+		free(pipe_args);
 	}
 	return (-1);
 }
@@ -82,8 +115,8 @@ void	shell_interactive(void)
 		record_history(line);
 		args = ft_split_quotes(line, ' ', 0);
 		status = execute_args(args);
+		ft_free_arr(args);
 		free(line);
-		free(args);
 		if (status >= 0)
 			exit(status);
 	}

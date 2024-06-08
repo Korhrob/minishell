@@ -1,4 +1,5 @@
 #include <fcntl.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <sys/stat.h>
 #include "libft/libft.h"
@@ -25,21 +26,24 @@ static int	history_line_count(void)
 
 void	record_history(char *line)
 {
-	int	fd;
-	int	count;
+	int		fd;
+	int		count;
+	char	*i;
 
+	return ;
 	add_history(line);
-	fd = open(".history", O_WRONLY | O_CREAT | O_APPEND, 
-			S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+	fd = open(".history", O_WRONLY | O_CREAT | O_APPEND, 0777);
 	if (fd == -1)
 		return ;
 	count = history_line_count();
+	i = ft_itoa(count);
 	ft_putstr_fd("  ", fd);
-	ft_putstr_fd(ft_itoa(count), fd);
+	ft_putstr_fd(i, fd);
 	ft_putstr_fd("  ", fd);
 	ft_putstr_fd(line, fd);
 	ft_putchar_fd('\n', fd);
 	close(fd);
+	free(i);
 }
 
 // print all history starting from the beginning
