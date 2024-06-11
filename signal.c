@@ -20,4 +20,8 @@ void	signal_signint(int signo)
 			exit(EXIT_FAILURE);
 		rl_redisplay();
 	}
+	else if (signo == SIGTERM)
+	{
+		unlink(".history");
+	}
 }

@@ -24,7 +24,15 @@ typedef enum e_builtin_cmd
 typedef struct s_runtime
 {
 	char	**env;
+	t_list	**child_pid;
 }	t_runtime;
+
+typedef struct s_process
+{
+	char	**args;
+	char	*infile;
+	char	*outfile;
+}	t_process;
 
 // parse
 
@@ -42,5 +50,8 @@ void	signal_signint(int signal);
 // readline JANK
 
 extern void	rl_replace_line(const char *, int);
+
+// pipes
+t_process	*new_process(char **args);
 
 #endif

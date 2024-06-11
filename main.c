@@ -9,15 +9,26 @@
 #include "minishell.h"
 #include "builtins/builtins.h"
 
+void	ft_exit(int	ecode)
+{
+	unlink(".history");
+	exit(ecode);
+}
 
 // execute all commands here
 // should return how many args we advanced
 void	do_command(char **args, t_runtime *runtime)
 {
+	t_process	*child;
+
 	(void)runtime;
+	child = new_process(args);
+	if (child == NULL)
+		return ;
 	if (ft_strcmp(*args, "history") == 0)
 		print_history(args + 1);
 	ft_printf("do command %s\n", *args);
+	free(child);
 }
 
 // exectue all builtin commands here
@@ -25,7 +36,7 @@ void	do_command(char **args, t_runtime *runtime)
 void	do_builtin(char **args, int cmd, t_runtime *runtime)
 {
 	if (cmd == EXIT)
-		exit(0);
+		ft_exit(0);
 	else if (cmd == PWD)
 		cmd_pwd();
 	else if (cmd == CD)
@@ -163,6 +174,9 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_runtime	runtime;
 
+	unlink(".history");
+	signal(SIGINT, signal_signint);
+	signal(SIGTERM, signal_signint);
 	runtime.env = NULL;
 	if (argc == 1 && argv)
 		init_runtime(&runtime, envp);

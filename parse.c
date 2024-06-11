@@ -26,6 +26,6 @@ char	**pipe_cut(char **args)
 		pipe_args[i] = args[i];
 		i++;
 	}
-	pipe_args[i] = 0;
+	pipe_args[i] = NULL;
 	return (pipe_args);
 }
