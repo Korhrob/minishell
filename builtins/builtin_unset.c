@@ -19,7 +19,7 @@ void	cmd_unset(char *env, t_runtime *runtime)
 	int		i;
 	int		j;
 
-	tmparr = malloc(sizeof(char*) * (array_len(runtime->env)));
+	tmparr = malloc(sizeof(char *) * (array_len(runtime->env)));
 	i = 0;
 	j = 0;
 	while (runtime->env[i] != NULL)
@@ -35,7 +35,7 @@ void	cmd_unset(char *env, t_runtime *runtime)
 		}
 		i++;
 	}
-	tmparr[i] = NULL;
+	tmparr[j] = NULL;
 	free(runtime->env);
 	runtime->env = tmparr;
 }

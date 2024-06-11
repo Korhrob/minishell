@@ -14,6 +14,7 @@
 // should return how many args we advanced
 void	do_command(char **args, t_runtime *runtime)
 {
+	(void)runtime;
 	if (ft_strcmp(*args, "history") == 0)
 		print_history(args + 1);
 	ft_printf("do command %s\n", *args);
@@ -77,7 +78,7 @@ int	execute_args(char **args, t_runtime *runtime)
 			return (-1);
 		builtin = get_builtin(*pipe_args);
 		if (builtin != -1)
-			do_builtin(args, builtin, runtime);
+			do_builtin(pipe_args, builtin, runtime);
 		else
 			do_command(pipe_args, runtime);
 		while (*args != NULL && ft_strcmp(*args, "|") != 0)
@@ -109,6 +110,7 @@ void	shell_interactive(t_runtime *runtime)
 		args = ft_split_quotes(line, ' ', 0);
 		status = execute_args(args, runtime);
 		free(line);
+		ft_free_arr(args);
 		if (status >= 0)
 			exit(status);
 	}
