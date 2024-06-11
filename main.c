@@ -7,6 +7,8 @@
 #include <readline/history.h>
 #include "libft/libft.h"
 #include "minishell.h"
+#include "builtins/builtins.h"
+
 
 // execute all commands here
 // should return how many args we advanced
@@ -19,11 +21,22 @@ void	do_command(char **args)
 
 // exectue all builtin commands here
 // should return how many args we advanced
-void	do_builtin(char **args, int cmd)
+void	do_builtin(char **args, int cmd, t_runtime *runtime)
 {
 	if (cmd == EXIT)
 		exit(0);
-	ft_printf("builtin %s\n", *args);
+	else if (cmd == PWD)
+		cmd_pwd();
+	else if (cmd == CD)
+		cmd_cd(args, runtime);
+	else if (cmd == ENV)
+		cmd_env(runtime);
+	else if (cmd == UNSET)
+		cmd_unset(args[1], runtime);
+	else if (cmd == EXPORT)
+		cmd_export(runtime);
+	else
+		ft_printf("builtin %s\n", *args);
 }
 
 // gets and returns enum if current string is builtin command
@@ -35,10 +48,13 @@ int	get_builtin(char *args)
 		BULTIN_ENV,
 		BULTIN_HELP,
 		BULTIN_EXIT,
+		BULTIN_PWD,
+		BULTIN_UNSET,
+		BULTIN_EXPORT,
 	};
 
 	i = 0;
-	while (i < 4)
+	while (i <= EXPORT)
 	{
 		if (ft_strcmp(args, builtin[i]) == 0)
 			return (i);
@@ -49,7 +65,7 @@ int	get_builtin(char *args)
 
 // execute args 1 by 1
 // args are split into sub
-int	execute_args(char **args)
+int	execute_args(char **args, t_runtime *runtime)
 {
 	char	**pipe_args;
 	int		builtin;
@@ -61,7 +77,7 @@ int	execute_args(char **args)
 			return (-1);
 		builtin = get_builtin(*pipe_args);
 		if (builtin != -1)
-			do_builtin(pipe_args, builtin);
+			do_builtin(args, builtin, runtime);
 		else
 			do_command(pipe_args);
 		while (*args != NULL && ft_strcmp(*args, "|") != 0)
@@ -75,7 +91,7 @@ int	execute_args(char **args)
 }
 
 // read stdin and split the line
-void	shell_interactive(void)
+void	shell_interactive(t_runtime *runtime)
 {
 	char	*line;
 	char	**args;
@@ -91,8 +107,7 @@ void	shell_interactive(void)
 			continue ;
 		record_history(line);
 		args = ft_split_quotes(line, ' ', 0);
-		status = execute_args(args);
-		ft_free_arr(args);
+		status = execute_args(args, runtime);
 		free(line);
 		if (status >= 0)
 			exit(status);
@@ -105,11 +120,52 @@ void	shell_no_interactive(void)
 
 }
 
-int	main(void)
+// Counts the number of environments in the envp array and returns the result
+static int	array_len(char **array)
 {
-	signal(SIGINT, signal_signint);
+	int	i;
+
+	i = 0;
+	while (*array != NULL)
+	{
+		i++;
+		array++;
+	}
+	return (i);
+}
+
+// Copies the envp into the runtime struct as an array
+static char	**set_env_array(char **envp)
+{
+	int		i;
+	char	**envi;
+
+	envi = malloc(sizeof(char*) * (array_len(envp) + 1));
+	i = 0;
+	while (envp[i] != NULL)
+	{
+		envi[i] = ft_strdup(envp[i]);
+		i++;
+	}
+	envi[i] = NULL;
+	return (envi);
+}
+
+//Initialization of runtime and all the possible content it may have
+static void	init_runtime(t_runtime *runtime, char **envp)
+{
+	runtime->env = set_env_array(envp);
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	t_runtime	runtime;
+
+	runtime.env = NULL;
+	if (argc == 1 && argv)
+		init_runtime(&runtime, envp);
 	if (isatty(STDIN_FILENO) == 1)
-		shell_interactive();
+		shell_interactive(&runtime);
 	else
 		shell_no_interactive();
 	return (0);

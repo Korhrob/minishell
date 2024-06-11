@@ -5,7 +5,9 @@ RL_INC		=	-I ~/.brew/opt/readline/include/readline
 RL_LIB		=	-L ~/.brew/opt/readline/lib
 NAME		=	idleshell #rename to minishell later
 SRC			=	main.c parse.c history.c signal.c
-OBJ			=	$(SRC:.c=.o)
+BUILTINS	=	builtins/builtin_pwd.c builtins/builtin_cd.c builtins/builtin_env.c builtins/builtin_unset.c	\
+				builtins/builtin_export.c
+OBJ			=	$(SRC:.c=.o) $(BUILTINS:.c=.o)
 LIBFT		=	libft
 LIBFT_LIB	=	$(LIBFT)/libft.a
 
