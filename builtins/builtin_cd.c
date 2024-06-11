@@ -10,7 +10,7 @@ static char	*find_env(char **array, char *env)
 	return (*temp);
 }
 
-void	correct_wd(t_runtime *runtime)
+static void	correct_wd(t_runtime *runtime)
 {
 	char	*temp;
 
@@ -30,3 +30,5 @@ void	cmd_cd(char **args, t_runtime *runtime)
 		ft_printf("cd did not work\n"); // Replace with perror later
 	}
 }
+
+// Add functionality to just do cd to go to home directory

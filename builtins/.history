@@ -1,2 +1,8 @@
   0  pwd
   1  cd ../
+  2  ls
+  3  pwd
+  4  env
+  5  unset PATH
+  6  env
+  7  exit

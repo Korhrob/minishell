@@ -10,3 +10,5 @@ void	cmd_pwd()
 	else
 		ft_printf("pwd did not work\n"); // Replace with perror later
 }
+
+// Getcwd performs a malloc need to free
