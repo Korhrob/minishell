@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "minishell.h"
 
+// separates string array args with delimiter string "|"
 char	**pipe_cut(char **args)
 {
 	char	**pipe_args;
