@@ -1,7 +1,34 @@
 #include "builtins.h"
 
+static int	envfinder(char *env, t_runtime *runtime)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (env[i] != 0)
+	{
+		if (env[i] == '=')
+		{
+			i++;
+			break ;
+		}
+		i++;
+	}
+	j = 0;
+	while (runtime->env[j] != NULL)
+	{
+		if (!ft_strncmp(env, runtime->env[j], i))
+			break ;
+		j++;
+	}
+	if (j < ft_array_len(runtime->env))
+		return (j);
+	return (-1);
+}
+
 // Trims the first and last character of a string and returns the result
-char	*minitrim(char *str, char c)
+static char	*minitrim(char *str, char c)
 {
 	char	*strlocal;
 
@@ -18,16 +45,18 @@ char	*minitrim(char *str, char c)
 	return (strlocal);
 }
 
+static void	replace_env(char *env, t_runtime *runtime, int index)
+{
+	free(runtime->env[index]);
+	runtime->env[index] = ft_strdup(env);
+}
+
 // Adds a string to the env array insine runtime at the end
-void	cmd_export(char *env, t_runtime *runtime)
+static void	create_env(char *env, t_runtime *runtime)
 {
 	char	**tmparr;
 	int		i;
 
-	if (env[0] == '\"')
-		env = minitrim(env, '\"');
-	else
-		env = minitrim(env, '\'');
 	tmparr = malloc(sizeof(char *) * (ft_array_len(runtime->env) + 2));
 	i = 0;
 	while (runtime->env[i] != NULL)
@@ -42,6 +71,24 @@ void	cmd_export(char *env, t_runtime *runtime)
 	runtime->env = tmparr;
 }
 
+// Adds a string to the env array insine runtime at the end
+void	cmd_export(char *env, t_runtime *runtime)
+{
+	int		old_i;
+
+	if (env[0] == '\"')
+		env = minitrim(env, '\"');
+	else
+		env = minitrim(env, '\'');
+	old_i = envfinder(env, runtime);
+	if (old_i > -1)
+	{
+		replace_env(env, runtime, old_i);
+		return ;
+	}
+	create_env(env, runtime);
+}
+
 // Add just export, that sorts alphabetically
-// Add overwriting
 // Add malloc checks
+// Add multiple arguments
