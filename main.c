@@ -12,7 +12,7 @@
 
 // execute all commands here
 // should return how many args we advanced
-void	do_command(char **args)
+void	do_command(char **args, t_runtime *runtime)
 {
 	if (ft_strcmp(*args, "history") == 0)
 		print_history(args + 1);
@@ -44,17 +44,17 @@ int	get_builtin(char *args)
 {
 	int			i;
 	static char	*builtin[] = {
-		BULTIN_CD,
-		BULTIN_ENV,
-		BULTIN_HELP,
-		BULTIN_EXIT,
-		BULTIN_PWD,
-		BULTIN_UNSET,
-		BULTIN_EXPORT,
+		BUILTIN_CD,
+		BUILTIN_ENV,
+		BUILTIN_HELP,
+		BUILTIN_EXIT,
+		BUILTIN_PWD,
+		BUILTIN_UNSET,
+		BUILTIN_EXPORT,
 	};
 
 	i = 0;
-	while (i <= EXPORT)
+	while (i < BUILTIN_MAX)
 	{
 		if (ft_strcmp(args, builtin[i]) == 0)
 			return (i);
@@ -79,7 +79,7 @@ int	execute_args(char **args, t_runtime *runtime)
 		if (builtin != -1)
 			do_builtin(args, builtin, runtime);
 		else
-			do_command(pipe_args);
+			do_command(pipe_args, runtime);
 		while (*args != NULL && ft_strcmp(*args, "|") != 0)
 			args++;
 		if (*args != NULL)

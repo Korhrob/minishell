@@ -1,13 +1,13 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# define BULTIN_CD "cd"
-# define BULTIN_ENV "env"
-# define BULTIN_HELP "help"
-# define BULTIN_EXIT "exit"
-# define BULTIN_PWD "pwd"
-# define BULTIN_UNSET "unset"
-# define BULTIN_EXPORT "export"
+# define BUILTIN_CD "cd"
+# define BUILTIN_ENV "env"
+# define BUILTIN_HELP "help"
+# define BUILTIN_EXIT "exit"
+# define BUILTIN_PWD "pwd"
+# define BUILTIN_UNSET "unset"
+# define BUILTIN_EXPORT "export"
 
 typedef enum e_builtin_cmd
 {
@@ -17,7 +17,8 @@ typedef enum e_builtin_cmd
 	EXIT,
 	PWD,
 	UNSET,
-	EXPORT
+	EXPORT,
+	BUILTIN_MAX
 }	t_builtin_cmd;
 
 typedef struct s_runtime
