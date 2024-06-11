@@ -46,7 +46,7 @@ void	do_builtin(char **args, int cmd, t_runtime *runtime)
 	else if (cmd == UNSET)
 		cmd_unset(args[1], runtime);
 	else if (cmd == EXPORT)
-		cmd_export(runtime);
+		cmd_export(args[1], runtime);
 	else
 		ft_printf("builtin %s\n", *args);
 }
@@ -133,27 +133,13 @@ void	shell_no_interactive(void)
 
 }
 
-// Counts the number of environments in the envp array and returns the result
-static int	array_len(char **array)
-{
-	int	i;
-
-	i = 0;
-	while (*array != NULL)
-	{
-		i++;
-		array++;
-	}
-	return (i);
-}
-
 // Copies the envp into the runtime struct as an array
 static char	**set_env_array(char **envp)
 {
 	int		i;
 	char	**envi;
 
-	envi = malloc(sizeof(char*) * (array_len(envp) + 1));
+	envi = malloc(sizeof(char*) * (ft_array_len(envp) + 1));
 	i = 0;
 	while (envp[i] != NULL)
 	{
