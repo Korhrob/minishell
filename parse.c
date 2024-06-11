@@ -17,7 +17,7 @@ char	**pipe_cut(char **args)
 			break ;
 		count++;
 	}
-	pipe_args = malloc(sizeof(char *) * (count));
+	pipe_args = malloc(sizeof(char *) * (count + 1));
 	if (pipe_args == NULL)
 		return (NULL);
 	i = 0;

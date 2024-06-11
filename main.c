@@ -9,7 +9,7 @@
 #include "minishell.h"
 #include "builtins/builtins.h"
 
-void	ft_exit(int	ecode)
+void	ft_exit(int ecode)
 {
 	unlink(".history");
 	exit(ecode);
@@ -21,6 +21,11 @@ void	do_command(char **args, t_runtime *runtime)
 {
 	t_process	*child;
 
+	if (ft_quote_check_arr(args) == 0)
+	{
+		ft_printf("idleshell: unexpected EOF\n");
+		exit(2);
+	}
 	(void)runtime;
 	child = new_process(args);
 	if (child == NULL)
@@ -28,7 +33,7 @@ void	do_command(char **args, t_runtime *runtime)
 	if (ft_strcmp(*args, "history") == 0)
 		print_history(args + 1);
 	ft_printf("do command %s\n", *args);
-	free(child);
+	clean_process(child);
 }
 
 // exectue all builtin commands here
@@ -161,6 +166,7 @@ int	main(int argc, char **argv, char **envp)
 	t_runtime	runtime;
 
 	unlink(".history");
+	signal_init(1);
 	signal(SIGINT, signal_signint);
 	signal(SIGTERM, signal_signint);
 	runtime.env = NULL;
