@@ -1,6 +1,6 @@
 #include "builtins.h"
 
-static char	*find_env(char **array, char *env)
+/*static char	*find_env(char **array, char *env)
 {
 	char	**temp;
 
@@ -16,13 +16,15 @@ static void	correct_wd(t_runtime *runtime)
 
 	temp = find_env(runtime->env, "PWD");
 }
+*/
 
 // Changes working directory to the provided path
 void	cmd_cd(char **args, t_runtime *runtime)
 {
 	if (chdir(args[1]) == 0)
 	{
-		correct_wd(runtime);
+		// correct_wd(runtime);
+		runtime->env = runtime->env;
 		cmd_pwd(); // Showing current directory after changing, remove later
 	}
 	else
