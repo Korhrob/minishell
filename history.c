@@ -58,6 +58,7 @@ void	print_history_all(void)
 	while (line != NULL)
 	{
 		ft_printf("%s", line);
+		free(line);
 		line = get_next_line(fd);
 	}
 	close(fd);
@@ -132,7 +133,7 @@ void	print_history(char **next_arg)
 			count = ft_atoi(*next_arg);
 		else
 		{
-			ft_printf("numeric argument required\n");
+			ft_printf("history: numeric argument required\n");
 			return ;
 		}
 	}

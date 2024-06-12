@@ -14,6 +14,7 @@ static void	correct_wd(t_runtime *runtime)
 {
 	char	*temp;
 
+	(void)temp;
 	temp = find_env(runtime->env, "PWD");
 }
 
