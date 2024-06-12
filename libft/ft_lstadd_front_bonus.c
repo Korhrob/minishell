@@ -15,7 +15,7 @@
 
 void	ft_lstadd_front(t_list **lst, t_list *new)
 {
-	if (lst == 0 || new == 0)
+	if (lst == NULL || new == NULL)
 		return ;
 	new->next = *lst;
 	*lst = new;
@@ -26,8 +26,10 @@ t_list	**ft_lst_create(void)
 {
 	t_list	**list;
 
-	list = NULL;
 	list = (t_list **) malloc(sizeof(t_list *));
+	if (list == NULL)
+		return (NULL);
+	*list = NULL;
 	return (list);
 }
 
@@ -49,7 +51,7 @@ void	*ft_lst_clean(t_list **list, int mode)
 		if (mode)
 			free(cur->content);
 		free(cur);
-		cur = cur->next;
+		cur = next;
 	}
 	free(list);
 	return (NULL);

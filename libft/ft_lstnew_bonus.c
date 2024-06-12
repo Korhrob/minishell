@@ -19,8 +19,8 @@ t_list	*ft_lstnew(void *content)
 
 	obj = (t_list *) malloc(sizeof(t_list));
 	if (obj == 0)
-		return (0);
+		return (NULL);
 	obj->content = content;
-	obj->next = 0;
+	obj->next = NULL;
 	return (obj);
 }

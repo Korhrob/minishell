@@ -15,9 +15,9 @@
 
 void	ft_lstdelone(t_list *lst, void (*del)(void *))
 {
-	if (lst == 0)
+	if (lst == NULL)
 		return ;
-	if (del != 0)
+	if (del != NULL)
 		(del)(lst->content);
 	free(lst);
 }
