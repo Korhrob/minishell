@@ -51,7 +51,7 @@ void	*ft_lst_clean(t_list **list, int mode)
 		if (mode)
 			free(cur->content);
 		free(cur);
-		cur = cur->next;
+		cur = next;
 	}
 	free(list);
 	return (NULL);

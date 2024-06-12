@@ -58,6 +58,7 @@ void	print_history_all(void)
 	while (line != NULL)
 	{
 		ft_printf("%s", line);
+		free(line);
 		line = get_next_line(fd);
 	}
 	close(fd);
@@ -65,8 +66,8 @@ void	print_history_all(void)
 
 // reads all history and saves lines to list
 // requires fd where to read from
-// mode 0 = standard
-// mode 1 = reversed
+// mode 0 = ascending
+// mode 1 = descending (reverse)
 t_list	**read_to_list(int fd, int mode)
 {
 	t_list	**list;
@@ -132,7 +133,7 @@ void	print_history(char **next_arg)
 			count = ft_atoi(*next_arg);
 		else
 		{
-			ft_printf("numeric argument required\n");
+			ft_printf("history: numeric argument required\n");
 			return ;
 		}
 	}
