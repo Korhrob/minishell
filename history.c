@@ -66,8 +66,8 @@ void	print_history_all(void)
 
 // reads all history and saves lines to list
 // requires fd where to read from
-// mode 0 = standard
-// mode 1 = reversed
+// mode 0 = ascending
+// mode 1 = descending (reverse)
 t_list	**read_to_list(int fd, int mode)
 {
 	t_list	**list;

@@ -24,7 +24,7 @@ void	do_command(char **args, t_runtime *runtime)
 	if (ft_quote_check_arr(args) == 0)
 	{
 		ft_printf("idleshell: unexpected EOF\n");
-		exit(2);
+		ft_exit(2);
 	}
 	(void)runtime;
 	child = new_process(args);
@@ -166,7 +166,7 @@ int	main(int argc, char **argv, char **envp)
 	t_runtime	runtime;
 
 	unlink(".history");
-	signal_init(1);
+	signal_init(0);
 	signal(SIGINT, signal_signint);
 	signal(SIGTERM, signal_signint);
 	runtime.env = NULL;
@@ -176,5 +176,6 @@ int	main(int argc, char **argv, char **envp)
 		shell_interactive(&runtime);
 	else
 		shell_no_interactive();
+	ft_free_arr(runtime.env);
 	return (0);
 }

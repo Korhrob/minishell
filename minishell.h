@@ -48,7 +48,7 @@ void		print_history(char **args);
 // signals
 
 void		signal_init(int flag);
-void		signal_signint(int signal);
+void		signal_signint(int signo);
 void		signal_reset(void);
 
 // readline JANK

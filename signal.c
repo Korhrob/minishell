@@ -10,12 +10,14 @@
 int g_exit_status;
 
 // toggles echo caret
+// flag 0 = off
+// flag 1 = on
 void	signal_init(int	flag)
 {
 	struct termios	attributes;
 
 	tcgetattr(STDIN_FILENO, &attributes);
-	if (flag == 1)
+	if (flag == 0)
 		attributes.c_lflag &= ~ECHOCTL;
 	else
 		attributes.c_lflag |= ECHOCTL;
@@ -37,6 +39,7 @@ void	signal_signint(int signo)
 	else if (signo == SIGTERM)
 	{
 		unlink(".history");
+		
 	}
 }
 

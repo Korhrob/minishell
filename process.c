@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <fcntl.h>
 
+// initialize redirections and heredoc
 void	set_inout(t_process *p)
 {
 	int	i;
@@ -23,6 +24,7 @@ void	set_inout(t_process *p)
 	}
 }
 
+// create new process struct
 t_process	*new_process(char **args)
 {
 	t_process	*p;
@@ -37,6 +39,7 @@ t_process	*new_process(char **args)
 	return (p);
 }
 
+// clean process struct
 void	clean_process(t_process *p)
 {
 	if (p == NULL)
