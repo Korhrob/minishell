@@ -71,14 +71,14 @@ int	process_heredoc(char **args)
 // handle heredoc behavior
 // only the last heredoc should matter
 // and this function shouldnt have to return anything
-char	*ft_heredoc(int flag, char *delimit)
+void	ft_heredoc(int flag, char *delimit)
 {
 	int		fd;
 	char	*buffer;
 
 	fd = open(".heredoc", flag, 0777);
 	if (fd == -1)
-		return (NULL);
+		return ;
 	while (1)
 	{
 		buffer = readline("heredoc> ");
@@ -100,5 +100,4 @@ char	*ft_heredoc(int flag, char *delimit)
 		}
 	}
 	close (fd);
-	return (".heredoc");
 }

@@ -65,7 +65,7 @@ void   		begin_pipe(t_process *process);
 int    		redirect(int pipefd[2], t_process *process);
 
 // heredoc
-char		*ft_heredoc(int flag, char *delimit);
+void		ft_heredoc(int flag, char *delimit);
 int			process_heredoc(char **args);
 
 // util
