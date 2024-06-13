@@ -6,9 +6,68 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
+static int valid_delimiter(char *delimit)
+{
+	int			i;
+	static char	*invalid[] = {
+		"|",
+		"<",
+		"<<",
+		">",
+		">>"
+	};
+	
+	if (delimit == NULL)
+	{
+		ft_printf("syntax error near unexpected token `newline'\n");
+		return (0);
+	}
+	i = 0;
+	while (i < 5)
+	{
+		if (ft_strcmp(delimit, invalid[i]) == 0)
+		{
+			ft_printf("syntax error near unexpected token '%s'\n", invalid[i]);
+			return (0);
+		}
+		i++;
+	}
+	return (1);
+}
+
+// process all heredocs but only retain the last one
+// return 1 if all heredocs succeed
+// return 0 if any heredoc fails
+int	process_heredocs(char **args)
+{
+	int		i;
+	char	*delimit;
+
+	i = 0;
+	while (args[i] != NULL)
+	{
+		if (ft_strcmp(args[i], "<<") == 0)
+		{
+			delimit = args[i + 1];
+			if (!valid_delimiter(delimit))
+				return (0);
+			ft_heredoc(O_WRONLY | O_CREAT, delimit);
+		}
+		if (ft_strcmp(args[i], ">>") == 0)
+		{
+			delimit = args[i + 1];
+			if (!valid_delimiter(delimit))
+				return (0);
+			ft_heredoc(O_WRONLY | O_CREAT | O_APPEND, delimit);
+		}
+		i++;
+	}
+	return (1);
+}
+
 // handle heredoc behavior
-// NOTE: does not replicate linux behaviour, check bash
-// heredock should open immediately, not when child is being processed
+// only the last heredoc should matter
+// and this function shouldnt have to return anything
 char	*ft_heredoc(int flag, char *delimit)
 {
 	int		fd;

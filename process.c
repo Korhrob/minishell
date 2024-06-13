@@ -17,9 +17,9 @@ void	set_inout(t_process *p)
 		if (p->args[i + 1] != NULL && ft_strcmp(p->args[i], ">") == 0)
 			p->outfile = p->args[i + 1];
 		if (p->args[i + 1] != NULL && ft_strcmp(p->args[i], "<<") == 0)
-			p->infile = ft_heredoc(O_WRONLY | O_CREAT, p->args[i + 1]);
+			p->infile = ".heredoc"; //ft_heredoc(O_WRONLY | O_CREAT, p->args[i + 1]);
 		if (p->args[i + 1] != NULL && ft_strcmp(p->args[i], ">>") == 0)
-			p->infile = ft_heredoc(O_WRONLY | O_CREAT | O_APPEND, p->args[i + 1]);
+			p->infile = ".heredoc"; //ft_heredoc(O_WRONLY | O_CREAT | O_APPEND, p->args[i + 1]);
 		i++;
 	}
 }

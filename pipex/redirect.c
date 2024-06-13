@@ -24,7 +24,7 @@ int     redirect(int pipefd[2], t_process *process)
 {
     int fd;
 
-    if (process->infile != NULL) // input is set, use input
+    if (process->infile != NULL) // infile is set, use infile
     {
         fd = open(process->infile, O_RDONLY);
         if (fd == -1)
@@ -33,15 +33,16 @@ int     redirect(int pipefd[2], t_process *process)
             return (-1); // dup2 fail
         close(pipefd[0]);
     }
-    // else if ?
-    if (process->outfile != NULL) // input is set, use input
+    // else if default redirection
+    if (process->outfile != NULL) // outfile is set, use outfile
     {
         fd = open(process->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
         if (fd == -1)
             return (-1); // open fail
         if (redirect_fd(pipefd[0], fd) == -1)
             return (-1); // dup2 fail
-        close(pipefd[0]);
+        close(pipefd[1]);
     }
+    // else if default redirection
     return (1);
 }

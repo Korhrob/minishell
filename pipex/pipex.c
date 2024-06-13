@@ -7,6 +7,7 @@
 
 //static int validate input / validate output
 
+// child process
 static void    child(int pipefd[2], t_process *process)
 {
     
@@ -27,6 +28,7 @@ static void    child(int pipefd[2], t_process *process)
     exit(0);
 }
 
+// begins piping process
 void   begin_pipe(t_process *process)
 {
     int pipefd[2];
@@ -50,5 +52,4 @@ void   begin_pipe(t_process *process)
     close(pipefd[1]);
     status = 0;
     waitpid(cid, &status, 0);
-    //clean_process(process);
 }

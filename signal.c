@@ -24,6 +24,7 @@ void	signal_init(int	flag)
 	tcsetattr(STDIN_FILENO, TCSAFLUSH, &attributes);
 }
 
+// handle all signals
 void	signal_signint(int signo)
 {
 	(void)signo;
@@ -43,6 +44,7 @@ void	signal_signint(int signo)
 	}
 }
 
+// sets g_exit_status back to 0
 void	signal_reset(void)
 {
 	g_exit_status = 0;
