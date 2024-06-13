@@ -111,7 +111,6 @@ int	execute_args(char **args, t_runtime *runtime)
 		if (*args != NULL)
 			args++;
 		free(pipe_args);
-		// wait all children here?
 	}
 	return (-1);
 }
@@ -137,6 +136,7 @@ void	shell_interactive(t_runtime *runtime)
 			status = execute_args(args, runtime);
 		free(line);
 		ft_free_arr(args);
+		unlink(".heredoc");
 		if (status >= 0)
 			exit(status);
 	}

@@ -5,7 +5,7 @@
 #include <fcntl.h>
 
 // initialize redirections and heredoc
-// also sets up file flags for in/out in t_process
+// also set up file flags for outfile
 void	set_inout(t_process *p)
 {
 	int	i;
@@ -16,11 +16,17 @@ void	set_inout(t_process *p)
 		if (i > 0 && ft_strcmp(p->args[i], "<") == 0)
 			p->infile = p->args[i - 1];
 		if (p->args[i + 1] != NULL && ft_strcmp(p->args[i], ">") == 0)
+		{
 			p->outfile = p->args[i + 1];
+			p->outflag = O_WRONLY | O_CREAT;
+		}
 		if (p->args[i + 1] != NULL && ft_strcmp(p->args[i], ">>") == 0)
-			p->outfile = p->args[i + 1]; // APPEND
+		{
+			p->outfile = p->args[i + 1];
+			p->outflag = O_WRONLY | O_CREAT | O_APPEND;
+		}
 		if (p->args[i + 1] != NULL && ft_strcmp(p->args[i], "<<") == 0)
-			p->infile = ".heredoc"; //ft_heredoc(O_WRONLY | O_CREAT, p->args[i + 1]);
+			p->infile = ".heredoc";
 		i++;
 	}
 }
@@ -34,20 +40,21 @@ t_process	*new_process(char **args)
 	if (p == NULL)
 		return (NULL);
 	p->infile = NULL;
+	p->inflag = O_RDONLY;
 	p->outfile = NULL;
+	p->outflag = 0;
 	p->args = args;
 	set_inout(p);
 	return (p);
 }
 
 // clean process struct
+// NOTE: shouldnt touch .heredoc?
 void	clean_process(t_process *p)
 {
 	if (p == NULL)
 		return ;
 	//if (p->infile != NULL && ft_strcmp(p->infile, ".heredoc") == 0)
 	//	unlink(".heredoc");
-	//if (p->outfile != NULL && ft_strcmp(p->outfile, ".heredoc") == 0)
-	unlink(".heredoc");
 	free(p);
 }

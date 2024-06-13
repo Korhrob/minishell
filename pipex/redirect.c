@@ -20,6 +20,8 @@ static int	redirect_fd(int input, int output)
 }
 
 // redirects input and output if needed
+// return 1 on success
+// return -1 on fail
 int     redirect(int pipefd[2], t_process *process)
 {
     int fd;
