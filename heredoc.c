@@ -7,6 +7,8 @@
 #include <readline/history.h>
 
 // handle heredoc behavior
+// NOTE: does not replicate linux behaviour, check bash
+// heredock should open immediately, not when child is being processed
 char	*ft_heredoc(int flag, char *delimit)
 {
 	int		fd;

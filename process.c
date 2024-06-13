@@ -44,9 +44,9 @@ void	clean_process(t_process *p)
 {
 	if (p == NULL)
 		return ;
-	if (p->infile != NULL && ft_strcmp(p->infile, ".heredoc") == 0)
-		unlink(".heredoc");
-	if (p->outfile != NULL && ft_strcmp(p->outfile, ".heredoc") == 0)
-		unlink(".heredoc");
+	//if (p->infile != NULL && ft_strcmp(p->infile, ".heredoc") == 0)
+	//	unlink(".heredoc");
+	//if (p->outfile != NULL && ft_strcmp(p->outfile, ".heredoc") == 0)
+	unlink(".heredoc");
 	free(p);
 }

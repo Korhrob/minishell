@@ -7,7 +7,8 @@ NAME		=	idleshell #rename to minishell later
 SRC			=	main.c parse.c history.c signal.c process.c heredoc.c
 BUILTINS	=	builtins/builtin_pwd.c builtins/builtin_cd.c builtins/builtin_env.c builtins/builtin_unset.c	\
 				builtins/builtin_export.c
-OBJ			=	$(SRC:.c=.o) $(BUILTINS:.c=.o)
+PIPEX		=	pipex/pipex.c pipex/redirect.c
+OBJ			=	$(SRC:.c=.o) $(BUILTINS:.c=.o) $(PIPEX:.c=.o)
 LIBFT		=	libft
 LIBFT_LIB	=	$(LIBFT)/libft.a
 

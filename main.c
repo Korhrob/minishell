@@ -32,7 +32,11 @@ void	do_command(char **args, t_runtime *runtime)
 		return ;
 	if (ft_strcmp(*args, "history") == 0)
 		print_history(args + 1);
-	ft_printf("do command %s\n", *args);
+	else
+	{
+		ft_printf("do command %s\n", *args);
+		begin_pipe(child);
+	}
 	clean_process(child);
 }
 

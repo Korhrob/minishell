@@ -59,6 +59,8 @@ void		rl_replace_line(const char *str, int i);
 t_process	*new_process(char **args);
 void		clean_process(t_process *p);
 void		set_inout(t_process *p);
+void   		begin_pipe(t_process *process);
+int    		redirect(int pipefd[2], t_process *process);
 
 // heredoc
 char		*ft_heredoc(int flag, char *delimit);
