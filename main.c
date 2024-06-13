@@ -128,8 +128,8 @@ void	shell_interactive(t_runtime *runtime)
 			continue ;
 		record_history(line);
 		args = ft_split_quotes(line, ' ', 0);
-		process_heredocs(args);
-		status = execute_args(args, runtime);
+		if (process_heredocs(args))
+			status = execute_args(args, runtime);
 		free(line);
 		ft_free_arr(args);
 		if (status >= 0)
