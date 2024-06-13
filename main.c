@@ -96,6 +96,11 @@ int	execute_args(char **args, t_runtime *runtime)
 		pipe_args = pipe_cut(args);
 		if (pipe_args == NULL)
 			return (-1);
+		if (*pipe_args == 0)
+		{
+			free(pipe_args);
+			return (-1);
+		}
 		builtin = get_builtin(*pipe_args);
 		if (builtin != -1)
 			do_builtin(pipe_args, builtin, runtime);
@@ -128,7 +133,7 @@ void	shell_interactive(t_runtime *runtime)
 			continue ;
 		record_history(line);
 		args = ft_split_quotes(line, ' ', 0);
-		if (process_heredocs(args))
+		if (process_heredoc(args))
 			status = execute_args(args, runtime);
 		free(line);
 		ft_free_arr(args);

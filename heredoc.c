@@ -6,7 +6,8 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-static int valid_delimiter(char *delimit)
+// check if str is invalid
+int syntax_error(char *str)
 {
 	int			i;
 	static char	*invalid[] = {
@@ -17,28 +18,28 @@ static int valid_delimiter(char *delimit)
 		">>"
 	};
 	
-	if (delimit == NULL)
+	if (str == NULL)
 	{
 		ft_printf("syntax error near unexpected token `newline'\n");
-		return (0);
+		return (1);
 	}
 	i = 0;
 	while (i < 5)
 	{
-		if (ft_strcmp(delimit, invalid[i]) == 0)
+		if (ft_strcmp(str, invalid[i]) == 0)
 		{
 			ft_printf("syntax error near unexpected token '%s'\n", invalid[i]);
-			return (0);
+			return (1);
 		}
 		i++;
 	}
-	return (1);
+	return (0);
 }
 
 // process all heredocs but only retain the last one
 // return 1 if all heredocs succeed
 // return 0 if any heredoc fails
-int	process_heredocs(char **args)
+int	process_heredoc(char **args)
 {
 	int		i;
 	char	*delimit;
@@ -49,10 +50,11 @@ int	process_heredocs(char **args)
 		if (ft_strcmp(args[i], "<<") == 0)
 		{
 			delimit = args[i + 1];
-			if (!valid_delimiter(delimit))
+			if (syntax_error(delimit))
 				return (0);
 			ft_heredoc(O_WRONLY | O_CREAT, delimit);
 		}
+		/* NOT HEREDOC
 		if (ft_strcmp(args[i], ">>") == 0)
 		{
 			delimit = args[i + 1];
@@ -60,6 +62,7 @@ int	process_heredocs(char **args)
 				return (0);
 			ft_heredoc(O_WRONLY | O_CREAT | O_APPEND, delimit);
 		}
+		*/
 		i++;
 	}
 	return (1);

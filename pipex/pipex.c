@@ -23,8 +23,7 @@ static void    child(int pipefd[2], t_process *process)
     // directory check (non builtin)
     //if (execve(process->path, process->args, envp) == -1)
     ft_printf("CHILD DONE '%s'\n", *(process->args));
-    // maybe free here
-    free(process);
+    //clean_process(process); // DONT USE WITHOUT EXECVE
     exit(0);
 }
 

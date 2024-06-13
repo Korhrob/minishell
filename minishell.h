@@ -31,6 +31,8 @@ typedef struct s_runtime
 
 typedef struct s_process
 {
+	int		inflag;
+	int		outflag;
 	char	*infile;
 	char	*outfile;
 	char	**args;
@@ -64,6 +66,9 @@ int    		redirect(int pipefd[2], t_process *process);
 
 // heredoc
 char		*ft_heredoc(int flag, char *delimit);
-int			process_heredocs(char **args);
+int			process_heredoc(char **args);
+
+// util
+int 		syntax_error(char *str);
 
 #endif

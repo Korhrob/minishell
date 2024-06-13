@@ -5,6 +5,7 @@
 #include <fcntl.h>
 
 // initialize redirections and heredoc
+// also sets up file flags for in/out in t_process
 void	set_inout(t_process *p)
 {
 	int	i;
@@ -16,10 +17,10 @@ void	set_inout(t_process *p)
 			p->infile = p->args[i - 1];
 		if (p->args[i + 1] != NULL && ft_strcmp(p->args[i], ">") == 0)
 			p->outfile = p->args[i + 1];
+		if (p->args[i + 1] != NULL && ft_strcmp(p->args[i], ">>") == 0)
+			p->outfile = p->args[i + 1]; // APPEND
 		if (p->args[i + 1] != NULL && ft_strcmp(p->args[i], "<<") == 0)
 			p->infile = ".heredoc"; //ft_heredoc(O_WRONLY | O_CREAT, p->args[i + 1]);
-		if (p->args[i + 1] != NULL && ft_strcmp(p->args[i], ">>") == 0)
-			p->infile = ".heredoc"; //ft_heredoc(O_WRONLY | O_CREAT | O_APPEND, p->args[i + 1]);
 		i++;
 	}
 }
