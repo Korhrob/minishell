@@ -69,6 +69,7 @@ void		ft_heredoc(int flag, char *delimit);
 int			process_heredoc(char **args);
 
 // util
-int 		syntax_error(char *str);
+int 		syntax_error(char *str, int flag);
+int			validate_args(char **args);
 
 #endif

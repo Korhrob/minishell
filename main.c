@@ -9,6 +9,8 @@
 #include "minishell.h"
 #include "builtins/builtins.h"
 
+
+// exits program and unlinks history file
 void	ft_exit(int ecode)
 {
 	unlink(".history");
@@ -34,7 +36,7 @@ void	do_command(char **args, t_runtime *runtime)
 		print_history(args + 1);
 	else
 	{
-		ft_printf("do command %s\n", *args);
+		ft_printf("do command %s\n", *args); // debug
 		begin_pipe(child);
 	}
 	clean_process(child);
@@ -57,7 +59,7 @@ void	do_builtin(char **args, int cmd, t_runtime *runtime)
 	else if (cmd == EXPORT)
 		cmd_export(args[1], runtime);
 	else
-		ft_printf("builtin %s\n", *args);
+		ft_printf("builtin %s\n", *args); // not needed
 }
 
 // gets and returns enum if current string is builtin command
@@ -132,7 +134,7 @@ void	shell_interactive(t_runtime *runtime)
 			continue ;
 		record_history(line);
 		args = ft_split_quotes(line, ' ', 0);
-		if (process_heredoc(args))
+		if (process_heredoc(args) && validate_args(args))
 			status = execute_args(args, runtime);
 		free(line);
 		ft_free_arr(args);

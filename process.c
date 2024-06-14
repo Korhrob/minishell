@@ -49,7 +49,6 @@ t_process	*new_process(char **args)
 }
 
 // clean process struct
-// NOTE: shouldnt touch .heredoc?
 void	clean_process(t_process *p)
 {
 	if (p == NULL)
