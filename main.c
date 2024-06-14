@@ -131,7 +131,10 @@ void	shell_interactive(t_runtime *runtime)
 		if (line == NULL)
 			break ;
 		if (*line == 0)
+		{
+			free(line);
 			continue ;
+		}
 		record_history(line);
 		args = ft_split_quotes(line, ' ', 0);
 		if (process_heredoc(args) && validate_args(args))
