@@ -1,6 +1,7 @@
 #include "builtins.h"
 
-static int	envfinder(char *env, t_runtime *runtime)
+// Finds the index of the env inside the array
+static int	env_index_finder(char *env, t_runtime *runtime)
 {
 	int	i;
 	int	j;
@@ -80,7 +81,7 @@ void	cmd_export(char *env, t_runtime *runtime)
 		env = minitrim(env, '\"');
 	else
 		env = minitrim(env, '\'');
-	old_i = envfinder(env, runtime);
+	old_i = env_index_finder(env, runtime);
 	if (old_i > -1)
 	{
 		replace_env(env, runtime, old_i);
@@ -89,6 +90,17 @@ void	cmd_export(char *env, t_runtime *runtime)
 	create_env(env, runtime);
 }
 
+// Will change name later to be inline with other builtins, this function was made to
+// perform multiple arguments passed to the function
+void	export_main(char **args, t_runtime *runtime)
+{
+	args++;
+	while (*args != NULL)
+	{
+		cmd_export(*args, runtime);
+		args++;
+	}
+}
+
 // Add just export, that sorts alphabetically
 // Add malloc checks
-// Add multiple arguments

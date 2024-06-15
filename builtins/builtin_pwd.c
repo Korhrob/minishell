@@ -1,9 +1,10 @@
 #include "builtins.h"
+#include "limits.h"
 
 // Fetches the current directory and prints it
 void	cmd_pwd()
 {
-	char	cwd[4096];
+	char	cwd[PATH_MAX];
 
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
 		ft_printf("%s\n", cwd);

@@ -17,10 +17,12 @@ typedef struct s_env
 	struct s_env	*next;
 }	t_env;
 
+// Builtin commands
 void	cmd_pwd();
 void	cmd_cd(char **args, t_runtime *runtime);
 void	cmd_env(t_runtime *runtime);
 void	cmd_unset(char *env, t_runtime *runtime);
 void	cmd_export(char *env, t_runtime *runtime);
+void	export_main(char **args, t_runtime *runtime);
 
 #endif

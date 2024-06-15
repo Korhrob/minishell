@@ -36,7 +36,7 @@ void	do_command(char **args, t_runtime *runtime)
 	clean_process(child);
 }
 
-// exectue all builtin commands here
+// execute all builtin commands here
 // should return how many args we advanced
 void	do_builtin(char **args, int cmd, t_runtime *runtime)
 {
@@ -51,7 +51,7 @@ void	do_builtin(char **args, int cmd, t_runtime *runtime)
 	else if (cmd == UNSET)
 		cmd_unset(args[1], runtime);
 	else if (cmd == EXPORT)
-		cmd_export(args[1], runtime);
+		export_main(args, runtime);
 	else
 		ft_printf("builtin %s\n", *args);
 }

@@ -29,3 +29,5 @@ void	cmd_unset(char *env, t_runtime *runtime)
 }
 
 // Need to add a malloc check and need to add a check if there is anything to remove
+// Need to add checks that see if the passed env is valid
+// Add multiple arguments

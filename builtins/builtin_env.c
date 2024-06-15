@@ -15,3 +15,5 @@ void	cmd_env(t_runtime *runtime)
 		i++;
 	}
 }
+
+// Add functionality to only print env's that have a '=' character (for export functionality)
