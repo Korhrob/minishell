@@ -49,7 +49,7 @@ void	do_builtin(char **args, int cmd, t_runtime *runtime)
 	else if (cmd == ENV)
 		cmd_env(runtime);
 	else if (cmd == UNSET)
-		cmd_unset(args[1], runtime);
+		unset_main(args, runtime);
 	else if (cmd == EXPORT)
 		export_main(args, runtime);
 	else

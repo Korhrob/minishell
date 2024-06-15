@@ -1,5 +1,6 @@
 #include "builtins.h"
 #include "limits.h"
+#include <linux/limits.h>
 
 // Fetches the current directory and prints it
 void	cmd_pwd()
@@ -12,4 +13,4 @@ void	cmd_pwd()
 		ft_printf("pwd did not work\n"); // Replace with perror later
 }
 
-// Getcwd performs a malloc need to free
+// check cwd return value of NULL

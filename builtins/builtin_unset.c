@@ -28,6 +28,17 @@ void	cmd_unset(char *env, t_runtime *runtime)
 	runtime->env = tmparr;
 }
 
+// Will change name later to be inline with other builtins, this function was made to
+// perform multiple arguments passed to the function
+void	unset_main(char **args, t_runtime *runtime)
+{
+	args++;
+	while (*args != NULL)
+	{
+		cmd_unset(*args, runtime);
+		args++;
+	}
+}
+
 // Need to add a malloc check and need to add a check if there is anything to remove
 // Need to add checks that see if the passed env is valid
-// Add multiple arguments

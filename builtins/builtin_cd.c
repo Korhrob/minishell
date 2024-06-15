@@ -1,5 +1,6 @@
 #include "builtins.h"
 #include "limits.h"
+#include <linux/limits.h>
 
 // Finds the old wd
 static char	*find_env(char **array, char *env)
