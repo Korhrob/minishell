@@ -11,9 +11,10 @@
 
 
 // exits program and unlinks history file
-void	ft_exit(int ecode)
+void	ft_exit(int ecode, t_runtime *runtime)
 {
-	unlink(".history");
+	unlink(runtime->history);
+	unlink(runtime->heredoc);
 	exit(ecode);
 }
 
@@ -26,14 +27,14 @@ void	do_command(char **args, t_runtime *runtime)
 	if (ft_quote_check_arr(args) == 0)
 	{
 		ft_printf("idleshell: unexpected EOF\n");
-		ft_exit(2);
+		ft_exit(2, runtime);
 	}
 	(void)runtime;
 	child = new_process(args);
 	if (child == NULL)
 		return ;
 	if (ft_strcmp(*args, "history") == 0)
-		print_history(args + 1);
+		print_history(args + 1, runtime);
 	else
 	{
 		ft_printf("do command %s\n", *args); // debug
@@ -47,7 +48,7 @@ void	do_command(char **args, t_runtime *runtime)
 void	do_builtin(char **args, int cmd, t_runtime *runtime)
 {
 	if (cmd == EXIT)
-		ft_exit(0);
+		ft_exit(0, runtime);
 	else if (cmd == PWD)
 		cmd_pwd();
 	else if (cmd == CD)
@@ -135,13 +136,13 @@ void	shell_interactive(t_runtime *runtime)
 			free(line);
 			continue ;
 		}
-		record_history(line);
+		record_history(line, runtime);
 		args = ft_split_quotes(line, ' ', 0);
-		if (process_heredoc(args) && validate_args(args))
+		if (process_heredoc(args, runtime) && validate_args(args))
 			status = execute_args(args, runtime);
 		free(line);
 		ft_free_arr(args);
-		unlink(".heredoc");
+		unlink(runtime->heredoc);
 		if (status >= 0)
 			exit(status);
 	}
@@ -175,19 +176,24 @@ static void	init_runtime(t_runtime *runtime, char **envp)
 {
 	runtime->env = set_env_array(envp);
 	runtime->exepath = get_cwd();
+	runtime->history = ft_strjoin(runtime->exepath, "/.history");
+	runtime->heredoc = ft_strjoin(runtime->exepath, "/.heredoc");
+	unlink(runtime->history);
+	unlink(runtime->heredoc);
 }
 
 static void free_runtime(t_runtime *runtime)
 {
 	ft_free_arr(runtime->env);
 	free(runtime->exepath);
+	free(runtime->history);
+	free(runtime->heredoc);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
 	t_runtime	runtime;
 
-	unlink(".history");
 	signal_init(0);
 	signal(SIGINT, signal_signint);
 	signal(SIGTERM, signal_signint);

@@ -3,16 +3,17 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include "libft/libft.h"
+#include "minishell.h"
 #include <readline/history.h>
 
-static int	history_line_count(void)
+static int	history_line_count(char *file)
 {
 	int		count;
 	int		fd;
 	char	buf;
 
 	count = 0;
-	fd = open(".history", O_RDONLY);
+	fd = open(file, O_RDONLY);
 	if (fd == -1)
 		return (0);
 	while (read(fd, &buf, 1) > 0)
@@ -25,17 +26,18 @@ static int	history_line_count(void)
 }
 
 // saves in current pwd
-void	record_history(char *line)
+// NOTE: does not save heredoc stuff
+void	record_history(char *line, t_runtime *runtime)
 {
 	int		fd;
 	int		count;
 	char	*i;
 
 	add_history(line);
-	fd = open(".history", O_WRONLY | O_CREAT | O_APPEND, 0777);
+	fd = open(runtime->history, O_WRONLY | O_CREAT | O_APPEND, 0777);
 	if (fd == -1)
 		return ;
-	count = history_line_count();
+	count = history_line_count(runtime->history);
 	i = ft_itoa(count);
 	ft_putstr_fd("  ", fd);
 	ft_putstr_fd(i, fd);
@@ -47,12 +49,12 @@ void	record_history(char *line)
 }
 
 // print all history starting from the beginning
-void	print_history_all(void)
+void	print_history_all(t_runtime *runtime)
 {
 	int		fd;
 	char	*line;
 
-	fd = open(".history", O_RDONLY);
+	fd = open(runtime->history, O_RDONLY);
 	if (fd == -1)
 		return ;
 	line = get_next_line(fd);
@@ -94,14 +96,14 @@ t_list	**read_to_list(int fd, int mode)
 }
 
 // print n number of most recent history
-void	print_history_n(int n)
+void	print_history_n(int n, t_runtime *runtime)
 {
 	int		fd;
 	int		skip;
 	t_list	**list;
 	t_list	*cur;
 
-	fd = open(".history", O_RDONLY);
+	fd = open(runtime->history, O_RDONLY);
 	if (fd == -1)
 	{
 		ft_printf("error: no history");
@@ -123,7 +125,7 @@ void	print_history_n(int n)
 	ft_lst_clean(list, 1);
 }
 
-void	print_history(char **next_arg)
+void	print_history(char **next_arg, t_runtime *runtime)
 {
 	int		count;
 
@@ -139,7 +141,7 @@ void	print_history(char **next_arg)
 		}
 	}
 	if (count == -1)
-		print_history_all();
+		print_history_all(runtime);
 	else
-		print_history_n(count);
+		print_history_n(count, runtime);
 }

@@ -9,7 +9,7 @@
 // process all heredocs but only retain the last one
 // return 1 if all heredocs succeed
 // return 0 if any heredoc fails
-int	process_heredoc(char **args)
+int	process_heredoc(char **args, t_runtime *runtime)
 {
 	int		i;
 	char	*delimit;
@@ -22,7 +22,7 @@ int	process_heredoc(char **args)
 			delimit = args[i + 1];
 			if (syntax_error(delimit, 1))
 				return (0);
-			ft_heredoc(O_WRONLY | O_CREAT, delimit);
+			ft_heredoc(O_WRONLY | O_CREAT, delimit, runtime);
 		}
 		i++;
 	}
@@ -32,12 +32,12 @@ int	process_heredoc(char **args)
 // handle heredoc behavior
 // only the last heredoc should matter
 // and this function shouldnt have to return anything
-void	ft_heredoc(int flag, char *delimit)
+void	ft_heredoc(int flag, char *delimit, t_runtime *runtime)
 {
 	int		fd;
 	char	*buffer;
 
-	fd = open(".heredoc", flag, 0777);
+	fd = open(runtime->heredoc, flag, 0777);
 	if (fd == -1)
 		return ;
 	while (1)

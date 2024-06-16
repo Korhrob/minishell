@@ -27,6 +27,8 @@ typedef struct s_runtime
 {
 	char	**env;
 	char	*exepath;
+	char	*history;
+	char	*heredoc;
 	//t_list	**child_pid;
 }	t_runtime;
 
@@ -45,8 +47,8 @@ char		**pipe_cut(char **args);
 
 // history
 
-void		record_history(char *line);
-void		print_history(char **args);
+void		record_history(char *line, t_runtime *runtime);
+void		print_history(char **args, t_runtime *runtime);
 
 // signals
 
@@ -62,12 +64,12 @@ void		rl_replace_line(const char *str, int i);
 t_process	*new_process(char **args);
 void		clean_process(t_process *p);
 void		set_inout(t_process *p);
-void   		begin_pipe(t_process *process);
-int    		redirect(int pipefd[2], t_process *process);
+void		begin_pipe(t_process *process);
+int			redirect(int pipefd[2], t_process *process);
 
 // heredoc
-void		ft_heredoc(int flag, char *delimit);
-int			process_heredoc(char **args);
+void		ft_heredoc(int flag, char *delimit, t_runtime *runtime);
+int			process_heredoc(char **args, t_runtime *runtime);
 
 // util
 int 		syntax_error(char *str, int flag);
