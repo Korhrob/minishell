@@ -19,7 +19,6 @@ void	ft_exit(int ecode, t_runtime *runtime)
 }
 
 // execute all commands here
-// should return how many args we advanced
 void	do_command(char **args, t_runtime *runtime)
 {
 	t_process	*child;
@@ -44,7 +43,6 @@ void	do_command(char **args, t_runtime *runtime)
 }
 
 // exectue all builtin commands here
-// should return how many args we advanced
 void	do_builtin(char **args, int cmd, t_runtime *runtime)
 {
 	if (cmd == EXIT)
@@ -160,7 +158,7 @@ static char	**set_env_array(char **envp)
 	int		i;
 	char	**envi;
 
-	envi = malloc(sizeof(char*) * (ft_array_len(envp) + 1));
+	envi = malloc(sizeof(char *) * (ft_array_len(envp) + 1));
 	i = 0;
 	while (envp[i] != NULL)
 	{
@@ -182,7 +180,7 @@ static void	init_runtime(t_runtime *runtime, char **envp)
 	unlink(runtime->heredoc);
 }
 
-static void free_runtime(t_runtime *runtime)
+static void	free_runtime(t_runtime *runtime)
 {
 	ft_free_arr(runtime->env);
 	free(runtime->exepath);
@@ -207,3 +205,16 @@ int	main(int argc, char **argv, char **envp)
 	free_runtime(&runtime);
 	return (0);
 }
+
+// should first split by pipes
+// pipe split should respect quotes
+// then expand env variables
+// then split by spaces
+
+// other stuff to handle
+// echo 'asd | zxc' | cat
+//<<a cat|cat
+//infile<cat|cat>outfile
+
+// if any pipes occur, all commands are done in child
+// else if its builtin do it in parent

@@ -5,9 +5,8 @@
 
 // check if str is invalid
 // flag 1 prints the syntax error
-int syntax_error(char *str, int flag)
+static int	syntax_cmp(char *str, int i, int flag)
 {
-	int			i;
 	static char	*invalid[] = {
 		"|",
 		"<",
@@ -15,7 +14,22 @@ int syntax_error(char *str, int flag)
 		">",
 		">>"
 	};
-	
+
+	if (ft_strcmp(str, invalid[i]) == 0)
+	{
+		if (flag == 1)
+			ft_printf("syntax error near unexpected token '%s'\n", invalid[i]);
+		return (0);
+	}
+	return (1);
+}
+
+// check if str is invalid
+// flag 1 prints the syntax error
+int	syntax_error(char *str, int flag)
+{
+	int			i;
+
 	if (str == NULL)
 	{
 		if (flag == 1)
@@ -25,12 +39,8 @@ int syntax_error(char *str, int flag)
 	i = 0;
 	while (i < 5)
 	{
-		if (ft_strcmp(str, invalid[i]) == 0)
-		{
-			if (flag == 1)
-				ft_printf("syntax error near unexpected token '%s'\n", invalid[i]);
+		if (syntax_cmp(str, i, flag) == 0)
 			return (1);
-		}
 		i++;
 	}
 	return (0);

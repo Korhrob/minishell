@@ -26,7 +26,7 @@ void	set_inout(t_process *p)
 			p->outflag = O_WRONLY | O_CREAT | O_APPEND;
 		}
 		if (p->args[i + 1] != NULL && ft_strcmp(p->args[i], "<<") == 0)
-			p->infile = ".heredoc";
+			p->infile = ft_strdup(".heredoc");
 		i++;
 	}
 }
@@ -53,7 +53,9 @@ void	clean_process(t_process *p)
 {
 	if (p == NULL)
 		return ;
-	//if (p->infile != NULL && ft_strcmp(p->infile, ".heredoc") == 0)
-	//	unlink(".heredoc");
+	if (p->infile != NULL)
+		free(p->infile);
+	if (p->outfile != NULL)
+		free(p->outfile);
 	free(p);
 }
