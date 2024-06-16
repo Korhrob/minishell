@@ -26,6 +26,7 @@ typedef enum e_builtin_cmd
 typedef struct s_runtime
 {
 	char	**env;
+	char	*exepath;
 	//t_list	**child_pid;
 }	t_runtime;
 

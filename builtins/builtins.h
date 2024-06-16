@@ -23,4 +23,6 @@ void	cmd_env(t_runtime *runtime);
 void	cmd_unset(char *env, t_runtime *runtime);
 void	cmd_export(char *env, t_runtime *runtime);
 
+char	*get_cwd();
+
 #endif

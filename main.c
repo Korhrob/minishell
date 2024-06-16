@@ -174,6 +174,13 @@ static char	**set_env_array(char **envp)
 static void	init_runtime(t_runtime *runtime, char **envp)
 {
 	runtime->env = set_env_array(envp);
+	runtime->exepath = get_cwd();
+}
+
+static void free_runtime(t_runtime *runtime)
+{
+	ft_free_arr(runtime->env);
+	free(runtime->exepath);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -191,6 +198,6 @@ int	main(int argc, char **argv, char **envp)
 		shell_interactive(&runtime);
 	else
 		shell_no_interactive();
-	ft_free_arr(runtime.env);
+	free_runtime(&runtime);
 	return (0);
 }

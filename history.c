@@ -24,6 +24,7 @@ static int	history_line_count(void)
 	return (count);
 }
 
+// saves in current pwd
 void	record_history(char *line)
 {
 	int		fd;
