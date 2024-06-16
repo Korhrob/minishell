@@ -6,7 +6,8 @@
 #include "minishell.h"
 #include <readline/history.h>
 
-static int	history_line_count(char *file)
+// NOTE: move to libft
+static int	file_line_count(char *file)
 {
 	int		count;
 	int		fd;
@@ -37,7 +38,7 @@ void	record_history(char *line, t_runtime *runtime)
 	fd = open(runtime->history, O_WRONLY | O_CREAT | O_APPEND, 0777);
 	if (fd == -1)
 		return ;
-	count = history_line_count(runtime->history);
+	count = file_line_count(runtime->history);
 	i = ft_itoa(count);
 	ft_putstr_fd("  ", fd);
 	ft_putstr_fd(i, fd);
@@ -71,6 +72,7 @@ void	print_history_all(t_runtime *runtime)
 // requires fd where to read from
 // mode 0 = ascending
 // mode 1 = descending (reverse)
+// NOTE: move to libft
 t_list	**read_to_list(int fd, int mode)
 {
 	t_list	**list;
