@@ -5,62 +5,78 @@
 
 // check if str is invalid
 // flag 1 prints the syntax error
-static int	syntax_cmp(char *str, int i, int flag)
+static char	*syntax_cmp(char *line)
 {
+	int			i;
 	static char	*invalid[] = {
+		"<<",
+		">>",
 		"|",
 		"<",
-		"<<",
-		">",
-		">>"
+		">"
+		//"" // newline, might not need
 	};
 
-	if (ft_strcmp(str, invalid[i]) == 0)
+	i = 0;
+	while (i < 6)
 	{
-		if (flag == 1)
-			ft_printf("syntax error near unexpected token '%s'\n", invalid[i]);
-		return (0);
+		if (ft_strncmp(line, invalid[i], ft_strlen(invalid[i])) == 0)
+			return (invalid[i]);
+		i++;
 	}
-	return (1);
+	return (NULL);
 }
 
 // check if str is invalid
-// flag 1 prints the syntax error
-int	syntax_error(char *str, int flag)
+// return 1 if syntax error is found
+int	syntax_error(char *line)
 {
-	int			i;
+	char	*cur;
+	char	*prev;
 
-	if (str == NULL)
+	prev = NULL;
+	while (*line != 0)
 	{
-		if (flag == 1)
-			ft_printf("syntax error near unexpected token `newline'\n");
-		return (1);
-	}
-	i = 0;
-	while (i < 5)
-	{
-		if (syntax_cmp(str, i, flag) == 0)
+		cur = syntax_cmp(line);
+		if (cur != NULL && prev != NULL)
+		{
+			ft_printf("syntax error near unexpected token `%s'\n", cur);
 			return (1);
-		i++;
+		}
+		prev = cur;
+		if (cur != NULL)
+			line += ft_strlen(cur);
+		else
+			line++;
+	}
+	if (prev != NULL)
+	{
+		ft_printf("syntax error near unexpected token `newline'\n");
+		return (1);
 	}
 	return (0);
 }
 
-int	validate_args(char **args)
+// NOTE: not used anymore
+/*
+int	validate_args(char **pipes)
 {
 	int	i;
 
 	i = 0;
-	while (args[i] != NULL)
+	while (pipes[i] != NULL)
 	{
-		if (syntax_error(args[i], 0) && syntax_error(args[i + 1], 1))
+		if (syntax_error(pipes[i], 0) && syntax_error(pipes[i + 1], 1))
 			return (0);
 		i++;
 	}
 	return (1);
 }
+*/
 
 // separates string array args with delimiter string "|"
+// not used anymore
+/*
 char	**pipe_cut(char **args)
 {
 	char	**pipe_args;
@@ -86,3 +102,4 @@ char	**pipe_cut(char **args)
 	pipe_args[i] = NULL;
 	return (pipe_args);
 }
+*/

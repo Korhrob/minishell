@@ -87,19 +87,24 @@ int	get_builtin(char *args)
 
 // execute args 1 by 1
 // args are split into sub
-int	execute_args(char **args, t_runtime *runtime)
+int	execute_args(char **pipes, t_runtime *runtime)
 {
 	char	**pipe_args;
+	char	*pipe;
 	int		builtin;
 
-	while (*args != NULL)
+	(void)builtin;
+	(void)runtime;
+	(void)pipe;
+	while (*pipes != NULL)
 	{
-		pipe_args = pipe_cut(args);
+		//pipe = ft_strtrim(*pipes, " ");
+		pipe_args = ft_split_quotes(*pipes, ' ', 0);
 		if (pipe_args == NULL)
 			return (-1);
 		if (*pipe_args == 0)
 		{
-			free(pipe_args);
+			ft_free_arr(pipe_args);
 			return (-1);
 		}
 		builtin = get_builtin(*pipe_args);
@@ -107,11 +112,11 @@ int	execute_args(char **args, t_runtime *runtime)
 			do_builtin(pipe_args, builtin, runtime);
 		else
 			do_command(pipe_args, runtime);
-		while (*args != NULL && ft_strcmp(*args, "|") != 0)
-			args++;
-		if (*args != NULL)
-			args++;
-		free(pipe_args);
+		//if (*args != NULL)
+		//	args++;
+		ft_free_arr(pipe_args);
+		//free(pipe);
+		pipes++;
 	}
 	return (-1);
 }
@@ -120,7 +125,7 @@ int	execute_args(char **args, t_runtime *runtime)
 void	shell_interactive(t_runtime *runtime)
 {
 	char	*line;
-	char	**args;
+	char	**pipes;
 	int		status;
 
 	status = -1;
@@ -135,11 +140,11 @@ void	shell_interactive(t_runtime *runtime)
 			continue ;
 		}
 		record_history(line, runtime);
-		args = ft_split_quotes(line, ' ', 0);
-		if (process_heredoc(args, runtime) && validate_args(args))
-			status = execute_args(args, runtime);
+		pipes = ft_split_quotes(line, '|', 0);
+		if (!syntax_error(line) && process_heredoc(line, runtime))
+			status = execute_args(pipes, runtime);
 		free(line);
-		ft_free_arr(args);
+		ft_free_arr(pipes);
 		unlink(runtime->heredoc);
 		if (status >= 0)
 			exit(status);
@@ -218,3 +223,9 @@ int	main(int argc, char **argv, char **envp)
 
 // if any pipes occur, all commands are done in child
 // else if its builtin do it in parent
+
+// should open the pipe before doing anything with children
+// keep it open until all children are done
+// then close pipe
+
+// note ft_quote_check doesnt work as it should, copy from pipex

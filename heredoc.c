@@ -6,25 +6,51 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
+
+// save str from current position till space or |
+static char	*get_delimiter(char *line)
+{
+	char	*delimit;
+	int		i;
+	int		j;
+
+	j = 0;
+	while (line[j] != 0 && line[j] != ' ' && line[j] != '|')
+		j++;
+	delimit = (char *)malloc(j);
+	if (delimit == NULL)
+		return (NULL);
+	i = 0;
+	while (i < j)
+	{
+		delimit[i] = line[i];
+		i++;
+	}
+	delimit[i] = 0;
+	return (delimit);
+}
+
+
 // process all heredocs but only retain the last one
 // return 1 if all heredocs succeed
 // return 0 if any heredoc fails
-int	process_heredoc(char **args, t_runtime *runtime)
+int	process_heredoc(char *line, t_runtime *runtime)
 {
-	int		i;
-	char	*delimit;
+	char	*delimiter;
 
-	i = 0;
-	while (args[i] != NULL)
+	while (*line != 0)
 	{
-		if (ft_strcmp(args[i], "<<") == 0)
+		if (ft_strncmp(line, "<<", 2) == 0)
 		{
-			delimit = args[i + 1];
-			if (syntax_error(delimit, 1))
+			line += 2;
+			delimiter = get_delimiter(line);
+			//ft_printf("\ndelimiter '%s'", delimiter);
+			if (delimiter == NULL)
 				return (0);
-			ft_heredoc(O_WRONLY | O_CREAT, delimit, runtime);
+			ft_heredoc(O_WRONLY | O_CREAT, delimiter, runtime);
+			free(delimiter);
 		}
-		i++;
+		line++;
 	}
 	return (1);
 }

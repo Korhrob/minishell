@@ -41,10 +41,6 @@ typedef struct s_process
 	char	**args;
 }	t_process;
 
-// parse
-
-char		**pipe_cut(char **args);
-
 // history
 
 void		record_history(char *line, t_runtime *runtime);
@@ -69,10 +65,9 @@ int			redirect(int pipefd[2], t_process *process);
 
 // heredoc
 void		ft_heredoc(int flag, char *delimit, t_runtime *runtime);
-int			process_heredoc(char **args, t_runtime *runtime);
+int			process_heredoc(char *line, t_runtime *runtime);
 
-// util
-int 		syntax_error(char *str, int flag);
-int			validate_args(char **args);
+// parse
+int 		syntax_error(char *line);
 
 #endif

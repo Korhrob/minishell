@@ -32,7 +32,6 @@ void	begin_pipe(t_process *process)
 		int		pipefd[2];
 		int		cid;
 		int		status;
-		//t_list	*child_id;
 
 		if (pipe(pipefd) == -1)
 		{
