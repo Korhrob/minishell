@@ -90,15 +90,11 @@ int	get_builtin(char *args)
 int	execute_args(char **pipes, t_runtime *runtime)
 {
 	char	**pipe_args;
-	char	*pipe;
 	int		builtin;
 
-	(void)builtin;
-	(void)runtime;
-	(void)pipe;
 	while (*pipes != NULL)
 	{
-		//pipe = ft_strtrim(*pipes, " ");
+		// do expansion
 		pipe_args = ft_split_quotes(*pipes, ' ', 0);
 		if (pipe_args == NULL)
 			return (-1);
@@ -112,10 +108,9 @@ int	execute_args(char **pipes, t_runtime *runtime)
 			do_builtin(pipe_args, builtin, runtime);
 		else
 			do_command(pipe_args, runtime);
-		//if (*args != NULL)
+		//if (*args != NULL) forgot what this is for
 		//	args++;
 		ft_free_arr(pipe_args);
-		//free(pipe);
 		pipes++;
 	}
 	return (-1);
