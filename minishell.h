@@ -20,6 +20,7 @@ typedef enum e_builtin_cmd
 	PWD,
 	UNSET,
 	EXPORT,
+
 	BUILTIN_MAX
 }	t_builtin_cmd;
 
@@ -29,7 +30,6 @@ typedef struct s_runtime
 	char	*exepath;
 	char	*history;
 	char	*heredoc;
-	//t_list	**child_pid;
 }	t_runtime;
 
 typedef struct s_process

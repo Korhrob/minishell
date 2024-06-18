@@ -85,13 +85,14 @@ int	get_builtin(char *args)
 	return (-1);
 }
 
-// execute args 1 by 1
-// args are split into sub
+// expand $, execute args
 int	execute_args(char **pipes, t_runtime *runtime)
 {
 	char	**pipe_args;
 	int		builtin;
 
+	(void)builtin;
+	(void)runtime;
 	while (*pipes != NULL)
 	{
 		// do expansion
@@ -108,9 +109,7 @@ int	execute_args(char **pipes, t_runtime *runtime)
 			do_builtin(pipe_args, builtin, runtime);
 		else
 			do_command(pipe_args, runtime);
-		//if (*args != NULL) forgot what this is for
-		//	args++;
-		ft_free_arr(pipe_args);
+		ft_free_arr(pipe_args); //double free?
 		pipes++;
 	}
 	return (-1);

@@ -6,6 +6,7 @@
 
 // initialize redirections and heredoc
 // also set up file flags for outfile
+// NOTE: no longer works due to rework in parsing
 void	set_inout(t_process *p)
 {
 	int	i;
@@ -13,19 +14,19 @@ void	set_inout(t_process *p)
 	i = 0;
 	while (p->args[i] != NULL)
 	{
-		if (i > 0 && ft_strcmp(p->args[i], "<") == 0)
-			p->infile = p->args[i - 1];
-		if (p->args[i + 1] != NULL && ft_strcmp(p->args[i], ">") == 0)
+		if (i > 0 && ft_strncmp(p->args[i], "<", 1) == 0)
+			p->infile = ft_strdup(p->args[i - 1]);
+		if (p->args[i + 1] != NULL && ft_strncmp(p->args[i], ">", 1) == 0)
 		{
-			p->outfile = p->args[i + 1];
+			p->outfile = ft_strdup(p->args[i + 1]);
 			p->outflag = O_WRONLY | O_CREAT;
 		}
-		if (p->args[i + 1] != NULL && ft_strcmp(p->args[i], ">>") == 0)
+		if (p->args[i + 1] != NULL && ft_strncmp(p->args[i], ">>", 2) == 0)
 		{
-			p->outfile = p->args[i + 1];
+			p->outfile = ft_strdup(p->args[i + 1]);
 			p->outflag = O_WRONLY | O_CREAT | O_APPEND;
 		}
-		if (p->args[i + 1] != NULL && ft_strcmp(p->args[i], "<<") == 0)
+		if (p->args[i + 1] != NULL && ft_strncmp(p->args[i], "<<", 2) == 0)
 			p->infile = ft_strdup(".heredoc");
 		i++;
 	}
