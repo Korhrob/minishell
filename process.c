@@ -17,14 +17,13 @@ t_process	*new_process(char *line)
 	p->outfile = NULL;
 	p->outflag = 0;
 	p->line = line;
-	set_inout(p);
+	set_inout(p); // LEAKS
 	p->args = ft_split_quotes(p->line, ' ', 0);
 	if (p->args == NULL)
 	{
 		free(p);
 		return (NULL);
 	}
-	//align_args(p);
 	rebind_args(p);
 	for (int i = 0; p->args[i] != NULL; i++)
 		ft_printf("%s\n", p->args[i]);

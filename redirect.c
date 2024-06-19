@@ -8,29 +8,37 @@
 static int	in_heredoc(t_process *p, char *line)
 {
 	(void)line;
+	if (p->infile != NULL)
+		free(p->infile);
 	p->infile = ft_strdup(".heredoc");
 	ft_printf("set in %s\n", ".heredoc");
 	return (2);
 }
 
-static int	out_file_append(t_process *p, char *line)
-{
-	p->outfile = get_filename(line);
-	p->outflag = O_WRONLY | O_CREAT | O_APPEND;
-	ft_printf("set out %s\n", p->outfile);
-	return (2);
-}
-
 static int	in_file(t_process *p, char *line)
 {
+	if (p->infile != NULL)
+		free(p->infile);
 	p->infile = get_filename(line);
 	p->inflag = O_RDONLY;
 	ft_printf("set in %s\n", p->infile);
 	return (1);
 }
 
+static int	out_file_append(t_process *p, char *line)
+{
+	if (p->infile != NULL)
+		free(p->outfile);
+	p->outfile = get_filename(line);
+	p->outflag = O_WRONLY | O_CREAT | O_APPEND;
+	ft_printf("set out %s\n", p->outfile);
+	return (2);
+}
+
 static int	out_file(t_process *p, char *line)
 {
+	if (p->infile != NULL)
+		free(p->outfile);
 	p->outfile = get_filename(line);
 	p->outflag = O_WRONLY | O_CREAT;
 	ft_printf("set out %s\n", p->outfile);
