@@ -42,7 +42,7 @@ int	process_heredoc(char *line, t_runtime *runtime)
 		if (ft_strncmp(line, "<<", 2) == 0)
 		{
 			line += 2;
-			delimiter = get_filename(line); //get_delimiter(line);
+			delimiter = get_filename(line);
 			if (delimiter == NULL)
 				return (0);
 			ft_printf("delimiter '%s'\n", delimiter);
