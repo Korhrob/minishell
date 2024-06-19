@@ -7,29 +7,28 @@
 #include <readline/history.h>
 
 
-// save str from current position till space or |
+/* exact same functionality as get_filename
 static char	*get_delimiter(char *line)
 {
 	char	*delimit;
-	int		i;
-	int		j;
+	int		len;
 
-	j = 0;
-	while (line[j] != 0 && line[j] != ' ' && line[j] != '|')
-		j++;
-	delimit = (char *)malloc(j);
+	while (*line != 0 && *line == ' ')
+		line++;
+	len = 0;
+	while (line[len] != 0)
+	{
+		if (ft_charset(line[len], " |<>"))
+			break ;
+		len++;
+	}
+	delimit = (char *)malloc(len + 1);
 	if (delimit == NULL)
 		return (NULL);
-	i = 0;
-	while (i < j)
-	{
-		delimit[i] = line[i];
-		i++;
-	}
-	delimit[i] = 0;
+	ft_strlcpy(delimit, line, len + 1);
 	return (delimit);
 }
-
+*/
 
 // process all heredocs but only retain the last one
 // return 1 if all heredocs succeed
@@ -43,14 +42,15 @@ int	process_heredoc(char *line, t_runtime *runtime)
 		if (ft_strncmp(line, "<<", 2) == 0)
 		{
 			line += 2;
-			delimiter = get_delimiter(line);
-			//ft_printf("\ndelimiter '%s'", delimiter);
+			delimiter = get_filename(line); //get_delimiter(line);
 			if (delimiter == NULL)
 				return (0);
+			ft_printf("\ndelimiter '%s'\n", delimiter);
 			ft_heredoc(O_WRONLY | O_CREAT, delimiter, runtime);
 			free(delimiter);
 		}
-		line++;
+		else
+			line++;
 	}
 	return (1);
 }
@@ -74,7 +74,7 @@ void	ft_heredoc(int flag, char *delimit, t_runtime *runtime)
 		if (*buffer == 0)
 			continue ;
 		ft_printf_fd(fd, "%s\n", buffer);
-		if (ft_strcmp(buffer, delimit) == 0)
+		if (ft_strncmp(buffer, delimit, ft_strlen(delimit)) == 0)
 		{
 			free(buffer);
 			break ;

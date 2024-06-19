@@ -3,24 +3,64 @@
 #include <stdlib.h>
 #include "minishell.h"
 
-// check if str is invalid
+// if c is any character in set return 1
+int	ft_charset(char c, const char *set)
+{
+	int	i;
+
+	i = 0;
+	while (set[i] != 0)
+	{
+		if (c == set[i])
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+// moves str to first char after << < or >
+// then gets length until next syntax symbol
+// then copies the chars until that point into a new string
+char	*get_filename(char *str)
+{
+	char	*out;
+	int		len;
+
+	while (*str == ' ')
+		str++;
+	len = 0;
+	while (str[len] != 0)
+	{
+		if (ft_charset(str[len], " |<>"))
+			break ;
+		len++;
+	}
+	out = (char *) malloc(len + 1);
+	if (out == NULL)
+		return (NULL);
+	ft_strlcpy(out, str, len + 1);
+	return (out);
+}
+
+// check if str is contains syntax
 // flag 1 prints the syntax error
 static char	*syntax_cmp(char *line)
 {
 	int			i;
+	int			len;
 	static char	*invalid[] = {
 		"<<",
 		">>",
 		"|",
 		"<",
 		">"
-		//"" // newline, might not need
 	};
 
 	i = 0;
-	while (i < 6)
+	while (i < 5)
 	{
-		if (ft_strncmp(line, invalid[i], ft_strlen(invalid[i])) == 0)
+		len = ft_strlen(invalid[i]);
+		if (ft_strncmp(line, invalid[i], len) == 0)
 			return (invalid[i]);
 		i++;
 	}
@@ -56,50 +96,3 @@ int	syntax_error(char *line)
 	}
 	return (0);
 }
-
-// NOTE: not used anymore
-/*
-int	validate_args(char **pipes)
-{
-	int	i;
-
-	i = 0;
-	while (pipes[i] != NULL)
-	{
-		if (syntax_error(pipes[i], 0) && syntax_error(pipes[i + 1], 1))
-			return (0);
-		i++;
-	}
-	return (1);
-}
-*/
-
-// separates string array args with delimiter string "|"
-// not used anymore
-/*
-char	**pipe_cut(char **args)
-{
-	char	**pipe_args;
-	int		count;
-	int		i;
-
-	count = 0;
-	while (args[count] != NULL)
-	{
-		if (ft_strcmp(args[count], "|") == 0)
-			break ;
-		count++;
-	}
-	pipe_args = malloc(sizeof(char *) * (count + 1));
-	if (pipe_args == NULL)
-		return (NULL);
-	i = 0;
-	while (i < count)
-	{
-		pipe_args[i] = args[i];
-		i++;
-	}
-	pipe_args[i] = NULL;
-	return (pipe_args);
-}
-*/

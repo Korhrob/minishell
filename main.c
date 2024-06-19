@@ -19,46 +19,40 @@ void	ft_exit(int ecode, t_runtime *runtime)
 }
 
 // execute all commands here
-void	do_command(char **args, t_runtime *runtime)
+void	do_command(t_process *p, t_runtime *runtime)
 {
-	t_process	*child;
-
-	if (ft_quote_check_arr(args) == 0)
+	(void)runtime;
+	if (ft_quote_check_arr(p->args) == 0)
 	{
 		ft_printf("idleshell: unexpected EOF\n");
 		ft_exit(2, runtime);
 	}
-	(void)runtime;
-	child = new_process(args);
-	if (child == NULL)
-		return ;
-	if (ft_strcmp(*args, "history") == 0)
-		print_history(args + 1, runtime);
+	if (ft_strcmp(*(p->args), "history") == 0)
+		print_history((p->args + 1), runtime);
 	else
 	{
-		ft_printf("do command %s\n", *args); // debug
-		begin_pipe(child);
+		ft_printf("do command %s\n", *(p->args)); // debug
+		begin_pipe(p);
 	}
-	clean_process(child);
 }
 
 // exectue all builtin commands here
-void	do_builtin(char **args, int cmd, t_runtime *runtime)
+void	do_builtin(t_process *p, int cmd, t_runtime *runtime)
 {
 	if (cmd == EXIT)
 		ft_exit(0, runtime);
 	else if (cmd == PWD)
 		cmd_pwd();
 	else if (cmd == CD)
-		cmd_cd(args, runtime);
+		cmd_cd(p->args, runtime);
 	else if (cmd == ENV)
 		cmd_env(runtime);
 	else if (cmd == UNSET)
-		cmd_unset(args[1], runtime);
+		cmd_unset(p->args[1], runtime);
 	else if (cmd == EXPORT)
-		cmd_export(args[1], runtime);
+		cmd_export(p->args[1], runtime);
 	else
-		ft_printf("builtin %s\n", *args); // not needed
+		ft_printf("builtin %s\n", *(p->args)); // not needed
 }
 
 // gets and returns enum if current string is builtin command
@@ -88,28 +82,21 @@ int	get_builtin(char *args)
 // expand $, execute args
 int	execute_args(char **pipes, t_runtime *runtime)
 {
-	char	**pipe_args;
-	int		builtin;
+	int			builtin;
+	t_process	*process;
 
-	(void)builtin;
-	(void)runtime;
 	while (*pipes != NULL)
 	{
-		// do expansion
-		pipe_args = ft_split_quotes(*pipes, ' ', 0);
-		if (pipe_args == NULL)
+		// expand
+		process = new_process(*pipes);
+		if (process == NULL)
 			return (-1);
-		if (*pipe_args == 0)
-		{
-			ft_free_arr(pipe_args);
-			return (-1);
-		}
-		builtin = get_builtin(*pipe_args);
+		builtin = get_builtin(process->args[0]);
 		if (builtin != -1)
-			do_builtin(pipe_args, builtin, runtime);
+			do_builtin(process, builtin, runtime);
 		else
-			do_command(pipe_args, runtime);
-		ft_free_arr(pipe_args); //double free?
+			do_command(process, runtime);
+		clean_process(process);
 		pipes++;
 	}
 	return (-1);

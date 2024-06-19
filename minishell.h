@@ -39,6 +39,7 @@ typedef struct s_process
 	char	*infile;
 	char	*outfile;
 	char	**args;
+	char	*line;
 }	t_process;
 
 // history
@@ -57,9 +58,9 @@ void		signal_reset(void);
 void		rl_replace_line(const char *str, int i);
 
 // pipes
-t_process	*new_process(char **args);
-void		clean_process(t_process *p);
-void		set_inout(t_process *p);
+t_process	*new_process(char *line);
+void		clean_process(t_process *process);
+void		set_inout(t_process *process);
 void		begin_pipe(t_process *process);
 int			redirect(int pipefd[2], t_process *process);
 
@@ -68,6 +69,7 @@ void		ft_heredoc(int flag, char *delimit, t_runtime *runtime);
 int			process_heredoc(char *line, t_runtime *runtime);
 
 // parse
-int 		syntax_error(char *line);
+int			syntax_error(char *line);
+char		*get_filename(char *str);
 
 #endif

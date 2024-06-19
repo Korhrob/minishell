@@ -75,6 +75,9 @@ char	*ft_strtrim_quote(const char *str)
 	int		len;
 
 	len = ft_strlen(str);
+	if (len == 0)
+		return (NULL);
+	c = 0;
 	if (str[len - 1] == '\'' || str[len - 1] == '\"')
 		c = str[len - 1];
 	if (str[0] == c)
