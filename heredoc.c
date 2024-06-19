@@ -45,7 +45,7 @@ int	process_heredoc(char *line, t_runtime *runtime)
 			delimiter = get_filename(line); //get_delimiter(line);
 			if (delimiter == NULL)
 				return (0);
-			ft_printf("\ndelimiter '%s'\n", delimiter);
+			ft_printf("delimiter '%s'\n", delimiter);
 			ft_heredoc(O_WRONLY | O_CREAT, delimiter, runtime);
 			free(delimiter);
 		}
@@ -74,17 +74,12 @@ void	ft_heredoc(int flag, char *delimit, t_runtime *runtime)
 		if (*buffer == 0)
 			continue ;
 		ft_printf_fd(fd, "%s\n", buffer);
-		if (ft_strncmp(buffer, delimit, ft_strlen(delimit)) == 0)
+		if (ft_strcmp(buffer, delimit) == 0)
 		{
 			free(buffer);
 			break ;
 		}
 		free(buffer);
-		if (g_exit_status != 0)
-		{
-			signal_reset();
-			break ;
-		}
 	}
 	close (fd);
 }

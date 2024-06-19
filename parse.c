@@ -96,6 +96,3 @@ int	syntax_error(char *line)
 	}
 	return (0);
 }
-
-// NOTE: <<< should display "syntax error near unexpected token `newline'"
-// but ours prints "syntax error near unexpected token `<'"
