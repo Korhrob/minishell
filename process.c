@@ -17,7 +17,7 @@ t_process	*new_process(char *line)
 	p->outfile = NULL;
 	p->outflag = 0;
 	p->line = line;
-	set_inout(p); // LEAKS
+	set_inout(p);
 	p->args = ft_split_quotes(p->line, ' ', 0);
 	if (p->args == NULL)
 	{
