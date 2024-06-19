@@ -73,5 +73,6 @@ int			process_heredoc(char *line, t_runtime *runtime);
 // parse
 int			syntax_error(char *line);
 char		*get_filename(char *str);
+void		align_args(t_process *p);
 
 #endif

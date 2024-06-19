@@ -12,6 +12,7 @@ static int	in_heredoc(t_process *p, char *line)
 	ft_printf("set in %s\n", ".heredoc");
 	return (2);
 }
+
 static int	out_file_append(t_process *p, char *line)
 {
 	p->outfile = get_filename(line);
@@ -38,6 +39,10 @@ static int	out_file(t_process *p, char *line)
 
 // initialize redirections and heredoc
 // also set up file flags for outfile
+// NOTE: should probably move p->line forward
+// all the way to first argument (command)
+// the string array containing line is freed outside of t_process,
+// so should be ok to move it
 void	set_inout(t_process *p)
 {
 	char	*ptr;

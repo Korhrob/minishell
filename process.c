@@ -17,13 +17,14 @@ t_process	*new_process(char *line)
 	p->outfile = NULL;
 	p->outflag = 0;
 	p->line = line;
-	p->args = ft_split_quotes(line, ' ', 0);
+	set_inout(p);
+	p->args = ft_split_quotes(p->line, ' ', 0);
 	if (p->args == NULL)
 	{
 		free(p);
 		return (NULL);
 	}
-	set_inout(p);
+	align_args(p);
 	return (p);
 }
 

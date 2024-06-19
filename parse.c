@@ -96,3 +96,38 @@ int	syntax_error(char *line)
 	}
 	return (0);
 }
+
+// realigns t_process line to first command
+// (after all redirections)
+// <asd<qwe>out cat, expected out = cat (easy)
+// < asd < qwer > out cat, expected out = cat (hard)
+void	align_args(t_process *p)
+{
+	int		flag;
+	char	**cmd;
+	char	*str;
+
+	flag = 0;
+	cmd = p->args;
+	while (*cmd != NULL)
+	{
+		str = *cmd;
+		if (is_charset(**cmd, "<>"))
+		{
+			while (is_charset(*str, "<>"))
+				str++;
+			if (*str == 0)
+				flag = 1;
+		}
+		if (!is_charset(**cmd, "<>"))
+		{
+			if (flag == 0)
+			{
+				ft_printf("cmd: %s\n", *cmd); // reduce 3 lines here
+				return ;
+			}
+			flag = 0;
+		}
+		cmd++;
+	}
+}

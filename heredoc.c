@@ -81,5 +81,6 @@ void	ft_heredoc(int flag, char *delimit, t_runtime *runtime)
 		}
 		free(buffer);
 	}
+	ft_printf("close heredoc\n");
 	close (fd);
 }
