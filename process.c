@@ -24,7 +24,10 @@ t_process	*new_process(char *line)
 		free(p);
 		return (NULL);
 	}
-	align_args(p);
+	//align_args(p);
+	rebind_args(p);
+	for (int i = 0; p->args[i] != NULL; i++)
+		ft_printf("%s\n", p->args[i]);
 	return (p);
 }
 

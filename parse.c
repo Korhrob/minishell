@@ -101,6 +101,7 @@ int	syntax_error(char *line)
 // (after all redirections)
 // <asd<qwe>out cat, expected out = cat (easy)
 // < asd < qwer > out cat, expected out = cat (hard)
+/*
 void	align_args(t_process *p)
 {
 	int		flag;
@@ -128,6 +129,47 @@ void	align_args(t_process *p)
 			}
 			flag = 0;
 		}
+		cmd++;
+	}
+}
+*/
+
+static void	set_flag(char *str, int *flag)
+{
+	if (is_charset(*str, "<>"))
+	{
+		while (is_charset(*str, "<>"))
+			str++;
+		if (*str == 0)
+			*flag = 1;
+	}
+}
+
+// rebind command and its args to the start of arg
+void	rebind_args(t_process *p)
+{
+	int		flag;
+	int		i;
+	char	**cmd;
+
+	flag = 0;
+	i = 0;
+	cmd = p->args;
+	while (*cmd != NULL)
+	{
+		set_flag(*cmd, &flag);
+		if (!is_charset(**cmd, "<>"))
+		{
+			if (flag == 0)
+			{
+				p->args[i] = *cmd;
+				i++;
+			}
+			else
+				free(*cmd);
+			flag = 0;
+		}
+		p->args[i] = 0;
 		cmd++;
 	}
 }
