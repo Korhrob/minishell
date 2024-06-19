@@ -87,7 +87,7 @@ int	execute_args(char **pipes, t_runtime *runtime)
 
 	while (*pipes != NULL)
 	{
-		// expand
+		// expand *pipes
 		process = new_process(*pipes);
 		if (process == NULL)
 			return (-1);

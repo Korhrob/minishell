@@ -4,7 +4,7 @@ LDFLAG		=	-g -fsanitize=address
 RL_INC		=	-I ~/.brew/opt/readline/include/readline
 RL_LIB		=	-L ~/.brew/opt/readline/lib
 NAME		=	idleshell #rename to minishell later
-SRC			=	main.c parse.c history.c signal.c process.c heredoc.c
+SRC			=	main.c parse.c history.c signal.c process.c heredoc.c redirect.c
 BUILTINS	=	builtins/builtin_pwd.c builtins/builtin_cd.c builtins/builtin_env.c builtins/builtin_unset.c	\
 				builtins/builtin_export.c
 PIPEX		=	pipex/pipex.c pipex/redirect.c

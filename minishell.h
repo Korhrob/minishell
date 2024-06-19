@@ -62,6 +62,8 @@ t_process	*new_process(char *line);
 void		clean_process(t_process *process);
 void		set_inout(t_process *process);
 void		begin_pipe(t_process *process);
+
+// redirect
 int			redirect(int pipefd[2], t_process *process);
 
 // heredoc

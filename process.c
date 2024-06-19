@@ -4,48 +4,6 @@
 #include <stdlib.h>
 #include <fcntl.h>
 
-// initialize redirections and heredoc
-// also set up file flags for outfile
-// NOTE: should do for entire line
-void	set_inout(t_process *p)
-{
-	char	*ptr;
-
-	ptr = p->line;
-	while (*ptr != 0)
-	{
-		if (ft_strncmp(ptr, "<<", 2) == 0)
-		{
-			// cut string from this position onwards till any syntax
-			ptr += 2;
-			p->infile = ft_strdup(".heredoc");
-		}
-		else if (ft_strncmp(ptr, ">>", 2) == 0)
-		{
-			// cut string from this position onwards
-			ptr += 2;
-			p->outfile = get_filename(ptr);
-			p->outflag = O_WRONLY | O_CREAT | O_APPEND;
-		}
-		else if (ft_strncmp(ptr, "<", 1) == 0)
-		{
-			// cut string from this position onwards
-			ptr++;
-			p->infile = get_filename(ptr);
-			p->inflag = O_RDONLY;
-		}
-		else if (ft_strncmp(ptr, ">", 1) == 0)
-		{
-			// cut string from this position onwards
-			ptr++;
-			p->outfile = get_filename(ptr);
-			p->outflag = O_WRONLY | O_CREAT;
-		}
-		else
-			ptr++;
-	}
-}
-
 // create new process struct
 t_process	*new_process(char *line)
 {
@@ -60,7 +18,7 @@ t_process	*new_process(char *line)
 	p->outflag = 0;
 	p->line = line;
 	p->args = ft_split_quotes(line, ' ', 0);
-	// check if split failed here
+	// check if split failed here, probably cant execve correctly
 	set_inout(p);
 	return (p);
 }
@@ -74,5 +32,6 @@ void	clean_process(t_process *p)
 		free(p->infile);
 	if (p->outfile != NULL)
 		free(p->outfile);
+	ft_free_arr(p->args);
 	free(p);
 }

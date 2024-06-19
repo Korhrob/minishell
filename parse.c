@@ -4,7 +4,7 @@
 #include "minishell.h"
 
 // if c is any character in set return 1
-int	ft_charset(char c, const char *set)
+static int	is_charset(char c, const char *set)
 {
 	int	i;
 
@@ -31,7 +31,7 @@ char	*get_filename(char *str)
 	len = 0;
 	while (str[len] != 0)
 	{
-		if (ft_charset(str[len], " |<>"))
+		if (is_charset(str[len], " |<>"))
 			break ;
 		len++;
 	}
@@ -96,3 +96,6 @@ int	syntax_error(char *line)
 	}
 	return (0);
 }
+
+// NOTE: <<< should display "syntax error near unexpected token `newline'"
+// but ours prints "syntax error near unexpected token `<'"
