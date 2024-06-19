@@ -47,10 +47,6 @@ static int	out_file(t_process *p, char *line)
 
 // initialize redirections and heredoc
 // also set up file flags for outfile
-// NOTE: should probably move p->line forward
-// all the way to first argument (command)
-// the string array containing line is freed outside of t_process,
-// so should be ok to move it
 void	set_inout(t_process *p)
 {
 	char	*ptr;

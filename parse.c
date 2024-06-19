@@ -97,43 +97,7 @@ int	syntax_error(char *line)
 	return (0);
 }
 
-// realigns t_process line to first command
-// (after all redirections)
-// <asd<qwe>out cat, expected out = cat (easy)
-// < asd < qwer > out cat, expected out = cat (hard)
-/*
-void	align_args(t_process *p)
-{
-	int		flag;
-	char	**cmd;
-	char	*str;
-
-	flag = 0;
-	cmd = p->args;
-	while (*cmd != NULL)
-	{
-		str = *cmd;
-		if (is_charset(**cmd, "<>"))
-		{
-			while (is_charset(*str, "<>"))
-				str++;
-			if (*str == 0)
-				flag = 1;
-		}
-		if (!is_charset(**cmd, "<>"))
-		{
-			if (flag == 0)
-			{
-				ft_printf("cmd: %s\n", *cmd); // reduce 3 lines here
-				return ;
-			}
-			flag = 0;
-		}
-		cmd++;
-	}
-}
-*/
-
+// sets flag to 1 if string consist only of < or >
 static void	set_flag(char *str, int *flag)
 {
 	if (is_charset(*str, "<>"))
@@ -145,7 +109,7 @@ static void	set_flag(char *str, int *flag)
 	}
 }
 
-
+// swap two strings pointers
 static void	ft_swap_str(char **s1, char **s2)
 {
 	char	*t;
@@ -155,8 +119,29 @@ static void	ft_swap_str(char **s1, char **s2)
 	*s2 = t;
 }
 
+// "cut" of any part of string after <>
+static void ft_cut_str(char **str, const char *set)
+{
+	int	i;
 
-// rebind command and its args to the start of arg
+	(void)set;
+	i = 0;
+	while ((*str)[i] != 0)
+	{
+		if (is_charset((*str)[i], set))
+		{
+			while ((*str)[i] != 0)
+			{
+				(*str)[i]  = 0;
+				i++;
+			}
+		}
+		else
+			i++;
+	}
+}
+
+// rebind command and its args to the start of arg, free redirections
 void	rebind_args(t_process *p)
 {
 	int		flag;
@@ -174,6 +159,7 @@ void	rebind_args(t_process *p)
 			if (flag == 0)
 			{
 				ft_swap_str(&p->args[i], &cmd[0]);
+				ft_cut_str(&p->args[i], "<>");
 				i++;
 			}
 			flag = 0;
