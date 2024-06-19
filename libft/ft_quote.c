@@ -15,13 +15,21 @@
 // return 0 if str has unclosed quotes
 int	ft_quote_check(const char *str)
 {
-	int	flag;
+	int		flag;
+	char	c;
 
 	flag = 0;
+	c = 0;
 	while (*str != 0)
 	{
-		if (*str == '\'' || *str == '\"')
+		if (c == 0 && (*str == '\'' || *str == '\"'))
+			c = *str;
+		if (*str == c)
+		{
 			flag ^= 1;
+			if (!(flag & 1))
+				c = 0;
+		}
 		str++;
 	}
 	return (!(flag & 1));

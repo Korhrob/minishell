@@ -18,7 +18,11 @@ t_process	*new_process(char *line)
 	p->outflag = 0;
 	p->line = line;
 	p->args = ft_split_quotes(line, ' ', 0);
-	// check if split failed here, probably cant execve correctly
+	if (p->args == NULL)
+	{
+		free(p);
+		return (NULL);
+	}
 	set_inout(p);
 	return (p);
 }
