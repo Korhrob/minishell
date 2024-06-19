@@ -75,6 +75,6 @@ int			syntax_error(char *line);
 char		*get_filename(char *str);
 void		align_args(t_process *p);
 
-void		realign_args(t_process *p); // TEST
+void		rebind_args(t_process *p); // TEST
 
 #endif

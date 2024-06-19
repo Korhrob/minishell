@@ -165,10 +165,10 @@ void	rebind_args(t_process *p)
 				p->args[i] = *cmd;
 				i++;
 			}
-			else
-				free(*cmd);
+			// else free
 			flag = 0;
 		}
+		// else free
 		p->args[i] = 0;
 		cmd++;
 	}
