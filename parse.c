@@ -145,6 +145,22 @@ static void	set_flag(char *str, int *flag)
 	}
 }
 
+static int	set_arg(t_process *p, char *str, int *flag, int *i)
+{
+	if (!is_charset(*str, "<>"))
+	{
+		if (*flag == 0)
+		{
+			p->args[*i] = str;
+			*(i)++;
+		}
+		// else free
+		*flag = 0;
+	}
+	// else free
+	return (0);
+}
+
 // rebind command and its args to the start of arg
 void	rebind_args(t_process *p)
 {
@@ -158,17 +174,7 @@ void	rebind_args(t_process *p)
 	while (*cmd != NULL)
 	{
 		set_flag(*cmd, &flag);
-		if (!is_charset(**cmd, "<>"))
-		{
-			if (flag == 0)
-			{
-				p->args[i] = *cmd;
-				i++;
-			}
-			// else free
-			flag = 0;
-		}
-		// else free
+		set_arg(p, *cmd, &flag, &i);
 		p->args[i] = 0;
 		cmd++;
 	}
