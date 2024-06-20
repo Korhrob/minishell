@@ -70,15 +70,12 @@ static char	*syntax_cmp(char *line)
 
 static int	check_syntax_error(char *cur, char *prev)
 {
-	if (cur != NULL && prev != NULL)
-	{
-		// special case if prev is | and cur is not | it is not a syntax error
-		if (*prev == '|' && *cur != '|')
-			return (0);
-		ft_printf("syntax error near unexpected token `%s'\n", cur);
-		return (1);
-	}
-	return (0);
+	if (cur == NULL || prev == NULL)
+		return (0);
+	if (*prev == '|' && *cur != '|')
+		return (0);
+	ft_printf("syntax error near unexpected token `%s'\n", cur);
+	return (1);
 }
 
 // check if str is invalid
