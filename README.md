@@ -30,4 +30,5 @@ for the appropriate builtin command (or -1 if command is not a builtin).
 
 NOTE: TODO!!!
 If the runtime has more than 1 pipe, all the commands should be executed in child processes.
-Otherwise execute single builtin in parent.
+Only the last builtin in the pipe should execute.
+If there are no pipes, handle builtins in the parent and non builtins in child.
