@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 // if c is any character in set return 1
-// USE LIBFT
+// MOVE TO LIBFT
 int	is_charset(char c, const char *set)
 {
 	int	i;
@@ -78,6 +78,18 @@ static int	check_syntax_error(char *cur, char *prev)
 	return (1);
 }
 
+static int	empty_pipe(char *line)
+{
+	while (*line == ' ')
+		line++;
+	if (*line == '|')
+	{
+		ft_printf("syntax error near unexpected token `|'\n");
+		return (1);
+	}
+	return (0);
+}
+
 // check if str is invalid
 // return 1 if syntax error is found
 // NOTE: after syntax there must be a non syntax character
@@ -87,6 +99,8 @@ int	syntax_error(char *line)
 	char	*prev;
 
 	prev = NULL;
+	if (empty_pipe(line))
+		return (1);
 	while (*line != 0)
 	{
 		cur = syntax_cmp(line);

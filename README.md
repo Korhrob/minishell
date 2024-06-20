@@ -58,9 +58,6 @@ should not change cur directory (too many arguments)
 cd  
 should move to home (if HOME is set)  
 
-   |cat  
-should not work, must have args before pipe  
-
 ## NON MANDATORY
 
 unset HOME  
