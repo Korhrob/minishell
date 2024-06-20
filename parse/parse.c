@@ -70,6 +70,7 @@ static char	*syntax_cmp(char *line)
 
 // check if str is invalid
 // return 1 if syntax error is found
+// NOTE: after syntax there must be a non syntax character
 int	syntax_error(char *line)
 {
 	char	*cur;

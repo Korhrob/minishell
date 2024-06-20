@@ -32,3 +32,23 @@ NOTE: TODO!!!
 If the runtime has more than 1 pipe, all the commands should be executed in child processes.
 Only the last builtin in the pipe should execute.
 If there are no pipes, handle builtins in the parent and non builtins in child.
+
+
+
+ISSUES MANDATORY
+cd .. hi
+should not change cur directory
+
+cd
+should move to home
+
+ISSUES *NON MANDATORY
+unset HOME
+cd ~
+should work
+
+ls |
+should wait for input cmd?
+
+
+

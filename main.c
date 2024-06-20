@@ -91,11 +91,14 @@ int	execute_args(char **pipes, t_runtime *runtime)
 		process = new_process(*pipes);
 		if (process == NULL)
 			return (-1);
-		builtin = get_builtin(process->args[0]);
-		if (builtin != -1)
-			do_builtin(process, builtin, runtime);
-		else
-			do_command(process, runtime);
+		if (process->args[0] != NULL)
+		{
+			builtin = get_builtin(process->args[0]);
+			if (builtin != -1)
+				do_builtin(process, builtin, runtime);
+			else
+				do_command(process, runtime);
+		}
 		clean_process(process);
 		pipes++;
 	}
