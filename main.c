@@ -1,3 +1,6 @@
+#include "minishell.h"
+#include "libft/libft.h"
+#include "builtins/builtins.h"
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -5,9 +8,6 @@
 #include <signal.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-#include "libft/libft.h"
-#include "minishell.h"
-#include "builtins/builtins.h"
 
 
 // exits program and unlinks history file

@@ -1,9 +1,9 @@
+#include "minishell.h"
+#include "libft/libft.h"
 #include <fcntl.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/stat.h>
-#include "libft/libft.h"
-#include "minishell.h"
 #include <readline/history.h>
 
 // NOTE: move to libft

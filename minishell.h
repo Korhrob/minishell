@@ -43,38 +43,42 @@ typedef struct s_process
 }	t_process;
 
 // history
-
 void		record_history(char *line, t_runtime *runtime);
 void		print_history(char **args, t_runtime *runtime);
 
 // signals
-
 void		signal_init(int flag);
 void		signal_signint(int signo);
 void		signal_reset(void);
-
-// readline JANK
-
-void		rl_replace_line(const char *str, int i);
-
-// pipes
-t_process	*new_process(char *line);
-void		clean_process(t_process *process);
-void		set_inout(t_process *process);
-void		begin_pipe(t_process *process);
-
-// redirect
-int			redirect(int pipefd[2], t_process *process);
 
 // heredoc
 void		ft_heredoc(int flag, char *delimit, t_runtime *runtime);
 int			process_heredoc(char *line, t_runtime *runtime);
 
+// readline
+void		rl_replace_line(const char *str, int i);
+
+// process
+t_process	*new_process(char *line);
+void		clean_process(t_process *process);
+
 // parse
 int			syntax_error(char *line);
 char		*get_filename(char *str);
 void		align_args(t_process *p);
+int			is_charset(char c, const char *set);
 
-void		rebind_args(t_process *p); // TEST
+// file_redirections
+void		file_redirection(t_process *process);
+
+// array_handler
+void		rebind_args(t_process *p);
+
+// pipex
+void		begin_pipe(t_process *process);
+
+// pipex redirect
+int			redirect(int pipefd[2], t_process *process);
+
 
 #endif

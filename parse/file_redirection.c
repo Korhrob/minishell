@@ -1,6 +1,6 @@
 
-#include "libft/libft.h"
-#include "minishell.h"
+#include "../minishell.h"
+#include "../libft/libft.h"
 #include <unistd.h>
 #include <stdlib.h>
 #include <fcntl.h>
@@ -47,7 +47,7 @@ static int	out_file(t_process *p, char *line)
 
 // initialize redirections and heredoc
 // also set up file flags for outfile
-void	set_inout(t_process *p)
+void	file_redirection(t_process *p)
 {
 	char	*ptr;
 

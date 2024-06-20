@@ -6,30 +6,6 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-
-/* exact same functionality as get_filename
-static char	*get_delimiter(char *line)
-{
-	char	*delimit;
-	int		len;
-
-	while (*line != 0 && *line == ' ')
-		line++;
-	len = 0;
-	while (line[len] != 0)
-	{
-		if (ft_charset(line[len], " |<>"))
-			break ;
-		len++;
-	}
-	delimit = (char *)malloc(len + 1);
-	if (delimit == NULL)
-		return (NULL);
-	ft_strlcpy(delimit, line, len + 1);
-	return (delimit);
-}
-*/
-
 // process all heredocs but only retain the last one
 // return 1 if all heredocs succeed
 // return 0 if any heredoc fails
