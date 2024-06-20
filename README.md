@@ -10,7 +10,7 @@ The entire string is processed for syntax errors and heredocs before passing the
 The string is iterated and compared to a set of strings such as "<<" ">>" "<" ">" "|" and if the previous and current portion of
 the string are both syntax strings, we can assume there is a syntax error.  
 
-!!!NOTE: TODO!!!
+!!!NOTE: TODO!!!  
 Any syntax string should be followed up by a non syntax and non whitespace character to be valid, (except '|')  
 A string ending with a pipe char '|' should ask for cmd args in stdin. (?)  
 
@@ -33,10 +33,20 @@ NOTE: "arg1>outfile" will simply overwrite the ">outfile" portion with 0's and n
 We check our first arg in process structs string array and compare it to defined strings for builtin commands,
 then return an enum for the specific builtin command (or -1 if command is not a builtin).  
 
-!!!NOTE: TODO!!!
+!!!NOTE: TODO!!!  
 If the runtime has more than 1 pipe, all the commands should be executed in child processes.  
 Only the last builtin in the pipe should execute.  
 If there are no pipes, handle builtins in the parent and non builtins in child.  
+
+## Signals
+
+!!!NOTE: TODO!!!  
+Signal ctrl + c should immediately close all heredocs  
+
+## Heredoc
+
+!!!NOTE: TODO!!!  
+Should only execute the last pipe with heredoc  
 
 # ISSUES
 
@@ -47,6 +57,9 @@ should not change cur directory (too many arguments)
 
 cd  
 should move to home (if HOME is set)  
+
+   |cat  
+should not work, must have args before pipe  
 
 ## NON MANDATORY
 

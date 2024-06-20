@@ -1,12 +1,13 @@
 #include "../minishell.h"
+#include "../libft/libft.h"
 #include <stdlib.h>
 
 // sets flag to 1 if string consist only of < or >
 static void	set_flag(char *str, int *flag)
 {
-	if (is_charset(*str, "<>"))
+	if (is_charset(*str, "<>")) // 
 	{
-		while (is_charset(*str, "<>"))
+		while (is_charset(*str, "<> ")) // 
 			str++;
 		if (*str == 0)
 			*flag = 1;
@@ -31,7 +32,7 @@ static void ft_cut_str(char **str, const char *set)
 	i = 0;
 	while ((*str)[i] != 0)
 	{
-		if (is_charset((*str)[i], set))
+		if (is_charset((*str)[i], set)) // 
 		{
 			while ((*str)[i] != 0)
 			{
@@ -67,7 +68,7 @@ void	rebind_args(t_process *p)
 	while (*cmd != NULL)
 	{
 		set_flag(*cmd, &flag);
-		if (!is_charset(**cmd, "<>"))
+		if (!is_charset(**cmd, "<>")) // 
 		{
 			if (flag == 0)
 			{

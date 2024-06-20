@@ -29,25 +29,25 @@ static void	child(int pipefd[2], t_process *process)
 // begins piping process
 void	begin_pipe(t_process *process)
 {
-		int		pipefd[2];
-		int		cid;
-		int		status;
+	int		pipefd[2];
+	int		cid;
+	int		status;
 
-		if (pipe(pipefd) == -1)
-		{
-			perror("pipe");
-			return ; //pipe failed
-		}
-		cid = fork();
-		if (cid == -1)
-		{
-			perror("fork");
-			return ; // fork failed
-		}
-		if (cid == 0)
-			child(pipefd, process);
-		close(pipefd[0]);
-		close(pipefd[1]);
-		status = 0;
-		waitpid(cid, &status, 0);
+	if (pipe(pipefd) == -1)
+	{
+		perror("pipe");
+		return ; //pipe failed
+	}
+	cid = fork();
+	if (cid == -1)
+	{
+		perror("fork");
+		return ; // fork failed
+	}
+	if (cid == 0)
+		child(pipefd, process);
+	close(pipefd[0]);
+	close(pipefd[1]);
+	status = 0;
+	waitpid(cid, &status, 0);
 }

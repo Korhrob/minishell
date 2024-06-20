@@ -195,16 +195,6 @@ int	main(int argc, char **argv, char **envp)
 	return (0);
 }
 
-// should first split by pipes
-// pipe split should respect quotes
-// then expand env variables
-// then split by spaces
-
-// other stuff to handle
-// echo 'asd | zxc' | cat
-//<<a cat|cat
-//infile<cat|cat>outfile
-
 // if any pipes occur, all commands are done in child
 // else if its builtin do it in parent
 

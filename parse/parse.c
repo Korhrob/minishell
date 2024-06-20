@@ -32,7 +32,7 @@ char	*get_filename(char *str)
 	len = 0;
 	while (str[len] != 0)
 	{
-		if (is_charset(str[len], " |<>"))
+		if (is_charset(str[len], "|<> ")) //
 			break ;
 		len++;
 	}
@@ -68,6 +68,19 @@ static char	*syntax_cmp(char *line)
 	return (NULL);
 }
 
+static int	check_syntax_error(char *cur, char *prev)
+{
+	if (cur != NULL && prev != NULL)
+	{
+		// special case if prev is | and cur is not | it is not a syntax error
+		if (*prev == '|' && *cur != '|')
+			return (0);
+		ft_printf("syntax error near unexpected token `%s'\n", cur);
+		return (1);
+	}
+	return (0);
+}
+
 // check if str is invalid
 // return 1 if syntax error is found
 // NOTE: after syntax there must be a non syntax character
@@ -80,11 +93,8 @@ int	syntax_error(char *line)
 	while (*line != 0)
 	{
 		cur = syntax_cmp(line);
-		if (cur != NULL && prev != NULL)
-		{
-			ft_printf("syntax error near unexpected token `%s'\n", cur);
+		if (check_syntax_error(cur, prev))
 			return (1);
-		}
 		prev = cur;
 		if (cur != NULL)
 			line += ft_strlen(cur);

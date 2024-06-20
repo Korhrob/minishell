@@ -1,5 +1,5 @@
-CC		= cc
-CFLAGS	= -Wall -Werror -Wextra
+CC		=	cc
+CFLAGS	=	-Wall -Werror -Wextra
 SRC		=	ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c ft_isprint.c \
 			ft_strlen.c ft_strlcpy.c ft_strlcat.c ft_toupper.c ft_tolower.c \
 		   	ft_strchr.c ft_strrchr.c ft_strncmp.c ft_strnstr.c ft_memset.c \
@@ -14,7 +14,7 @@ SRC		=	ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c ft_isprint.c \
 			ft_lstdelone_bonus.c ft_lstclear_bonus.c ft_lstiter_bonus.c ft_lstmap_bonus.c \
 			ft_free_arr.c ft_arr_len.c
 OBJ		=	$(SRC:.c=.o)
-NAME		= libft.a
+NAME	= libft.a
 
 all: $(NAME)
 
