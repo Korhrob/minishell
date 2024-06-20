@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 // if c is any character in set return 1
+// USE LIBFT
 int	is_charset(char c, const char *set)
 {
 	int	i;
