@@ -98,15 +98,17 @@ int	syntax_error(char *line)
 	char	*cur;
 	char	*prev;
 
+	cur = NULL;
 	prev = NULL;
-	if (empty_pipe(line))
+	if (empty_pipe(line)) // or uneven quotes
 		return (1);
 	while (*line != 0)
 	{
 		cur = syntax_cmp(line);
 		if (check_syntax_error(cur, prev))
 			return (1);
-		prev = cur;
+		if (*line != ' ')
+			prev = cur;
 		if (cur != NULL)
 			line += ft_strlen(cur);
 		else
