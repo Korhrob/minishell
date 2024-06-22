@@ -3,19 +3,18 @@
 #include <linux/limits.h>
 
 // Finds the old wd
-static char	*find_env(char **array, char *env)
+static char	*find_env(t_env **environ, char *env)
 {
-	char	**temp;
+	int		i;
 
-	temp = array;
-	while (*temp != NULL)
+	i = 0;
+	while (environ[i] != NULL)
 	{
-		if (!ft_strncmp(env, *temp, ft_strlen(env)))
-			break ;
-		temp++;
+		if (environ[i]->key != NULL)
+			if (!ft_strcmp(env, environ[i]->key))
+				return (environ[i]->value);
+		i++;
 	}
-	if (temp)
-		return (*temp);
 	return (NULL);
 }
 
@@ -27,14 +26,14 @@ static void	correct_wd(t_runtime *runtime)
 	char	*temp;
 	char	*old_env;
 
-	temp = find_env(runtime->env, "PWD=");
+	temp = find_env(runtime->env_struct, "PWD=");
 	if (temp == NULL)
 	{
-		if (find_env(runtime->env, "OLDPWD=") != NULL)
+		if (find_env(runtime->env_struct, "OLDPWD=") != NULL)
 			cmd_export("OLDPWD=", runtime);
 		return ;
 	}
-	if (find_env(runtime->env, "OLDPWD=") != NULL)
+	if (find_env(runtime->env_struct, "OLDPWD=") != NULL)
 	{
 		old_env = ft_strjoin("OLD", temp); // Handle freeing the string in export?
 		cmd_export(old_env, runtime);
@@ -51,7 +50,8 @@ static void	home_dir(t_runtime *runtime)
 {
 	char	*home;
 
-	home = find_env(runtime->env, "HOME=");
+	home = find_env(runtime->env_struct, "HOME=");
+	ft_printf("home = %s\n", home);
 	if (home == NULL)
 	{
 		ft_printf("idleshell: cd: HOME not set\n");
@@ -59,7 +59,6 @@ static void	home_dir(t_runtime *runtime)
 	}
 	else
 	{
-		home+=5;
 		if (chdir(home) == 0)
 		{
 			correct_wd(runtime);

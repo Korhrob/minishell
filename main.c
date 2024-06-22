@@ -41,7 +41,10 @@ void	do_command(char **args, t_runtime *runtime)
 void	do_builtin(char **args, int cmd, t_runtime *runtime)
 {
 	if (cmd == EXIT)
+	{
+		free_env(runtime->env_struct);
 		ft_exit(0);
+	}
 	else if (cmd == PWD)
 		cmd_pwd();
 	else if (cmd == CD)
@@ -144,7 +147,7 @@ static char	**set_env_array(char **envp)
 	int		i;
 	char	**envi;
 
-	envi = malloc(sizeof(char*) * (ft_array_len(envp) + 1));
+	envi = malloc(sizeof(char*) * (ft_array_len((void **)envp) + 1));
 	i = 0;
 	while (envp[i] != NULL)
 	{
@@ -155,10 +158,61 @@ static char	**set_env_array(char **envp)
 	return (envi);
 }
 
+static int	set_env(t_env *env, char *envp)
+{
+	char	*temp;
+
+	temp = envp;
+	while (*envp != 0)
+	{
+		if (*envp == '=')
+		{
+			envp++;
+			env->value = ft_strdup(envp);
+			if (!env->value)
+				return (0);
+			env->key = ft_strldup(temp, 0, ft_strlen_t(temp, '=') + 1);
+			if (!env->key)
+			{
+				free (env->value);
+				return (0);
+			}
+			return (1);
+		}
+		envp++;
+	}
+	return (1);
+}
+
+static t_env	**set_env_struct(char **envp)
+{
+	t_env	**env;
+	t_env	*env_new;
+	int		i;
+
+	i = 0;
+	env = (t_env **)malloc(sizeof(t_env *) * ft_array_len((void **)envp) + 1);
+	while (envp[i] != NULL)
+	{
+		env_new = (t_env *)malloc(sizeof(t_env));
+		env_new->key = NULL;
+		env_new->value = NULL;
+		if (set_env(env_new, envp[i]) != 1)
+		{
+			//do malloc check
+		}
+		env[i] = env_new;
+		i++;
+	}
+	env[i] = NULL;
+	return (env);
+}
+
 //Initialization of runtime and all the possible content it may have
 static void	init_runtime(t_runtime *runtime, char **envp)
 {
 	runtime->env = set_env_array(envp);
+	runtime->env_struct = set_env_struct(envp);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -176,6 +230,9 @@ int	main(int argc, char **argv, char **envp)
 		shell_interactive(&runtime);
 	else
 		shell_no_interactive();
+	free_env(runtime.env_struct);
 	ft_free_arr(runtime.env);
 	return (0);
 }
+
+//Remove the = character from the key string

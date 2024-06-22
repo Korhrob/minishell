@@ -7,11 +7,12 @@ void	cmd_env(t_runtime *runtime)
 	i = 0;
 	if (runtime == NULL)
 		return ;
-	if (runtime->env == NULL)
+	if (runtime->env_struct == NULL)
 		return ;
-	while (runtime->env[i] != NULL)
+	while (runtime->env_struct[i] != NULL)
 	{
-		ft_printf("%s\n", runtime->env[i]);
+		if (runtime->env_struct[i]->value)
+			ft_printf("%s%s\n", runtime->env_struct[i]->key, runtime->env_struct[i]->value);
 		i++;
 	}
 }

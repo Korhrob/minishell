@@ -17,13 +17,13 @@ static int	env_index_finder(char *env, t_runtime *runtime)
 		i++;
 	}
 	j = 0;
-	while (runtime->env[j] != NULL)
+	while (runtime->env_struct[j] != NULL)
 	{
-		if (!ft_strncmp(env, runtime->env[j], i))
+		if (!ft_strncmp(env, runtime->env_struct[j]->key, i))
 			break ;
 		j++;
 	}
-	if (j < ft_array_len(runtime->env))
+	if (j < ft_array_len((void **)runtime->env))
 		return (j);
 	return (-1);
 }
@@ -46,30 +46,82 @@ static char	*minitrim(char *str, char c)
 	return (strlocal);
 }
 
-static void	replace_env(char *env, t_runtime *runtime, int index)
+static int	create_env(char *envp, t_env *env)
 {
-	free(runtime->env[index]);
-	runtime->env[index] = ft_strdup(env);
+	char	*temp;
+
+	temp = envp;
+	while (*envp != 0)
+	{
+		if (*envp == '=')
+		{
+			envp++;
+			env->value = ft_strdup(envp);
+			if (!env->value)
+				return (0);
+			env->key = ft_strldup(temp, 0, ft_strlen_t(temp, '=') + 1);
+			if (!env->key)
+			{
+				free (env->value);
+				return (0);
+			}
+			return (1);
+		}
+		envp++;
+	}
+	env->key = ft_strdup(temp);
+	return (1);
 }
 
+// static void	replace_env(char *env, t_runtime *runtime, int index)
+// {
+// 	free(runtime->env[index]);
+// 	runtime->env[index] = ft_strdup(env);
+// }
+
 // Adds a string to the env array insine runtime at the end
-static void	create_env(char *env, t_runtime *runtime)
+// static void	create_env(char *env, t_runtime *runtime)
+// {
+// 	char	**tmparr;
+// 	int		i;
+
+// 	tmparr = malloc(sizeof(char *) * (ft_array_len(runtime->env) + 2));
+// 	i = 0;
+// 	while (runtime->env[i] != NULL)
+// 	{
+// 		tmparr[i] = runtime->env[i];
+// 		i++;
+// 	}
+// 	tmparr[i] = ft_strdup(env);
+// 	i++;
+// 	tmparr[i] = NULL;
+// 	free(runtime->env);
+// 	runtime->env = tmparr;
+// }
+
+static void	add_env(char *env, t_runtime *runtime)
 {
-	char	**tmparr;
+	t_env	**temp;
+	t_env	*new;
 	int		i;
 
-	tmparr = malloc(sizeof(char *) * (ft_array_len(runtime->env) + 2));
+	i = ft_array_len((void **)runtime->env_struct);
+	temp = (t_env **)malloc(sizeof(t_env *) * i + 2);
 	i = 0;
-	while (runtime->env[i] != NULL)
+	while (runtime->env_struct[i] != NULL)
 	{
-		tmparr[i] = runtime->env[i];
+		temp[i] = runtime->env_struct[i];
 		i++;
 	}
-	tmparr[i] = ft_strdup(env);
+	free(runtime->env_struct);
+	new = (t_env *)malloc(sizeof(t_env));
+	new->key = NULL;
+	new->value = NULL;
+	create_env(env, new);
+	temp[i] = new;
 	i++;
-	tmparr[i] = NULL;
-	free(runtime->env);
-	runtime->env = tmparr;
+	temp[i] = NULL;
+	runtime->env_struct = temp;
 }
 
 // Adds a string to the env array insine runtime at the end
@@ -84,10 +136,14 @@ void	cmd_export(char *env, t_runtime *runtime)
 	old_i = env_index_finder(env, runtime);
 	if (old_i > -1)
 	{
-		replace_env(env, runtime, old_i);
+		free_single_env(runtime->env_struct[old_i]);
+		runtime->env_struct[old_i] = (t_env *)malloc(sizeof(t_env));
+		runtime->env_struct[old_i]->key = NULL;
+		runtime->env_struct[old_i]->value = NULL;
+		create_env(env, runtime->env_struct[old_i]);
 		return ;
 	}
-	create_env(env, runtime);
+	add_env(env, runtime);
 }
 
 // Will change name later to be inline with other builtins, this function was made to

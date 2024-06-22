@@ -23,9 +23,16 @@ typedef enum e_builtin_cmd
 	BUILTIN_MAX
 }	t_builtin_cmd;
 
+typedef struct s_env
+{
+	char	*key;
+	char	*value;
+}	t_env;
+
 typedef struct s_runtime
 {
 	char	**env;
+	t_env	**env_struct;
 	//t_list	**child_pid;
 }	t_runtime;
 
@@ -35,6 +42,7 @@ typedef struct s_process
 	char	*outfile;
 	char	**args;
 }	t_process;
+
 
 // parse
 
