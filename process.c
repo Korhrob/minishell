@@ -5,10 +5,11 @@
 #include <fcntl.h>
 
 // create new process struct
-t_process	*new_process(char *line)
+t_process	*new_process(char *line, t_runtime *runtime)
 {
 	t_process	*p;
 
+	(void) runtime;
 	p = (t_process *)malloc(sizeof(t_process));
 	if (p == NULL)
 		return (NULL);
@@ -25,6 +26,8 @@ t_process	*new_process(char *line)
 		return (NULL);
 	}
 	rebind_args(p);
+	p->path = get_cmd_path(p->args, runtime->env);
+	ft_printf("%s\n", p->path);
 	for (int i = 0; p->args[i] != NULL; i++)
 		ft_printf("%s\n", p->args[i]);
 	return (p);
@@ -39,6 +42,8 @@ void	clean_process(t_process *p)
 		free(p->infile);
 	if (p->outfile != NULL)
 		free(p->outfile);
+	if (p->path != NULL)
+		free(p->path);
 	ft_free_arr(p->args);
 	free(p);
 }

@@ -20,7 +20,14 @@ static void	child(int pipefd[2], t_process *process)
 	close(pipefd[0]);
 	// f ok path (non builtin)
 	// directory check (non builtin)
-	//if (execve(process->path, process->args, envp) == -1)
+	if (process->path == NULL)
+	{
+		ft_printf("no such command %s\n", process->args[0]);
+		exit(1);
+	}
+	if (execve(process->path, process->args, NULL) == -1) {}
+	/*
+	*/
 	ft_printf("CHILD DONE '%s'\n", *(process->args));
 	//clean_process(process); // DONT USE WITHOUT EXECVE
 	exit(0);

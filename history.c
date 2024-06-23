@@ -6,26 +6,6 @@
 #include <sys/stat.h>
 #include <readline/history.h>
 
-// NOTE: move to libft
-static int	file_line_count(char *file)
-{
-	int		count;
-	int		fd;
-	char	buf;
-
-	count = 0;
-	fd = open(file, O_RDONLY);
-	if (fd == -1)
-		return (0);
-	while (read(fd, &buf, 1) > 0)
-	{
-		if (buf == '\n')
-			count++;
-	}
-	close(fd);
-	return (count);
-}
-
 // saves in current pwd
 // NOTE: does not save heredoc stuff
 void	record_history(char *line, t_runtime *runtime)
@@ -39,7 +19,7 @@ void	record_history(char *line, t_runtime *runtime)
 	if (fd == -1)
 		return ;
 	count = file_line_count(runtime->history);
-	i = ft_itoa(count);
+	i = ft_itoa(1 + count);
 	ft_putstr_fd("  ", fd);
 	ft_putstr_fd(i, fd);
 	ft_putstr_fd("  ", fd);

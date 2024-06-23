@@ -48,6 +48,11 @@ Signal ctrl + c should immediately close all heredocs
 !!!NOTE: TODO!!!  
 Should only execute the last pipe with heredoc  
 
+## History
+
+!!!NOTE: TODO!!!
+Should only execute history and none of the other pipes
+
 # ISSUES
 
 ## MANDATORY 

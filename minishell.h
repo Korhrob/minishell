@@ -34,12 +34,13 @@ typedef struct s_runtime
 
 typedef struct s_process
 {
-	int		inflag;
-	int		outflag;
-	char	*infile;
-	char	*outfile;
 	char	**args;
 	char	*line;
+	char	*infile;
+	char	*outfile;
+	char	*path;
+	int		inflag;
+	int		outflag;
 }	t_process;
 
 // history
@@ -59,7 +60,7 @@ int			process_heredoc(char *line, t_runtime *runtime);
 void		rl_replace_line(const char *str, int i);
 
 // process
-t_process	*new_process(char *line);
+t_process	*new_process(char *line, t_runtime *runtime);
 void		clean_process(t_process *process);
 
 // parse
@@ -76,8 +77,7 @@ void		rebind_args(t_process *p);
 
 // pipex
 void		begin_pipe(t_process *process);
-
-// pipex redirect
+char		*get_cmd_path(char **args, char **envp);
 int			redirect(int pipefd[2], t_process *process);
 
 

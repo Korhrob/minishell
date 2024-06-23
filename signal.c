@@ -40,8 +40,9 @@ void	signal_signint(int signo)
 	else if (signo == SIGTERM)
 	{
 		unlink(".history");
-		
 	}
+	//if (g_exit_status)
+	//	ft_printf("signal %d\n", g_exit_status);
 }
 
 // sets g_exit_status back to 0

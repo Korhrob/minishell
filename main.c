@@ -9,12 +9,48 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
+// Copies the envp into the runtime struct as an array
+static char	**set_env_array(char **envp)
+{
+	int		i;
+	char	**envi;
+
+	envi = malloc(sizeof(char *) * (ft_array_len(envp) + 1));
+	i = 0;
+	while (envp[i] != NULL)
+	{
+		envi[i] = ft_strdup(envp[i]);
+		i++;
+	}
+	envi[i] = NULL;
+	return (envi);
+}
+
+//Initialization of runtime and all the possible content it may have
+static void	init_runtime(t_runtime *runtime, char **envp)
+{
+	runtime->env = set_env_array(envp);
+	runtime->exepath = get_cwd();
+	runtime->history = ft_strjoin(runtime->exepath, "/.history");
+	runtime->heredoc = ft_strjoin(runtime->exepath, "/.heredoc");
+	unlink(runtime->history);
+	unlink(runtime->heredoc);
+}
+
+static void	free_runtime(t_runtime *runtime)
+{
+	ft_free_arr(runtime->env);
+	free(runtime->exepath);
+	free(runtime->history);
+	free(runtime->heredoc);
+}
 
 // exits program and unlinks history file
 void	ft_exit(int ecode, t_runtime *runtime)
 {
 	unlink(runtime->history);
 	unlink(runtime->heredoc);
+	free_runtime(runtime);
 	exit(ecode);
 }
 
@@ -30,10 +66,7 @@ void	do_command(t_process *p, t_runtime *runtime)
 	if (ft_strcmp(*(p->args), "history") == 0)
 		print_history((p->args + 1), runtime);
 	else
-	{
-		ft_printf("do command %s\n", *(p->args)); // debug
 		begin_pipe(p);
-	}
 }
 
 // exectue all builtin commands here
@@ -88,7 +121,7 @@ int	execute_args(char **pipes, t_runtime *runtime)
 	while (*pipes != NULL)
 	{
 		// expand *pipes
-		process = new_process(*pipes);
+		process = new_process(*pipes, runtime);
 		if (process == NULL)
 			return (-1);
 		if (process->args[0] != NULL)
@@ -118,20 +151,21 @@ void	shell_interactive(t_runtime *runtime)
 		line = readline("idleshell$ ");
 		if (line == NULL)
 			break ;
-		if (*line == 0)
+		if (*line != 0)
 		{
-			free(line);
-			continue ;
+			// free(line); DOUBLE CHECK LEAKS
+			// continue ;
+			record_history(line, runtime);
+			pipes = ft_split_quotes(line, '|', 0);
+			if (!syntax_error(line) && process_heredoc(line, runtime))
+				status = execute_args(pipes, runtime);
+			ft_free_arr(pipes);
+			unlink(runtime->heredoc);
+			if (status >= 0)
+				exit(status);
+			signal_reset();
 		}
-		record_history(line, runtime);
-		pipes = ft_split_quotes(line, '|', 0);
-		if (!syntax_error(line) && process_heredoc(line, runtime))
-			status = execute_args(pipes, runtime);
 		free(line);
-		ft_free_arr(pipes);
-		unlink(runtime->heredoc);
-		if (status >= 0)
-			exit(status);
 	}
 }
 
@@ -139,42 +173,6 @@ void	shell_interactive(t_runtime *runtime)
 void	shell_no_interactive(void)
 {
 
-}
-
-// Copies the envp into the runtime struct as an array
-static char	**set_env_array(char **envp)
-{
-	int		i;
-	char	**envi;
-
-	envi = malloc(sizeof(char *) * (ft_array_len(envp) + 1));
-	i = 0;
-	while (envp[i] != NULL)
-	{
-		envi[i] = ft_strdup(envp[i]);
-		i++;
-	}
-	envi[i] = NULL;
-	return (envi);
-}
-
-//Initialization of runtime and all the possible content it may have
-static void	init_runtime(t_runtime *runtime, char **envp)
-{
-	runtime->env = set_env_array(envp);
-	runtime->exepath = get_cwd();
-	runtime->history = ft_strjoin(runtime->exepath, "/.history");
-	runtime->heredoc = ft_strjoin(runtime->exepath, "/.heredoc");
-	unlink(runtime->history);
-	unlink(runtime->heredoc);
-}
-
-static void	free_runtime(t_runtime *runtime)
-{
-	ft_free_arr(runtime->env);
-	free(runtime->exepath);
-	free(runtime->history);
-	free(runtime->heredoc);
 }
 
 int	main(int argc, char **argv, char **envp)

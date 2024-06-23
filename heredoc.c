@@ -21,7 +21,6 @@ int	process_heredoc(char *line, t_runtime *runtime)
 			delimiter = get_filename(line);
 			if (delimiter == NULL)
 				return (0);
-			ft_printf("delimiter '%s'\n", delimiter);
 			ft_heredoc(O_WRONLY | O_CREAT, delimiter, runtime);
 			free(delimiter);
 		}
@@ -57,6 +56,5 @@ void	ft_heredoc(int flag, char *delimit, t_runtime *runtime)
 		}
 		free(buffer);
 	}
-	ft_printf("close heredoc\n");
 	close (fd);
 }
