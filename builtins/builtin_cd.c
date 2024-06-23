@@ -26,16 +26,16 @@ static void	correct_wd(t_runtime *runtime)
 	char	*temp;
 	char	*old_env;
 
-	temp = find_env(runtime->env_struct, "PWD=");
+	temp = find_env(runtime->env_struct, "PWD");
 	if (temp == NULL)
 	{
-		if (find_env(runtime->env_struct, "OLDPWD=") != NULL)
+		if (find_env(runtime->env_struct, "OLDPWD") != NULL)
 			cmd_export("OLDPWD=", runtime);
 		return ;
 	}
-	if (find_env(runtime->env_struct, "OLDPWD=") != NULL)
+	if (find_env(runtime->env_struct, "OLDPWD") != NULL)
 	{
-		old_env = ft_strjoin("OLD", temp); // Handle freeing the string in export?
+		old_env = ft_strjoin("OLDPWD=", temp); // Handle freeing the string in export?
 		cmd_export(old_env, runtime);
 		free(old_env);
 	}
@@ -50,8 +50,7 @@ static void	home_dir(t_runtime *runtime)
 {
 	char	*home;
 
-	home = find_env(runtime->env_struct, "HOME=");
-	ft_printf("home = %s\n", home);
+	home = find_env(runtime->env_struct, "HOME");
 	if (home == NULL)
 	{
 		ft_printf("idleshell: cd: HOME not set\n");

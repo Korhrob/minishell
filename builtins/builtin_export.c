@@ -10,10 +10,7 @@ static int	env_index_finder(char *env, t_runtime *runtime)
 	while (env[i] != 0)
 	{
 		if (env[i] == '=')
-		{
-			i++;
 			break ;
-		}
 		i++;
 	}
 	j = 0;
@@ -23,7 +20,7 @@ static int	env_index_finder(char *env, t_runtime *runtime)
 			break ;
 		j++;
 	}
-	if (j < ft_array_len((void **)runtime->env))
+	if (j < ft_array_len((void **)runtime->env_struct))
 		return (j);
 	return (-1);
 }
@@ -46,59 +43,7 @@ static char	*minitrim(char *str, char c)
 	return (strlocal);
 }
 
-static int	create_env(char *envp, t_env *env)
-{
-	char	*temp;
-
-	temp = envp;
-	while (*envp != 0)
-	{
-		if (*envp == '=')
-		{
-			envp++;
-			env->value = ft_strdup(envp);
-			if (!env->value)
-				return (0);
-			env->key = ft_strldup(temp, 0, ft_strlen_t(temp, '=') + 1);
-			if (!env->key)
-			{
-				free (env->value);
-				return (0);
-			}
-			return (1);
-		}
-		envp++;
-	}
-	env->key = ft_strdup(temp);
-	return (1);
-}
-
-// static void	replace_env(char *env, t_runtime *runtime, int index)
-// {
-// 	free(runtime->env[index]);
-// 	runtime->env[index] = ft_strdup(env);
-// }
-
-// Adds a string to the env array insine runtime at the end
-// static void	create_env(char *env, t_runtime *runtime)
-// {
-// 	char	**tmparr;
-// 	int		i;
-
-// 	tmparr = malloc(sizeof(char *) * (ft_array_len(runtime->env) + 2));
-// 	i = 0;
-// 	while (runtime->env[i] != NULL)
-// 	{
-// 		tmparr[i] = runtime->env[i];
-// 		i++;
-// 	}
-// 	tmparr[i] = ft_strdup(env);
-// 	i++;
-// 	tmparr[i] = NULL;
-// 	free(runtime->env);
-// 	runtime->env = tmparr;
-// }
-
+// Adds a new env
 static void	add_env(char *env, t_runtime *runtime)
 {
 	t_env	**temp;
@@ -124,7 +69,8 @@ static void	add_env(char *env, t_runtime *runtime)
 	runtime->env_struct = temp;
 }
 
-// Adds a string to the env array insine runtime at the end
+// Adds a string to the env struct inside runtime at the end, checks if it needs
+// to be replaced or created as new
 void	cmd_export(char *env, t_runtime *runtime)
 {
 	int		old_i;
@@ -150,6 +96,11 @@ void	cmd_export(char *env, t_runtime *runtime)
 // perform multiple arguments passed to the function
 void	export_main(char **args, t_runtime *runtime)
 {
+	if (!args[1])
+	{
+		cmd_export_single(runtime);
+		return ;
+	}
 	args++;
 	while (*args != NULL)
 	{
@@ -160,3 +111,4 @@ void	export_main(char **args, t_runtime *runtime)
 
 // Add just export, that sorts alphabetically
 // Add malloc checks
+// Add quotation character remover

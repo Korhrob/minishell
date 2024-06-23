@@ -1,33 +1,21 @@
 #include "builtins.h"
 
-// Iterates the env list and copies it into a new array, if it finds the desired deletion it doesnt copy it.
-// void	cmd_unset(char *env, t_runtime *runtime)
-// {
-// 	char	**tmparr;
-// 	int		i;
-// 	int		j;
+static int	key_exists(char *line, t_env **env)
+{
+	int	i;
 
-// 	tmparr = malloc(sizeof(char *) * (ft_array_len((void **)runtime->env)));
-// 	i = 0;
-// 	j = 0;
-// 	while (runtime->env[i] != NULL)
-// 	{
-// 		if (ft_strncmp(runtime->env[i], env, ft_strlen(env)) == 0)
-// 		{
-// 			free(runtime->env[i]);
-// 		}
-// 		else
-// 		{
-// 			tmparr[j] = runtime->env[i];
-// 			j++;
-// 		}
-// 		i++;
-// 	}
-// 	tmparr[j] = NULL;
-// 	free(runtime->env);
-// 	runtime->env = tmparr;
-// }
+	i = 0;
+	while (env[i] != NULL)
+	{
+		if (ft_strcmp(env[i]->key, line) == 0)
+			return (1);
+		i++;
+	}
+	return (0);
+}
 
+// Frees and removes a single node
+// Creates a new struct and populates with the remaining env nodes
 void	cmd_unset(char *env, t_runtime *runtime)
 {
 	t_env	**temp;
@@ -40,9 +28,9 @@ void	cmd_unset(char *env, t_runtime *runtime)
 	j = 0;
 	while (runtime->env_struct[i] != NULL)
 	{
-		if (ft_strcmp(runtime->env_struct[i]->key, env))
+		if (ft_strcmp(runtime->env_struct[i]->key, env) == 0)
 			free_single_env(runtime->env_struct[i]);
-		if (runtime->env_struct[i])
+		else if (runtime->env_struct[i])
 		{
 			temp[j] = runtime->env_struct[i];
 			j++;
@@ -50,6 +38,8 @@ void	cmd_unset(char *env, t_runtime *runtime)
 		i++;
 	}
 	temp[j] = NULL;
+	free(runtime->env_struct);
+	runtime->env_struct = temp;
 }
 
 // Will change name later to be inline with other builtins, this function was made to
@@ -59,7 +49,8 @@ void	unset_main(char **args, t_runtime *runtime)
 	args++;
 	while (*args != NULL)
 	{
-		cmd_unset(*args, runtime);
+		if (key_exists(*args, runtime->env_struct) == 1)
+			cmd_unset(*args, runtime);
 		args++;
 	}
 }

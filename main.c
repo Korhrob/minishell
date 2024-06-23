@@ -158,32 +158,7 @@ static char	**set_env_array(char **envp)
 	return (envi);
 }
 
-static int	set_env(t_env *env, char *envp)
-{
-	char	*temp;
-
-	temp = envp;
-	while (*envp != 0)
-	{
-		if (*envp == '=')
-		{
-			envp++;
-			env->value = ft_strdup(envp);
-			if (!env->value)
-				return (0);
-			env->key = ft_strldup(temp, 0, ft_strlen_t(temp, '=') + 1);
-			if (!env->key)
-			{
-				free (env->value);
-				return (0);
-			}
-			return (1);
-		}
-		envp++;
-	}
-	return (1);
-}
-
+// Creates the entirety of the env struct with the key and value nodes
 static t_env	**set_env_struct(char **envp)
 {
 	t_env	**env;
@@ -197,7 +172,7 @@ static t_env	**set_env_struct(char **envp)
 		env_new = (t_env *)malloc(sizeof(t_env));
 		env_new->key = NULL;
 		env_new->value = NULL;
-		if (set_env(env_new, envp[i]) != 1)
+		if (create_env(envp[i], env_new) != 1)
 		{
 			//do malloc check
 		}
