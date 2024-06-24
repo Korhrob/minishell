@@ -55,6 +55,8 @@ void	do_builtin(char **args, int cmd, t_runtime *runtime)
 		unset_main(args, runtime);
 	else if (cmd == EXPORT)
 		export_main(args, runtime);
+	else if (cmd == ECHO)
+		cmd_echo(args);
 	else
 		ft_printf("builtin %s\n", *args);
 }
@@ -71,6 +73,7 @@ int	get_builtin(char *args)
 		BUILTIN_PWD,
 		BUILTIN_UNSET,
 		BUILTIN_EXPORT,
+		BUILTIN_ECHO,
 	};
 
 	i = 0;

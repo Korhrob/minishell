@@ -8,6 +8,7 @@
 # define BUILTIN_PWD "pwd"
 # define BUILTIN_UNSET "unset"
 # define BUILTIN_EXPORT "export"
+# define BUILTIN_ECHO "echo"
 
 extern int g_exit_status;
 
@@ -20,6 +21,7 @@ typedef enum e_builtin_cmd
 	PWD,
 	UNSET,
 	EXPORT,
+	ECHO,
 	BUILTIN_MAX
 }	t_builtin_cmd;
 

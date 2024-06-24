@@ -52,3 +52,21 @@ int create_env(char *envp, t_env *env)
 	}
     return (1);
 }
+
+// Trims the first and last character of a string and returns the result
+char	*minitrim(char *str, char c)
+{
+	char	*strlocal;
+
+	if (str[0] != c || str[ft_strlen(str)-1] != c)
+		return (str);
+	if (*str == c)
+		str++;
+	strlocal = str;
+	while (*str != 0)
+		str++;
+	str--;
+	if (*str == c)
+		*str = 0;
+	return (strlocal);
+}
