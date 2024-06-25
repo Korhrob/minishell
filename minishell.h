@@ -8,6 +8,7 @@
 # define BUILTIN_PWD "pwd"
 # define BUILTIN_UNSET "unset"
 # define BUILTIN_EXPORT "export"
+# define BUILTIN_ECHO "echo"
 
 extern int g_exit_status;
 
@@ -20,13 +21,21 @@ typedef enum e_builtin_cmd
 	PWD,
 	UNSET,
 	EXPORT,
-
+	ECHO,
 	BUILTIN_MAX
 }	t_builtin_cmd;
+
+typedef struct s_env
+{
+	char	*key;
+	char	*value;
+}	t_env;
 
 typedef struct s_runtime
 {
 	char	**env;
+	t_env	**env_struct;
+	int		enverr;
 	char	*exepath;
 	char	*history;
 	char	*heredoc;
@@ -80,5 +89,9 @@ void		begin_pipe(t_process *process);
 char		*get_cmd_path(char **args, char **envp);
 int			redirect(int pipefd[2], t_process *process);
 
+
+// Environment
+
+t_env	**set_env_struct(char **envp);
 
 #endif

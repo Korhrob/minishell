@@ -100,6 +100,7 @@ int	get_builtin(char *args)
 		BUILTIN_PWD,
 		BUILTIN_UNSET,
 		BUILTIN_EXPORT,
+		BUILTIN_ECHO,
 	};
 
 	i = 0;
@@ -175,6 +176,13 @@ void	shell_no_interactive(void)
 
 }
 
+//Initialization of runtime and all the possible content it may have
+static void	init_runtime(t_runtime *runtime, char **envp)
+{
+	runtime->env = set_env_array(envp);
+	runtime->env_struct = set_env_struct(envp);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_runtime	runtime;
@@ -189,10 +197,12 @@ int	main(int argc, char **argv, char **envp)
 		shell_interactive(&runtime);
 	else
 		shell_no_interactive();
-	free_runtime(&runtime);
+	free_env(runtime.env_struct);
+	ft_free_arr(runtime.env);
 	return (0);
 }
 
+//Remove the = character from the key string
 // if any pipes occur, all commands are done in child
 // else if its builtin do it in parent
 

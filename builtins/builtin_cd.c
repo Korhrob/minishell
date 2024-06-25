@@ -1,26 +1,81 @@
 #include "builtins.h"
+#include "limits.h"
+#include <linux/limits.h>
 
-static char	*find_env(char **array, char *env)
+// Finds the old wd
+static char	*find_env(t_env **environ, char *env)
 {
-	char	**temp;
+	int		i;
 
-	temp = array;
-	while (ft_strncmp(env, *temp, ft_strlen(env)))
-		temp++;
-	return (*temp);
+	i = 0;
+	while (environ[i] != NULL)
+	{
+		if (environ[i]->key != NULL)
+			if (!ft_strcmp(env, environ[i]->key))
+				return (environ[i]->value);
+		i++;
+	}
+	return (NULL);
 }
 
+// Fixes the old and new wd strings in the env
 static void	correct_wd(t_runtime *runtime)
 {
+	char	cwd[PATH_MAX];
+	char	*new_wd;
 	char	*temp;
+	char	*old_env;
 
-	(void)temp;
-	temp = find_env(runtime->env, "PWD");
+	temp = find_env(runtime->env_struct, "PWD");
+	if (temp == NULL)
+	{
+		if (find_env(runtime->env_struct, "OLDPWD") != NULL)
+			cmd_export("OLDPWD=", runtime);
+		return ;
+	}
+	if (find_env(runtime->env_struct, "OLDPWD") != NULL)
+	{
+		old_env = ft_strjoin("OLDPWD=", temp);
+		cmd_export(old_env, runtime);
+		free(old_env);
+	}
+	getcwd(cwd, sizeof(cwd));
+	new_wd = ft_strjoin("PWD=", cwd);
+	cmd_export(new_wd, runtime);
+	free(new_wd);
+}
+
+// Changes to home directory
+static void	home_dir(t_runtime *runtime)
+{
+	char	*home;
+
+	home = find_env(runtime->env_struct, "HOME");
+	if (home == NULL)
+	{
+		ft_printf("idleshell: cd: HOME not set\n");
+		return ;
+	}
+	else
+	{
+		if (chdir(home) == 0)
+		{
+			correct_wd(runtime);
+			cmd_pwd(); // Showing current directory after changing, remove later
+		}
+		else
+			ft_printf("cd did not work home version\n"); // Replace with perror later
+	}
 }
 
 // Changes working directory to the provided path
 void	cmd_cd(char **args, t_runtime *runtime)
 {
+	if (args[1] == NULL)
+	{
+		home_dir(runtime);
+		return ;
+	}
 	if (chdir(args[1]) == 0)
 	{
 		correct_wd(runtime);
@@ -28,8 +83,8 @@ void	cmd_cd(char **args, t_runtime *runtime)
 	}
 	else
 	{
-		ft_printf("cd did not work\n"); // Replace with perror later
+		ft_printf("cd did not work normal version\n"); // Replace with perror later
 	}
 }
 
-// Add functionality to just do cd to go to home directory
+// check cwd return value of NULL
