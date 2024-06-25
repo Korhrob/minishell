@@ -36,12 +36,15 @@ void	do_command(char **args, t_runtime *runtime)
 	clean_process(child);
 }
 
-// exectue all builtin commands here
+// execute all builtin commands here
 // should return how many args we advanced
 void	do_builtin(char **args, int cmd, t_runtime *runtime)
 {
 	if (cmd == EXIT)
+	{
+		free_env(runtime->env_struct);
 		ft_exit(0);
+	}
 	else if (cmd == PWD)
 		cmd_pwd();
 	else if (cmd == CD)
@@ -49,11 +52,11 @@ void	do_builtin(char **args, int cmd, t_runtime *runtime)
 	else if (cmd == ENV)
 		cmd_env(runtime);
 	else if (cmd == UNSET)
-		cmd_unset(args[1], runtime);
+		unset_main(args, runtime);
 	else if (cmd == EXPORT)
-		cmd_export(args[1], runtime);
-	else
-		ft_printf("builtin %s\n", *args);
+		export_main(args, runtime);
+	else if (cmd == ECHO)
+		cmd_echo(args);
 }
 
 // gets and returns enum if current string is builtin command
@@ -68,6 +71,7 @@ int	get_builtin(char *args)
 		BUILTIN_PWD,
 		BUILTIN_UNSET,
 		BUILTIN_EXPORT,
+		BUILTIN_ECHO,
 	};
 
 	i = 0;
@@ -139,12 +143,13 @@ void	shell_no_interactive(void)
 }
 
 // Copies the envp into the runtime struct as an array
+// Remove after you have switched to the struct system
 static char	**set_env_array(char **envp)
 {
 	int		i;
 	char	**envi;
 
-	envi = malloc(sizeof(char*) * (ft_array_len(envp) + 1));
+	envi = malloc(sizeof(char*) * (ft_array_len((void **)envp) + 1));
 	i = 0;
 	while (envp[i] != NULL)
 	{
@@ -159,6 +164,7 @@ static char	**set_env_array(char **envp)
 static void	init_runtime(t_runtime *runtime, char **envp)
 {
 	runtime->env = set_env_array(envp);
+	runtime->env_struct = set_env_struct(envp);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -176,6 +182,9 @@ int	main(int argc, char **argv, char **envp)
 		shell_interactive(&runtime);
 	else
 		shell_no_interactive();
+	free_env(runtime.env_struct);
 	ft_free_arr(runtime.env);
 	return (0);
 }
+
+//Remove the = character from the key string
