@@ -34,5 +34,6 @@ int		create_env(char *envp, t_env *env);
 char	*minitrim(char *str, char c);
 
 char	*get_cwd();
+char    *str_pwd();
 
 #endif

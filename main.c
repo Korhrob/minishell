@@ -15,7 +15,7 @@ static char	**set_env_array(char **envp)
 	int		i;
 	char	**envi;
 
-	envi = malloc(sizeof(char *) * (ft_array_len(envp) + 1));
+	envi = malloc(sizeof(char *) * (ft_array_len((void **)envp) + 1));
 	i = 0;
 	while (envp[i] != NULL)
 	{
@@ -30,7 +30,8 @@ static char	**set_env_array(char **envp)
 static void	init_runtime(t_runtime *runtime, char **envp)
 {
 	runtime->env = set_env_array(envp);
-	runtime->exepath = get_cwd();
+	runtime->env_struct = set_env_struct(envp);
+	runtime->exepath = str_pwd();
 	runtime->history = ft_strjoin(runtime->exepath, "/.history");
 	runtime->heredoc = ft_strjoin(runtime->exepath, "/.heredoc");
 	unlink(runtime->history);
@@ -174,13 +175,6 @@ void	shell_interactive(t_runtime *runtime)
 void	shell_no_interactive(void)
 {
 
-}
-
-//Initialization of runtime and all the possible content it may have
-static void	init_runtime(t_runtime *runtime, char **envp)
-{
-	runtime->env = set_env_array(envp);
-	runtime->env_struct = set_env_struct(envp);
 }
 
 int	main(int argc, char **argv, char **envp)

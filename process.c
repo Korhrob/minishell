@@ -27,7 +27,8 @@ t_process	*new_process(char *line, t_runtime *runtime)
 	}
 	rebind_args(p);
 	p->path = get_cmd_path(p->args, runtime->env);
-	ft_printf("%s\n", p->path);
+	ft_printf("path\n%s\n", p->path);
+	ft_printf("args\n");
 	for (int i = 0; p->args[i] != NULL; i++)
 		ft_printf("%s\n", p->args[i]);
 	return (p);
