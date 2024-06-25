@@ -35,12 +35,12 @@ static void	correct_wd(t_runtime *runtime)
 	}
 	if (find_env(runtime->env_struct, "OLDPWD") != NULL)
 	{
-		old_env = ft_strjoin("OLDPWD=", temp); // Handle freeing the string in export?
+		old_env = ft_strjoin("OLDPWD=", temp);
 		cmd_export(old_env, runtime);
 		free(old_env);
 	}
 	getcwd(cwd, sizeof(cwd));
-	new_wd = ft_strjoin("PWD=", cwd); // Handle freeing the string in export?
+	new_wd = ft_strjoin("PWD=", cwd);
 	cmd_export(new_wd, runtime);
 	free(new_wd);
 }

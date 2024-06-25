@@ -35,6 +35,7 @@ typedef struct s_runtime
 {
 	char	**env;
 	t_env	**env_struct;
+	int		enverr;
 	//t_list	**child_pid;
 }	t_runtime;
 
@@ -72,5 +73,9 @@ void		set_inout(t_process *p);
 
 // heredoc
 char		*ft_heredoc(int flag, char *delimit);
+
+// Environment
+
+t_env	**set_env_struct(char **envp);
 
 #endif
