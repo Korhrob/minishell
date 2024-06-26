@@ -10,26 +10,18 @@
 // child process
 static void	child(int pipefd[2], t_process *process)
 {
-	// directory check
-	// f ok
-	// r ok
-	// fd open o_rdonly
-	// fd check
 	if (redirect(pipefd, process) != 1)
 		exit(0);
-	close(pipefd[0]);
-	// f ok path (non builtin)
-	// directory check (non builtin)
 	if (process->path == NULL)
 	{
 		ft_printf("no such command %s\n", process->args[0]);
 		exit(1);
 	}
-	if (execve(process->path, process->args, NULL) == -1) {}
-	/*
-	*/
-	ft_printf("CHILD DONE '%s'\n", *(process->args));
-	//clean_process(process); // DONT USE WITHOUT EXECVE
+	if (execve(process->path, process->args, NULL) == -1)
+	{
+		ft_printf("execve failed\n");
+		exit(1);
+	}
 	exit(0);
 }
 
@@ -52,9 +44,14 @@ void	begin_pipe(t_process *process)
 		return ; // fork failed
 	}
 	if (cid == 0)
+	{
+		close(pipefd[0]);
 		child(pipefd, process);
-	close(pipefd[0]);
-	close(pipefd[1]);
+	}
+	else
+		close(pipefd[1]);
+	if (!(process->pflag & PF_LAST))
+		close(pipefd[1]);
 	status = 0;
 	waitpid(cid, &status, 0);
 }

@@ -2,49 +2,46 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-static int	redirect_fd(int input, int output)
-{
-	if (dup2(input, STDIN_FILENO) == -1)
-	{
-		close(input);
-		return (-1);
-	}
-	close (input);
-	if (dup2(output, STDOUT_FILENO) == -1)
-	{
-		close(output);
-		return (-1);
-	}
-	close(output);
-	return (1);
-}
-
 // redirects input and output if needed
 // return 1 on success
 // return -1 on fail
-int     redirect(int pipefd[2], t_process *process)
+int     redirect(int pipefd[2], t_process *p)
 {
     int fd;
 
-    if (process->infile != NULL) // infile is set, use infile
+    if (!(p->pflag & PF_FIRST))
     {
-        fd = open(process->infile, O_RDONLY);
-        if (fd == -1)
-            return (-1); // open fail
-        if (redirect_fd(fd, pipefd[1]) == -1)
-            return (-1); // dup2 fail
+        if (dup2(pipefd[0], STDIN_FILENO) == -1)
+            return (-1);
         close(pipefd[0]);
     }
-    // else if default redirection
-    if (process->outfile != NULL) // outfile is set, use outfile
+
+    if (!(p->pflag & PF_LAST))
     {
-        fd = open(process->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-        if (fd == -1)
-            return (-1); // open fail
-        if (redirect_fd(pipefd[0], fd) == -1)
-            return (-1); // dup2 fail
+        if (dup2(pipefd[1], STDOUT_FILENO) == -1)
+            return (-1);
         close(pipefd[1]);
     }
-    // else if default redirection
+
+    if (p->infile != NULL)
+    {
+        fd = open(p->infile, p->inflag);
+        if (fd == -1)
+            return (-1);
+        if (dup2(fd, STDIN_FILENO) == -1)
+            return (-1);
+        close(fd);
+    }
+
+    if (p->outfile != NULL)
+    {
+        fd = open(p->outfile, p->outflag, 0644);
+        if (fd == -1)
+            return (-1);
+        if (dup2(fd, STDOUT_FILENO) == -1)
+            return (-1);
+        close(fd);
+    }
+
     return (1);
 }

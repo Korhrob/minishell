@@ -4,12 +4,37 @@
 #include <stdlib.h>
 #include <fcntl.h>
 
+static void set_pflag(t_process *p, t_runtime *runtime)
+{
+	p->pflag = 0;
+	ft_printf("cur index %d\n", runtime->pipe_index);
+	if (runtime->pipe_count == 1)
+	{
+		ft_printf("single pipe\n");
+		p->pflag = PF_FIRST | PF_LAST;
+	}
+	else if (runtime->pipe_index == 0)
+	{
+		ft_printf("first pipe\n");
+		p->pflag |= PF_FIRST;
+	}
+	else if (runtime->pipe_index < runtime->pipe_count - 1)
+	{
+		ft_printf("middle pipe\n");
+		p->pflag = PF_MIDDLE;
+	}
+	else
+	{
+		ft_printf("last pipe\n");
+		p->pflag |= PF_LAST;
+	}
+}
+
 // create new process struct
 t_process	*new_process(char *line, t_runtime *runtime)
 {
 	t_process	*p;
 
-	(void) runtime;
 	p = (t_process *)malloc(sizeof(t_process));
 	if (p == NULL)
 		return (NULL);
@@ -27,10 +52,7 @@ t_process	*new_process(char *line, t_runtime *runtime)
 	}
 	rebind_args(p);
 	p->path = get_cmd_path(p->args, runtime->env_struct);
-	//ft_printf("path\n%s\n", p->path);
-	//ft_printf("args\n");
-	//for (int i = 0; p->args[i] != NULL; i++)
-	//	ft_printf("%s\n", p->args[i]);
+	set_pflag(p, runtime);
 	return (p);
 }
 

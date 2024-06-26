@@ -36,6 +36,8 @@ typedef struct s_runtime
 	char	**env;
 	t_env	**env_struct;
 	int		enverr;
+	int		pipe_index;
+	int		pipe_count;
 	char	*exepath;
 	char	*history;
 	char	*heredoc;
@@ -50,7 +52,15 @@ typedef struct s_process
 	char	*path;
 	int		inflag;
 	int		outflag;
+	int		pflag;
 }	t_process;
+
+typedef enum e_pflag
+{
+	PF_FIRST = 1,
+	PF_MIDDLE = 2,
+	PF_LAST = 4
+}	t_pflag;
 
 // history
 void		record_history(char *line, t_runtime *runtime);

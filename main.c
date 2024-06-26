@@ -34,6 +34,8 @@ static void	init_runtime(t_runtime *runtime, char **envp)
 	runtime->exepath = str_pwd();
 	runtime->history = ft_strjoin(runtime->exepath, "/.history");
 	runtime->heredoc = ft_strjoin(runtime->exepath, "/.heredoc");
+	runtime->pipe_count = 0;
+	runtime->pipe_index = 0;
 	unlink(runtime->history);
 	unlink(runtime->heredoc);
 }
@@ -122,6 +124,9 @@ int	execute_args(char **pipes, t_runtime *runtime)
 	int			builtin;
 	t_process	*process;
 
+	runtime->pipe_index = 0;
+	runtime->pipe_count = ft_array_len((void**)pipes);
+	ft_printf("pipe count %d\n", runtime->pipe_count);
 	while (*pipes != NULL)
 	{
 		// expand *pipes
@@ -138,6 +143,7 @@ int	execute_args(char **pipes, t_runtime *runtime)
 		}
 		clean_process(process);
 		pipes++;
+		runtime->pipe_index++;
 	}
 	return (-1);
 }
