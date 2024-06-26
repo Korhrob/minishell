@@ -8,50 +8,53 @@
 //static int validate input / validate output
 
 // child process
+
 static void	child(int pipefd[2], t_process *process)
 {
-	if (redirect(pipefd, process) != 1)
-		exit(0);
+	(void)pipefd;
 	if (process->path == NULL)
 	{
-		ft_printf("no such command %s\n", process->args[0]);
+		ft_printf_fd(STDERR_FILENO, "no such command %s\n", process->args[0]);
 		exit(1);
 	}
+	//ft_printf_fd(STDERR_FILENO, "execve %s %s %s\n", process->path, process->args[0], process->args[1]);
 	if (execve(process->path, process->args, NULL) == -1)
 	{
-		ft_printf("execve failed\n");
+		ft_printf_fd(STDERR_FILENO, "execve failed\n");
 		exit(1);
 	}
-	exit(0);
+	ft_printf_fd(STDERR_FILENO, "execve failed\n");
+	exit(1);
 }
 
-// begins piping process
-void	begin_pipe(t_process *process)
+// pipe once and and execute all child processes in forks
+void alt_pipex(t_list *list)
 {
-	int		pipefd[2];
-	int		cid;
-	int		status;
+	t_process *p;
+	int fd[2];
+	int pid;
 
-	if (pipe(pipefd) == -1)
+	pipe(fd);
+	while (list != NULL)
 	{
-		perror("pipe");
-		return ; //pipe failed
+		p = list->content;
+		pid = fork();
+		if (!pid)
+		{
+			if (redirect(fd, p) == -1)
+				exit(1); // could return here
+			close(fd[0]);
+			child(fd, p);
+		}
+		else
+		{
+			if (p->pflag & PF_LAST)
+				close(fd[1]);
+		}
+		list = list->next;
 	}
-	cid = fork();
-	if (cid == -1)
-	{
-		perror("fork");
-		return ; // fork failed
-	}
-	if (cid == 0)
-	{
-		close(pipefd[0]);
-		child(pipefd, process);
-	}
-	else
-		close(pipefd[1]);
-	if (!(process->pflag & PF_LAST))
-		close(pipefd[1]);
-	status = 0;
-	waitpid(cid, &status, 0);
+	close(fd[1]);
+	close(fd[0]);
+	wait(NULL); // wait all pids
 }
+

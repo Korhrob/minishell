@@ -9,27 +9,9 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-// Copies the envp into the runtime struct as an array
-static char	**set_env_array(char **envp)
-{
-	int		i;
-	char	**envi;
-
-	envi = malloc(sizeof(char *) * (ft_array_len((void **)envp) + 1));
-	i = 0;
-	while (envp[i] != NULL)
-	{
-		envi[i] = ft_strdup(envp[i]);
-		i++;
-	}
-	envi[i] = NULL;
-	return (envi);
-}
-
 //Initialization of runtime and all the possible content it may have
 static void	init_runtime(t_runtime *runtime, char **envp)
 {
-	runtime->env = set_env_array(envp);
 	runtime->env_struct = set_env_struct(envp);
 	runtime->exepath = str_pwd();
 	runtime->history = ft_strjoin(runtime->exepath, "/.history");
@@ -42,7 +24,7 @@ static void	init_runtime(t_runtime *runtime, char **envp)
 
 static void	free_runtime(t_runtime *runtime)
 {
-	ft_free_arr(runtime->env);
+	free_env(runtime->env_struct);
 	free(runtime->exepath);
 	free(runtime->history);
 	free(runtime->heredoc);
@@ -68,8 +50,8 @@ void	do_command(t_process *p, t_runtime *runtime)
 	}
 	if (ft_strcmp(*(p->args), "history") == 0)
 		print_history((p->args + 1), runtime);
-	else
-		begin_pipe(p);
+	//else
+	//	begin_pipe(p);
 }
 
 // exectue all builtin commands here
@@ -118,33 +100,51 @@ int	get_builtin(char *args)
 	return (-1);
 }
 
+/* OLD CODE
+if (process->args[0] != NULL)
+{
+	builtin = get_builtin(process->args[0]);
+	if (builtin != -1)
+		do_builtin(process, builtin, runtime);
+	else
+		do_command(process, runtime);
+}
+*/
+
+// execute single builtin in parent
+int	single_builtin(t_process *process, t_runtime *runtime)
+{
+	int	builtin;
+
+	if (runtime->pipe_count > 1)
+		return (0);
+	builtin = get_builtin(process->args[0]);
+	if (builtin != -1)
+	{
+		do_builtin(process, builtin, runtime);
+		return (1);
+	}
+	return (0);
+}
+
 // expand $, execute args
 int	execute_args(char **pipes, t_runtime *runtime)
 {
-	int			builtin;
-	t_process	*process;
+	
+	t_list		*list;
+	(void)alt_pipex;
 
 	runtime->pipe_index = 0;
 	runtime->pipe_count = ft_array_len((void**)pipes);
-	ft_printf("pipe count %d\n", runtime->pipe_count);
-	while (*pipes != NULL)
+	list = create_process_list(pipes, runtime);
+	if (list == NULL)
 	{
-		// expand *pipes
-		process = new_process(*pipes, runtime);
-		if (process == NULL)
-			return (-1);
-		if (process->args[0] != NULL)
-		{
-			builtin = get_builtin(process->args[0]);
-			if (builtin != -1)
-				do_builtin(process, builtin, runtime);
-			else
-				do_command(process, runtime);
-		}
-		clean_process(process);
-		pipes++;
-		runtime->pipe_index++;
+		// malloc error
+		return (-1);
 	}
+	if (!single_builtin(list->content, runtime))
+		alt_pipex(list);
+	clean_process_list(&list);
 	return (-1);
 }
 
@@ -192,15 +192,13 @@ int	main(int argc, char **argv, char **envp)
 	signal_init(0);
 	signal(SIGINT, signal_signint);
 	signal(SIGTERM, signal_signint);
-	runtime.env = NULL;
 	if (argc == 1 && argv)
 		init_runtime(&runtime, envp);
 	if (isatty(STDIN_FILENO) == 1)
 		shell_interactive(&runtime);
 	else
 		shell_no_interactive();
-	free_env(runtime.env_struct);
-	ft_free_arr(runtime.env);
+	free_runtime(&runtime);
 	return (0);
 }
 
