@@ -1,20 +1,24 @@
+#include "../minishell.h"
 #include "../libft/libft.h"
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <fcntl.h>
 
-// find 'name' in envp
-// return entire line after 'name='
-static char	*get_path(char **envp, const char *name)
+// find key 'name' in envp
+// return value for key
+static char	*get_path(t_env **envp, const char *name)
 {
+	int	i;
+
 	if (!envp)
 		return (NULL);
-	while (*envp != NULL)
+	i = 0;
+	while (envp[i] != NULL)
 	{
-		if (ft_strncmp(*envp, name, 4) == 0)
-			return (*envp + 5);
-		envp++;
+		if (ft_strncmp(envp[i]->key, name, 4) == 0)
+			return (envp[i]->value);
+		i++;
 	}
 	return (NULL);
 }
@@ -48,7 +52,7 @@ static char	*try_path(char *out, char *path)
 }
 
 // return path to cmd
-char	*get_cmd_path(char **args, char **envp)
+char	*get_cmd_path(char **args, t_env **envp)
 {
 	char	*out;
     char    *path;

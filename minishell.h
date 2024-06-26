@@ -86,7 +86,7 @@ void		rebind_args(t_process *p);
 
 // pipex
 void		begin_pipe(t_process *process);
-char		*get_cmd_path(char **args, char **envp);
+char		*get_cmd_path(char **args, t_env **envp);
 int			redirect(int pipefd[2], t_process *process);
 
 

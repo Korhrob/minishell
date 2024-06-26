@@ -85,6 +85,8 @@ void	do_builtin(t_process *p, int cmd, t_runtime *runtime)
 		cmd_unset(p->args[1], runtime);
 	else if (cmd == EXPORT)
 		cmd_export(p->args[1], runtime);
+	else if (cmd == ECHO)
+		cmd_echo(p->args);
 	else
 		ft_printf("builtin %s\n", *(p->args)); // not needed
 }
