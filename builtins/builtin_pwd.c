@@ -12,5 +12,3 @@ void	cmd_pwd()
 	else
 		perror("pwd");
 }
-
-// check cwd return value of NULL

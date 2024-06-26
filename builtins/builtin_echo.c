@@ -13,8 +13,8 @@ void    cmd_echo(char **args)
 	    	args[i] = minitrim(args[i], '\'');
         i++;
     }
-    i = 0;
-    if (ft_strcmp(args[1], "-n"))
+    i = 1;
+    if (ft_strcmp(args[1], "-n") == 0)
         i++;
     while (args[i] != NULL)
     {

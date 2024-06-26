@@ -19,30 +19,37 @@ static char	*find_env(t_env **environ, char *env)
 }
 
 // Fixes the old and new wd strings in the env
-static void	correct_wd(t_runtime *runtime)
+static int	correct_wd(t_runtime *runtime)
 {
 	char	cwd[PATH_MAX];
-	char	*new_wd;
-	char	*temp;
-	char	*old_env;
+	char	*temp_wd;
+	char	*temp_str;
 
-	temp = find_env(runtime->env_struct, "PWD");
-	if (temp == NULL)
+	temp_str = find_env(runtime->env_struct, "PWD");
+	if (temp_str == NULL)
 	{
 		if (find_env(runtime->env_struct, "OLDPWD") != NULL)
-			cmd_export("OLDPWD=", runtime);
-		return ;
+			if (cmd_export("OLDPWD=", runtime) == MALLOC_FAIL)
+				return (MALLOC_FAIL);
+		return (SUCCESS);
 	}
 	if (find_env(runtime->env_struct, "OLDPWD") != NULL)
 	{
-		old_env = ft_strjoin("OLDPWD=", temp);
-		cmd_export(old_env, runtime);
-		free(old_env);
+		temp_wd = ft_strjoin("OLDPWD=", temp_str);
+		if (!temp_wd)
+			return (MALLOC_FAIL);
+		cmd_export(temp_wd, runtime);
+		free(temp_wd);
 	}
-	getcwd(cwd, sizeof(cwd));
-	new_wd = ft_strjoin("PWD=", cwd);
-	cmd_export(new_wd, runtime);
-	free(new_wd);
+	if (getcwd(cwd, sizeof(cwd)) == NULL)
+		perror("working directory fail");
+	temp_wd = ft_strjoin("PWD=", cwd);
+	if (!temp_wd)
+		return (MALLOC_FAIL);
+	if (cmd_export(temp_wd, runtime) == MALLOC_FAIL)
+		return (MALLOC_FAIL);
+	free(temp_wd);
+	return (SUCCESS);
 }
 
 // Changes to home directory
@@ -60,17 +67,18 @@ static void	home_dir(t_runtime *runtime)
 	{
 		if (chdir(home) == 0)
 		{
-			correct_wd(runtime);
-			cmd_pwd(); // Showing current directory after changing, remove later
+			if (correct_wd(runtime) == MALLOC_FAIL)
+				ft_printf("idleshell: cd: not enough memory");
 		}
 		else
-			ft_printf("cd did not work home version\n"); // Replace with perror later
+			perror("cd");
 	}
 }
 
 // Changes working directory to the provided path
 void	cmd_cd(char **args, t_runtime *runtime)
 {
+	runtime->err_num = SUCCESS;
 	if (args[1] == NULL)
 	{
 		home_dir(runtime);
@@ -78,13 +86,9 @@ void	cmd_cd(char **args, t_runtime *runtime)
 	}
 	if (chdir(args[1]) == 0)
 	{
-		correct_wd(runtime);
-		cmd_pwd(); // Showing current directory after changing, remove later
+		if (correct_wd(runtime) == MALLOC_FAIL)
+			ft_printf("idleshell: cd: not enough memory");
 	}
 	else
-	{
-		ft_printf("cd did not work normal version\n"); // Replace with perror later
-	}
+		perror("cd");
 }
-
-// check cwd return value of NULL

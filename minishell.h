@@ -25,6 +25,13 @@ typedef enum e_builtin_cmd
 	BUILTIN_MAX
 }	t_builtin_cmd;
 
+typedef enum e_error_code
+{
+	SUCCESS,
+	FAIL,
+	MALLOC_FAIL
+}	t_error_code;
+
 typedef struct s_env
 {
 	char	*key;
@@ -35,7 +42,7 @@ typedef struct s_runtime
 {
 	char	**env;
 	t_env	**env_struct;
-	int		enverr;
+	int		err_num;
 	//t_list	**child_pid;
 }	t_runtime;
 

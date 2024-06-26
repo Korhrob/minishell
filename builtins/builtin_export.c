@@ -2,7 +2,7 @@
 
 // Used in export with no arguments to print all the environments
 // even without value
-static void	cmd_export_single(t_runtime *runtime)
+static void	cmd_export_info(t_runtime *runtime)
 {
 	int	i;
 
@@ -48,7 +48,7 @@ static int	env_index_finder(char *env, t_runtime *runtime)
 }
 
 // Adds a new env
-static void	add_env(char *env, t_runtime *runtime)
+static int	add_env(char *env, t_runtime *runtime)
 {
 	t_env	**temp;
 	t_env	*new;
@@ -56,27 +56,31 @@ static void	add_env(char *env, t_runtime *runtime)
 
 	i = ft_array_len((void **)runtime->env_struct);
 	temp = (t_env **)malloc(sizeof(t_env *) * i + 2);
-	i = 0;
-	while (runtime->env_struct[i] != NULL)
-	{
+	if (!temp)
+		return (export_malloc_fail(temp, NULL));
+	i = -1;
+	while (runtime->env_struct[++i] != NULL)
 		temp[i] = runtime->env_struct[i];
-		i++;
-	}
-	free(runtime->env_struct);
 	new = (t_env *)malloc(sizeof(t_env));
+	if (!new)
+		return (export_malloc_fail(NULL, new));
 	new->key = NULL;
 	new->value = NULL;
-	create_env(env, new);
+	if (create_env(env, new) == MALLOC_FAIL)
+		return (export_malloc_fail(NULL, new));
 	temp[i] = new;
 	i++;
 	temp[i] = NULL;
+	free(runtime->env_struct);
 	runtime->env_struct = temp;
+	return (SUCCESS);
 }
 
 // Adds a string to the env struct inside runtime at the end, checks if it needs
 // to be replaced or created as new
-void	cmd_export(char *env, t_runtime *runtime)
+int	cmd_export(char *env, t_runtime *runtime)
 {
+	t_env	*temp_env;
 	int		old_i;
 
 	if (env[0] == '\"')
@@ -86,14 +90,19 @@ void	cmd_export(char *env, t_runtime *runtime)
 	old_i = env_index_finder(env, runtime);
 	if (old_i > -1)
 	{
+		temp_env = (t_env *)malloc(sizeof(t_env));
+		if (!temp_env)
+			return (export_malloc_fail(NULL, temp_env));
+		temp_env->key = NULL;
+		temp_env->value = NULL;
+		if (create_env(env, temp_env) == MALLOC_FAIL)
+			return (export_malloc_fail(NULL, temp_env));
 		free_single_env(runtime->env_struct[old_i]);
-		runtime->env_struct[old_i] = (t_env *)malloc(sizeof(t_env));
-		runtime->env_struct[old_i]->key = NULL;
-		runtime->env_struct[old_i]->value = NULL;
-		create_env(env, runtime->env_struct[old_i]);
-		return ;
+		runtime->env_struct[old_i] = temp_env;
+		return (SUCCESS);
 	}
 	add_env(env, runtime);
+	return (SUCCESS);
 }
 
 // Will change name later to be inline with other builtins, this function was made to
@@ -102,17 +111,20 @@ void	export_main(char **args, t_runtime *runtime)
 {
 	if (!args[1])
 	{
-		cmd_export_single(runtime);
+		cmd_export_info(runtime);
 		return ;
 	}
 	args++;
 	while (*args != NULL)
 	{
-		cmd_export(*args, runtime);
+		if (cmd_export(*args, runtime) == MALLOC_FAIL)
+			{
+				ft_printf("idleshell: export: not enough memory\n");
+				return ;
+			}
 		args++;
 	}
+	runtime->err_num = SUCCESS;
 }
 
-// Add just export, that sorts alphabetically
-// Add malloc checks
 // Add quotation character remover
