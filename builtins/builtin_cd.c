@@ -18,6 +18,11 @@ static char	*find_env(t_env **environ, char *env)
 	return (NULL);
 }
 
+static int	correct_wd(t_runtime *runtime)
+{
+	
+}
+
 // Fixes the old and new wd strings in the env
 static int	correct_wd(t_runtime *runtime)
 {

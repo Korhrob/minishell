@@ -1,9 +1,11 @@
 #include "builtins.h"
 
-void    cmd_echo(char **args)
+void    cmd_echo(char **args, t_process *process)
 {
     int i;
 
+	// process->outfile != NULL;
+	
     i = 0;
     while (args[i] != NULL)
     {
@@ -14,8 +16,9 @@ void    cmd_echo(char **args)
         i++;
     }
     i = 1;
-    if (ft_strcmp(args[1], "-n") == 0)
-        i++;
+    if (args[1])
+        if (ft_strcmp(args[1], "-n") == 0)
+            i++;
     while (args[i] != NULL)
     {
         ft_printf("%s", args[i]);
@@ -23,6 +26,7 @@ void    cmd_echo(char **args)
             ft_printf(" ");
         i++;
     }
-    if (ft_strcmp(args[1], "-n"))
-        ft_printf("\n");
+	if (args[1])
+		if (ft_strcmp(args[1], "-n"))
+			ft_printf("\n");
 }
