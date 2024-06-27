@@ -86,7 +86,7 @@ void		rl_replace_line(const char *str, int i);
 //t_process	*new_process(char *line, t_runtime *runtime);
 //void		clean_process(t_process *process);
 t_list		*create_process_list(char **pipes, t_runtime *runtime);
-void 		*clean_process_list(t_list **list);
+void 		*clean_process_list(t_list *list);
 
 // parse
 int			syntax_error(char *line);
@@ -101,8 +101,12 @@ void		file_redirection(t_process *process);
 void		rebind_args(t_process *p);
 
 // pipex
-//void		begin_pipe(t_process *process);
+void		pipex(t_list *process_list, t_runtime *runtime);
+
+// pipex/path
 char		*get_cmd_path(char **args, t_env **envp);
+
+// pipex/redirect
 int			redirect(int pipefd[2], t_process *process);
 
 
@@ -110,6 +114,5 @@ int			redirect(int pipefd[2], t_process *process);
 
 t_env	**set_env_struct(char **envp);
 
-void alt_pipex(t_list *process_list);
 
 #endif

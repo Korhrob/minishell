@@ -100,17 +100,6 @@ int	get_builtin(char *args)
 	return (-1);
 }
 
-/* OLD CODE
-if (process->args[0] != NULL)
-{
-	builtin = get_builtin(process->args[0]);
-	if (builtin != -1)
-		do_builtin(process, builtin, runtime);
-	else
-		do_command(process, runtime);
-}
-*/
-
 // execute single builtin in parent
 int	single_builtin(t_process *process, t_runtime *runtime)
 {
@@ -130,21 +119,22 @@ int	single_builtin(t_process *process, t_runtime *runtime)
 // expand $, execute args
 int	execute_args(char **pipes, t_runtime *runtime)
 {
-	
-	t_list		*list;
-	(void)alt_pipex;
+	t_list	*list;
 
+	// handle expansions for pipes here
 	runtime->pipe_index = 0;
 	runtime->pipe_count = ft_array_len((void**)pipes);
 	list = create_process_list(pipes, runtime);
 	if (list == NULL)
 	{
-		// malloc error
+		// flag malloc error
 		return (-1);
 	}
+
 	if (!single_builtin(list->content, runtime))
-		alt_pipex(list);
-	clean_process_list(&list);
+	 	pipex(list, runtime);
+
+	clean_process_list(list);
 	return (-1);
 }
 
@@ -163,8 +153,6 @@ void	shell_interactive(t_runtime *runtime)
 			break ;
 		if (*line != 0)
 		{
-			// free(line); DOUBLE CHECK LEAKS
-			// continue ;
 			record_history(line, runtime);
 			pipes = ft_split_quotes(line, '|', 0);
 			if (!syntax_error(line) && process_heredoc(line, runtime))

@@ -53,7 +53,6 @@ static t_process	*new_process(char *line, t_runtime *runtime)
 	}
 	rebind_args(p);
 	p->path = get_cmd_path(p->args, runtime->env_struct);
-	//ft_printf("path %s\n", p->path);
 	set_pflag(p, runtime);
 	return (p);
 }
@@ -85,13 +84,13 @@ t_list	*create_process_list(char **pipes, t_runtime *runtime)
 		process = new_process(*pipes, runtime);
 		if (process == NULL)
 		{
-			clean_process_list(&list);
+			clean_process_list(list);
 			return (NULL);
 		}
 		temp = ft_lstnew(process);
 		if (temp == NULL)
 		{
-			clean_process_list(&list);
+			clean_process_list(list);
 			return (NULL);
 		}
 		ft_lstadd_back(&list, temp);
@@ -101,18 +100,17 @@ t_list	*create_process_list(char **pipes, t_runtime *runtime)
 	return (list);
 }
 
-void *clean_process_list(t_list **list)
+void *clean_process_list(t_list *list)
 {
 	t_list	*cur;
 	t_list	*next;
 
-	cur = *list;
+	cur = list;
 	while (cur != NULL)
 	{
 		next = cur->next;
 		clean_process(cur->content);
 		free(cur);
-		*list = next;
 		cur = next;
 	}
 	return (NULL);

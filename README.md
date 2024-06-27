@@ -57,11 +57,7 @@ Should only execute history and none of the other pipes
 
 ## MANDATORY 
 
-cd .. hi  
-should not change cur directory (too many arguments)  
-
-cd  
-should move to home (if HOME is set)  
+two pipes work ( check redirects ), more than 2 doesnt
 
 ## NON MANDATORY
 
