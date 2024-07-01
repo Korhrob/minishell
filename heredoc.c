@@ -38,7 +38,7 @@ void	ft_heredoc(int flag, char *delimit, t_runtime *runtime)
 	int		fd;
 	char	*buffer;
 
-	fd = open(runtime->heredoc, flag, 0777);
+	fd = open(runtime->heredoc, flag, 0666); // test
 	if (fd == -1)
 		return ;
 	while (1)
@@ -48,12 +48,12 @@ void	ft_heredoc(int flag, char *delimit, t_runtime *runtime)
 			break ;
 		if (*buffer == 0)
 			continue ;
-		ft_printf_fd(fd, "%s\n", buffer);
 		if (ft_strcmp(buffer, delimit) == 0)
 		{
 			free(buffer);
 			break ;
 		}
+		ft_printf_fd(fd, "%s\n", buffer);
 		free(buffer);
 	}
 	close (fd);

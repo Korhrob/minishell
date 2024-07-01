@@ -7,12 +7,12 @@
 #include <readline/history.h>
 #include <termios.h>
 
-int g_exit_status;
+int	g_exit_status;
 
 // toggles echo caret
 // flag 0 = off
 // flag 1 = on
-void	signal_init(int	flag)
+void	signal_init(int flag)
 {
 	struct termios	attributes;
 

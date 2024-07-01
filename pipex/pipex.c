@@ -7,10 +7,6 @@
 #include <elf.h>
 #include <fcntl.h>
 
-//static int validate input / validate output
-
-// child process
-
 static int	is_executable(char *file)
 {
 	int				fd;
@@ -21,18 +17,18 @@ static int	is_executable(char *file)
 	fd = open(file, O_RDONLY);
 	if (fd == -1)
 		return (0);
-    if (read(fd, e_ident, EI_NIDENT) != EI_NIDENT) {
-        perror("read");
-        close(fd);
-        return 0;
-    }
-    close(fd);
-    if (e_ident[EI_MAG0] == ELFMAG0 &&
-        e_ident[EI_MAG1] == ELFMAG1 &&
-        e_ident[EI_MAG2] == ELFMAG2 &&
-        e_ident[EI_MAG3] == ELFMAG3)
+	if (read(fd, e_ident, EI_NIDENT) != EI_NIDENT) {
+		perror("read");
+		close(fd);
+		return 0;
+	}
+	close(fd);
+	if (e_ident[EI_MAG0] == ELFMAG0 &&
+		e_ident[EI_MAG1] == ELFMAG1 &&
+		e_ident[EI_MAG2] == ELFMAG2 &&
+		e_ident[EI_MAG3] == ELFMAG3)
 	{
-        return (1);  // It's an ELF file
+		return (1);  // It's an ELF file
 	}
 	return (0);
 }
@@ -58,6 +54,16 @@ static void	child(t_process *process)
 	exit(1);
 }
 
+static void end_pipe(int fd[2], t_pipe *pipe_info, t_process *p)
+{
+	if (!(p->pflag & PF_FIRST))
+		close(pipe_info->fd_in);
+	if (!(p->pflag & PF_LAST))
+	{
+		close(fd[WRITE]);
+		pipe_info->fd_out = fd[READ];
+	}
+}
 
 static void do_pipe(t_pipe *pipe_info, t_process *p)
 {
@@ -74,22 +80,13 @@ static void do_pipe(t_pipe *pipe_info, t_process *p)
 		perror("fork");
 		exit(1);
 	}
-	// set fd_in and fd_out here if infile and outfile are set?
 	if (pid == 0)
 	{
 		if (do_redirect(pipe_info->fd_in, fd, p) == -1)
 			exit(1);
 		child(p);
-		if (p->infile != NULL)
-			close(fd[READ]);
 	}
-	if (!(p->pflag & PF_FIRST))
-		close(pipe_info->fd_in);
-	if (!(p->pflag & PF_LAST))
-	{
-		close(fd[1]);
-		pipe_info->fd_out = fd[0];
-	}
+	end_pipe(fd, pipe_info, p);
 }
 
 // pipe once and and execute all child processes in forks
@@ -110,9 +107,7 @@ void pipex(t_list *list)
 	}
 	pid = wait(&status);
 	while (pid > 0)
-	{
 		pid = wait(&status);
-		//ft_printf_fd(STDERR_FILENO, "%d\n", status);
-	}
+	// perror("wait");
 }
 

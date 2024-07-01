@@ -1,7 +1,7 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-#include "libft/libft.h"
+# include "libft/libft.h"
 
 # define BUILTIN_CD "cd"
 # define BUILTIN_ENV "env"
@@ -11,11 +11,12 @@
 # define BUILTIN_UNSET "unset"
 # define BUILTIN_EXPORT "export"
 # define BUILTIN_ECHO "echo"
+# define BUILITIN_HISTORY "history"
 
 # define READ 0
 # define WRITE 1
 
-extern int g_exit_status;
+extern int	g_exit_status;
 
 typedef enum e_builtin_cmd
 {
@@ -27,6 +28,7 @@ typedef enum e_builtin_cmd
 	UNSET,
 	EXPORT,
 	ECHO,
+	HISTORY,
 	BUILTIN_MAX
 }	t_builtin_cmd;
 
@@ -89,10 +91,8 @@ int			process_heredoc(char *line, t_runtime *runtime);
 void		rl_replace_line(const char *str, int i);
 
 // process
-//t_process	*new_process(char *line, t_runtime *runtime);
-//void		clean_process(t_process *process);
 t_list		*create_process_list(char **pipes, t_runtime *runtime);
-void 		*clean_process_list(t_list *list);
+void		*clean_process_list(t_list *list);
 
 // parse
 int			syntax_error(char *line);
@@ -114,11 +114,10 @@ char		*get_cmd_path(char **args, t_env **envp);
 
 // pipex/redirect
 int			redirect(int pipefd[2], t_process *process);
-int 		do_redirect(int fd_in, int pipe[2], t_process *p);
+int			do_redirect(int fd_in, int pipe[2], t_process *p);
 
 // Environment
 
-t_env	**set_env_struct(char **envp);
-
+t_env		**set_env_struct(char **envp);
 
 #endif

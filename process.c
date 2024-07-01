@@ -4,31 +4,17 @@
 #include <stdlib.h>
 #include <fcntl.h>
 
-static void set_pflag(t_process *p, t_runtime *runtime)
+static void	set_pflag(t_process *p, t_runtime *runtime)
 {
 	p->pflag = 0;
-	//ft_printf("cur index %d, ", runtime->pipe_index);
 	if (runtime->pipe_count == 1)
-	{
-		//ft_printf("single pipe\n");
 		p->pflag = PF_FIRST | PF_LAST;
-	}
 	else if (runtime->pipe_index == 0)
-	{
-		//ft_printf("first pipe\n");
 		p->pflag |= PF_FIRST;
-	}
 	else if (runtime->pipe_index < runtime->pipe_count - 1)
-	{
-		//ft_printf("middle pipe\n");
 		p->pflag = PF_MIDDLE;
-	}
 	else
-	{
-		//ft_printf("last pipe\n");
 		p->pflag |= PF_LAST;
-	}
-
 }
 
 // create new process struct
@@ -100,7 +86,7 @@ t_list	*create_process_list(char **pipes, t_runtime *runtime)
 	return (list);
 }
 
-void *clean_process_list(t_list *list)
+void	*clean_process_list(t_list *list)
 {
 	t_list	*cur;
 	t_list	*next;

@@ -39,7 +39,7 @@ void	ft_exit(int ecode, t_runtime *runtime)
 	exit(ecode);
 }
 
-// execute all commands here
+// DEPRECATED: NO LONGER USED
 void	do_command(t_process *p, t_runtime *runtime)
 {
 	(void)runtime;
@@ -48,10 +48,6 @@ void	do_command(t_process *p, t_runtime *runtime)
 		ft_printf("idleshell: unexpected EOF\n");
 		ft_exit(2, runtime);
 	}
-	if (ft_strcmp(*(p->args), "history") == 0)
-		print_history((p->args + 1), runtime);
-	//else
-	//	begin_pipe(p);
 }
 
 // exectue all builtin commands here
@@ -71,8 +67,8 @@ void	do_builtin(t_process *p, int cmd, t_runtime *runtime)
 		cmd_export(p->args[1], runtime);
 	else if (cmd == ECHO)
 		cmd_echo(p->args);
-	else
-		ft_printf("builtin %s\n", *(p->args)); // not needed
+	else if (cmd == HISTORY)
+		print_history((p->args + 1), runtime);
 }
 
 // gets and returns enum if current string is builtin command
@@ -88,6 +84,7 @@ int	get_builtin(char *args)
 		BUILTIN_UNSET,
 		BUILTIN_EXPORT,
 		BUILTIN_ECHO,
+		BUILITIN_HISTORY
 	};
 
 	i = 0;
@@ -121,19 +118,17 @@ int	execute_args(char **pipes, t_runtime *runtime)
 {
 	t_list	*list;
 
-	// handle expansions for pipes here
+	// EXPAND **pipes
 	runtime->pipe_index = 0;
-	runtime->pipe_count = ft_array_len((void**)pipes);
+	runtime->pipe_count = ft_array_len((void **)pipes);
 	list = create_process_list(pipes, runtime);
 	if (list == NULL)
 	{
-		// flag malloc error
+		// MALLOC FLAG
 		return (-1);
 	}
-
 	if (!single_builtin(list->content, runtime))
-	 	pipex(list);
-
+		pipex(list);
 	clean_process_list(list);
 	return (-1);
 }
@@ -167,12 +162,6 @@ void	shell_interactive(t_runtime *runtime)
 	}
 }
 
-// probably not needed
-void	shell_no_interactive(void)
-{
-
-}
-
 int	main(int argc, char **argv, char **envp)
 {
 	t_runtime	runtime;
@@ -184,18 +173,9 @@ int	main(int argc, char **argv, char **envp)
 		init_runtime(&runtime, envp);
 	if (isatty(STDIN_FILENO) == 1)
 		shell_interactive(&runtime);
-	else
-		shell_no_interactive();
 	free_runtime(&runtime);
 	return (0);
 }
 
-//Remove the = character from the key string
-// if any pipes occur, all commands are done in child
-// else if its builtin do it in parent
-
-// should open the pipe before doing anything with children
-// keep it open until all children are done
-// then close pipe
-
-// note ft_quote_check doesnt work as it should, copy from pipex
+// note ft_quote_check doesnt work as it should, 
+// double check all quote related functions
