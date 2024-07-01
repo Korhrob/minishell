@@ -66,6 +66,12 @@ typedef enum e_pflag
 	PF_LAST = 4
 }	t_pflag;
 
+typedef struct s_pipe
+{
+	int	fd_in;
+	int	fd_out;
+}	t_pipe;
+
 // history
 void		record_history(char *line, t_runtime *runtime);
 void		print_history(char **args, t_runtime *runtime);
@@ -101,14 +107,14 @@ void		file_redirection(t_process *process);
 void		rebind_args(t_process *p);
 
 // pipex
-void		pipex(t_list *process_list, t_runtime *runtime);
+void		pipex(t_list *process_list);
 
 // pipex/path
 char		*get_cmd_path(char **args, t_env **envp);
 
 // pipex/redirect
 int			redirect(int pipefd[2], t_process *process);
-
+int 		do_redirect(int fd_in, int pipe[2], t_process *p);
 
 // Environment
 

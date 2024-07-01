@@ -38,7 +38,7 @@ static char	*try_path(char *out, char *path)
 	while (path_arr[++i] != NULL)
 	{
 		temp = ft_strjoin_c(path_arr[i], out, '/');
-		if (access(temp, F_OK) == 0)
+		if (access(temp, X_OK) == 0)
 		{
 			free(out);
 			out = ft_strdup(temp);

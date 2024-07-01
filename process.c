@@ -45,7 +45,7 @@ static t_process	*new_process(char *line, t_runtime *runtime)
 	p->outflag = 0;
 	p->line = line;
 	file_redirection(p);
-	p->args = ft_split_quotes(p->line, ' ', 0);
+	p->args = ft_split_quotes(p->line, ' ', 1);
 	if (p->args == NULL)
 	{
 		free(p);

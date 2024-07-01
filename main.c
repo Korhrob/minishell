@@ -132,7 +132,7 @@ int	execute_args(char **pipes, t_runtime *runtime)
 	}
 
 	if (!single_builtin(list->content, runtime))
-	 	pipex(list, runtime);
+	 	pipex(list);
 
 	clean_process_list(list);
 	return (-1);
