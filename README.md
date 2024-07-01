@@ -57,7 +57,9 @@ Should only execute history and none of the other pipes
 
 ## MANDATORY 
 
-two pipes work ( check redirects ), more than 2 doesnt
+empty cmds might be getting passed to pipex and print  
+no such command (null)
+fix: dont pass them to pipex in the first placeexit
 
 ## NON MANDATORY
 
