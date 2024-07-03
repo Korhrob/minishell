@@ -153,9 +153,8 @@ void	shell_interactive(t_runtime *runtime)
 			if (!syntax_error(line) && process_heredoc(line, runtime))
 				status = execute_args(pipes, runtime);
 			ft_free_arr(pipes);
-			unlink(runtime->heredoc);
 			if (status >= 0)
-				exit(status);
+				ft_exit(status, runtime);
 			signal_reset();
 		}
 		free(line);
