@@ -1,13 +1,15 @@
 CC			=	cc
 CFLAGS		=	-Wall -Werror -Wextra
-LDFLAG		=	-g -fsanitize=address
-RL_INC		=	-I ~/.brew/opt/readline/include/readline
-RL_LIB		=	-L ~/.brew/opt/readline/lib
+LDFLAG		=	#-g -fsanitize=address
+RL_INC		=	#-I ~/.brew/opt/readline/include/readline
+RL_LIB		=	#-L ~/.brew/opt/readline/lib
 NAME		=	idleshell #rename to minishell later
-SRC			=	main.c parse.c history.c signal.c process.c heredoc.c environments.c
-BUILTINS	=	builtins/builtin_pwd.c builtins/builtin_cd.c builtins/builtin_env.c builtins/builtin_unset.c	\
+SRC			=	main.c history.c signal.c process.c heredoc.c environments.c
+PARSE		=	parse/parse.c parse/file_redirection.c parse/array_handler.c
+BUILTIN		=	builtins/builtin_pwd.c builtins/builtin_cd.c builtins/builtin_env.c builtins/builtin_unset.c	\
 				builtins/builtin_export.c builtins/builtin_echo.c builtins/builtin_utils.c
-OBJ			=	$(SRC:.c=.o) $(BUILTINS:.c=.o)
+PIPEX		=	pipex/pipex.c pipex/redirect.c pipex/path.c
+OBJ			=	$(SRC:.c=.o) $(PARSE:.c=.o) $(BUILTIN:.c=.o) $(PIPEX:.c=.o)
 LIBFT		=	libft
 LIBFT_LIB	=	$(LIBFT)/libft.a
 

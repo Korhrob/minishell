@@ -64,6 +64,7 @@ int			ft_quote_check(const char *str);
 int			ft_quote_check_arr(char **arr);
 void		*ft_free_arr(char **arr);
 int			ft_array_len(void **array);
+int			file_line_count(char *file);
 
 typedef struct s_list
 {
