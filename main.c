@@ -1,3 +1,6 @@
+#include "minishell.h"
+#include "libft/libft.h"
+#include "builtins/builtins.h"
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -5,58 +8,67 @@
 #include <signal.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-#include "libft/libft.h"
-#include "minishell.h"
-#include "builtins/builtins.h"
 
-void	ft_exit(int ecode)
+//Initialization of runtime and all the possible content it may have
+static void	init_runtime(t_runtime *runtime, char **envp)
 {
-	unlink(".history");
+	runtime->env_struct = set_env_struct(envp);
+	runtime->exepath = str_pwd();
+	runtime->history = ft_strjoin(runtime->exepath, "/.history");
+	runtime->heredoc = ft_strjoin(runtime->exepath, "/.heredoc");
+	runtime->pipe_count = 0;
+	runtime->pipe_index = 0;
+	unlink(runtime->history);
+	unlink(runtime->heredoc);
+}
+
+static void	free_runtime(t_runtime *runtime)
+{
+	free_env(runtime->env_struct);
+	free(runtime->exepath);
+	free(runtime->history);
+	free(runtime->heredoc);
+}
+
+// exits program and unlinks history file
+void	ft_exit(int ecode, t_runtime *runtime)
+{
+	unlink(runtime->history);
+	unlink(runtime->heredoc);
+	free_runtime(runtime);
 	exit(ecode);
 }
 
-// execute all commands here
-// should return how many args we advanced
-void	do_command(char **args, t_runtime *runtime)
+// DEPRECATED: NO LONGER USED
+void	do_command(t_process *p, t_runtime *runtime)
 {
-	t_process	*child;
-
-	if (ft_quote_check_arr(args) == 0)
+	(void)runtime;
+	if (ft_quote_check_arr(p->args) == 0)
 	{
 		ft_printf("idleshell: unexpected EOF\n");
-		ft_exit(2);
+		ft_exit(2, runtime);
 	}
-	(void)runtime;
-	child = new_process(args);
-	if (child == NULL)
-		return ;
-	if (ft_strcmp(*args, "history") == 0)
-		print_history(args + 1);
-	ft_printf("do command %s\n", *args);
-	clean_process(child);
 }
 
-// execute all builtin commands here
-// should return how many args we advanced
-void	do_builtin(char **args, int cmd, t_runtime *runtime)
+// exectue all builtin commands here
+void	do_builtin(t_process *p, int cmd, t_runtime *runtime)
 {
 	if (cmd == EXIT)
-	{
-		free_env(runtime->env_struct);
-		ft_exit(0);
-	}
+		ft_exit(0, runtime);
 	else if (cmd == PWD)
 		cmd_pwd();
 	else if (cmd == CD)
-		cmd_cd(args, runtime);
+		cmd_cd(p->args, runtime);
 	else if (cmd == ENV)
 		cmd_env(runtime);
 	else if (cmd == UNSET)
-		unset_main(args, runtime);
+		cmd_unset(p->args[1], runtime);
 	else if (cmd == EXPORT)
-		export_main(args, runtime);
+		cmd_export(p->args[1], runtime);
 	else if (cmd == ECHO)
-		cmd_echo(args);
+		cmd_echo(p->args);
+	else if (cmd == HISTORY)
+		print_history((p->args + 1), runtime);
 }
 
 // gets and returns enum if current string is builtin command
@@ -72,6 +84,7 @@ int	get_builtin(char *args)
 		BUILTIN_UNSET,
 		BUILTIN_EXPORT,
 		BUILTIN_ECHO,
+		BUILITIN_HISTORY
 	};
 
 	i = 0;
@@ -84,30 +97,39 @@ int	get_builtin(char *args)
 	return (-1);
 }
 
-// execute args 1 by 1
-// args are split into sub
-int	execute_args(char **args, t_runtime *runtime)
+// execute single builtin in parent
+int	single_builtin(t_process *process, t_runtime *runtime)
 {
-	char	**pipe_args;
-	int		builtin;
+	int	builtin;
 
-	while (*args != NULL)
+	if (runtime->pipe_count > 1)
+		return (0);
+	builtin = get_builtin(process->args[0]);
+	if (builtin != -1)
 	{
-		pipe_args = pipe_cut(args);
-		if (pipe_args == NULL)
-			return (-1);
-		builtin = get_builtin(*pipe_args);
-		if (builtin != -1)
-			do_builtin(pipe_args, builtin, runtime);
-		else
-			do_command(pipe_args, runtime);
-		while (*args != NULL && ft_strcmp(*args, "|") != 0)
-			args++;
-		if (*args != NULL)
-			args++;
-		free(pipe_args);
-		// wait all children here?
+		do_builtin(process, builtin, runtime);
+		return (1);
 	}
+	return (0);
+}
+
+// expand $, execute args
+int	execute_args(char **pipes, t_runtime *runtime)
+{
+	t_list	*list;
+
+	// EXPAND **pipes
+	runtime->pipe_index = 0;
+	runtime->pipe_count = ft_array_len((void **)pipes);
+	list = create_process_list(pipes, runtime);
+	if (list == NULL)
+	{
+		// MALLOC FLAG
+		return (-1);
+	}
+	if (!single_builtin(list->content, runtime))
+		pipex(list);
+	clean_process_list(list);
 	return (-1);
 }
 
@@ -115,7 +137,7 @@ int	execute_args(char **args, t_runtime *runtime)
 void	shell_interactive(t_runtime *runtime)
 {
 	char	*line;
-	char	**args;
+	char	**pipes;
 	int		status;
 
 	status = -1;
@@ -124,67 +146,36 @@ void	shell_interactive(t_runtime *runtime)
 		line = readline("idleshell$ ");
 		if (line == NULL)
 			break ;
-		if (*line == 0)
-			continue ;
-		record_history(line);
-		args = ft_split_quotes(line, ' ', 0);
-		status = execute_args(args, runtime);
+		if (*line != 0)
+		{
+			record_history(line, runtime);
+			pipes = ft_split_quotes(line, '|', 0);
+			if (!syntax_error(line) && process_heredoc(line, runtime))
+				status = execute_args(pipes, runtime);
+			ft_free_arr(pipes);
+			unlink(runtime->heredoc);
+			if (status >= 0)
+				exit(status);
+			signal_reset();
+		}
 		free(line);
-		ft_free_arr(args);
-		if (status >= 0)
-			exit(status);
 	}
-}
-
-// probably not needed
-void	shell_no_interactive(void)
-{
-
-}
-
-// Copies the envp into the runtime struct as an array
-// Remove after you have switched to the struct system
-static char	**set_env_array(char **envp)
-{
-	int		i;
-	char	**envi;
-
-	envi = malloc(sizeof(char*) * (ft_array_len((void **)envp) + 1));
-	i = 0;
-	while (envp[i] != NULL)
-	{
-		envi[i] = ft_strdup(envp[i]);
-		i++;
-	}
-	envi[i] = NULL;
-	return (envi);
-}
-
-//Initialization of runtime and all the possible content it may have
-static void	init_runtime(t_runtime *runtime, char **envp)
-{
-	runtime->env = set_env_array(envp);
-	runtime->env_struct = set_env_struct(envp);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
 	t_runtime	runtime;
 
-	unlink(".history");
 	signal_init(0);
 	signal(SIGINT, signal_signint);
 	signal(SIGTERM, signal_signint);
-	runtime.env = NULL;
 	if (argc == 1 && argv)
 		init_runtime(&runtime, envp);
 	if (isatty(STDIN_FILENO) == 1)
 		shell_interactive(&runtime);
-	else
-		shell_no_interactive();
-	free_env(runtime.env_struct);
-	ft_free_arr(runtime.env);
+	free_runtime(&runtime);
 	return (0);
 }
 
-//Remove the = character from the key string
+// note ft_quote_check doesnt work as it should, 
+// double check all quote related functions

@@ -12,3 +12,19 @@ void	cmd_pwd()
 	else
 		perror("pwd");
 }
+
+// check cwd return value of NULL
+
+// gets pwd and returns it as allocated string
+char *str_pwd()
+{
+	char	cwd[PATH_MAX];
+	char	*out;
+
+	out = NULL;
+	if (getcwd(cwd, sizeof(cwd)) != NULL)
+		out = ft_strdup(cwd);
+	else
+		perror("pwd");
+	return (out);
+}

@@ -67,21 +67,23 @@ char	*ft_strtrim(const char *s1, const char *set)
 }
 
 // trims outer quotes from str and returns a new string
-// NOTE: needs some work
+// TODO: test this
 char	*ft_strtrim_quote(const char *str)
 {
+	char	c;
 	char	*out;
 	int		len;
 
 	len = ft_strlen(str);
+	if (len == 0)
+		return (NULL);
+	c = 0;
 	if (str[len - 1] == '\'' || str[len - 1] == '\"')
-	{
-		len--;
-	}
-	if (str[0] == '\'' || str[0] == '\"')
+		c = str[len - 1];
+	if (str[0] == c)
 	{
 		str++;
-		len--;
+		len -= 2;
 	}
 	out = (char *)malloc(len + 1);
 	if (out == NULL)

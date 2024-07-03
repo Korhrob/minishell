@@ -4,28 +4,21 @@
 #include <stdlib.h>
 #include <fcntl.h>
 
-// initialize redirections and heredoc
-void	set_inout(t_process *p)
+static void	set_pflag(t_process *p, t_runtime *runtime)
 {
-	int	i;
-
-	i = 0;
-	while (p->args[i] != NULL)
-	{
-		if (i > 0 && ft_strcmp(p->args[i], "<") == 0)
-			p->infile = p->args[i - 1];
-		if (p->args[i + 1] != NULL && ft_strcmp(p->args[i], ">") == 0)
-			p->outfile = p->args[i + 1];
-		if (p->args[i + 1] != NULL && ft_strcmp(p->args[i], "<<") == 0)
-			p->infile = ft_heredoc(O_WRONLY | O_CREAT, p->args[i + 1]);
-		if (p->args[i + 1] != NULL && ft_strcmp(p->args[i], ">>") == 0)
-			p->infile = ft_heredoc(O_WRONLY | O_CREAT | O_APPEND, p->args[i + 1]);
-		i++;
-	}
+	p->pflag = 0;
+	if (runtime->pipe_count == 1)
+		p->pflag = PF_FIRST | PF_LAST;
+	else if (runtime->pipe_index == 0)
+		p->pflag |= PF_FIRST;
+	else if (runtime->pipe_index < runtime->pipe_count - 1)
+		p->pflag = PF_MIDDLE;
+	else
+		p->pflag |= PF_LAST;
 }
 
 // create new process struct
-t_process	*new_process(char **args)
+static t_process	*new_process(char *line, t_runtime *runtime)
 {
 	t_process	*p;
 
@@ -33,20 +26,78 @@ t_process	*new_process(char **args)
 	if (p == NULL)
 		return (NULL);
 	p->infile = NULL;
+	p->inflag = O_RDONLY;
 	p->outfile = NULL;
-	p->args = args;
-	set_inout(p);
+	p->outflag = 0;
+	p->line = line;
+	file_redirection(p);
+	p->args = ft_split_quotes(p->line, ' ', 1);
+	if (p->args == NULL)
+	{
+		free(p);
+		return (NULL);
+	}
+	rebind_args(p);
+	p->path = get_cmd_path(p->args, runtime->env_struct);
+	set_pflag(p, runtime);
 	return (p);
 }
 
 // clean process struct
-void	clean_process(t_process *p)
+static void	clean_process(t_process *p)
 {
 	if (p == NULL)
 		return ;
-	if (p->infile != NULL && ft_strcmp(p->infile, ".heredoc") == 0)
-		unlink(".heredoc");
-	if (p->outfile != NULL && ft_strcmp(p->outfile, ".heredoc") == 0)
-		unlink(".heredoc");
+	if (p->infile != NULL)
+		free(p->infile);
+	if (p->outfile != NULL)
+		free(p->outfile);
+	if (p->path != NULL)
+		free(p->path);
+	ft_free_arr(p->args);
 	free(p);
+}
+
+t_list	*create_process_list(char **pipes, t_runtime *runtime)
+{
+	t_list		*list;
+	t_list		*temp;
+	t_process	*process;
+
+	list = NULL;
+	while (*pipes != NULL)
+	{
+		process = new_process(*pipes, runtime);
+		if (process == NULL)
+		{
+			clean_process_list(list);
+			return (NULL);
+		}
+		temp = ft_lstnew(process);
+		if (temp == NULL)
+		{
+			clean_process_list(list);
+			return (NULL);
+		}
+		ft_lstadd_back(&list, temp);
+		pipes++;
+		runtime->pipe_index++;
+	}
+	return (list);
+}
+
+void	*clean_process_list(t_list *list)
+{
+	t_list	*cur;
+	t_list	*next;
+
+	cur = list;
+	while (cur != NULL)
+	{
+		next = cur->next;
+		clean_process(cur->content);
+		free(cur);
+		cur = next;
+	}
+	return (NULL);
 }

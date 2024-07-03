@@ -25,7 +25,7 @@ int 	cmd_export(char *env, t_runtime *runtime);
 void	export_main(char **args, t_runtime *runtime);
 
 // Builtin echo
-void    cmd_echo(char **args);
+void	cmd_echo(char **args);
 
 // Utility functions
 void	free_env(t_env **env);
@@ -33,5 +33,8 @@ void	free_single_env(t_env *env);
 int	    export_malloc_fail(t_env **array, t_env *node);
 int		create_env(char *envp, t_env *env);
 char	*minitrim(char *str, char c);
+
+char	*get_cwd();
+char	*str_pwd();
 
 #endif

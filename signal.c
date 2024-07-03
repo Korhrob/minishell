@@ -7,12 +7,12 @@
 #include <readline/history.h>
 #include <termios.h>
 
-int g_exit_status;
+int	g_exit_status;
 
 // toggles echo caret
 // flag 0 = off
 // flag 1 = on
-void	signal_init(int	flag)
+void	signal_init(int flag)
 {
 	struct termios	attributes;
 
@@ -24,6 +24,7 @@ void	signal_init(int	flag)
 	tcsetattr(STDIN_FILENO, TCSAFLUSH, &attributes);
 }
 
+// handle all signals
 void	signal_signint(int signo)
 {
 	(void)signo;
@@ -39,10 +40,12 @@ void	signal_signint(int signo)
 	else if (signo == SIGTERM)
 	{
 		unlink(".history");
-		
 	}
+	//if (g_exit_status)
+	//	ft_printf("signal %d\n", g_exit_status);
 }
 
+// sets g_exit_status back to 0
 void	signal_reset(void)
 {
 	g_exit_status = 0;

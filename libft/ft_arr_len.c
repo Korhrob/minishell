@@ -6,6 +6,8 @@ int	ft_array_len(void **array)
 	int	i;
 
 	i = 0;
+	if (array == NULL)
+		return (i);
 	while (*array != NULL)
 	{
 		i++;
