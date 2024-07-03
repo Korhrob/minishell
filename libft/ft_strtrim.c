@@ -110,53 +110,9 @@ char	*ft_strtrim_quote(const char *str)
 		}
 	}
 	return (ptr);
-	/* V2
-	char	*out;
-	int		i;
-	int		j;
-	int		b;
+}
 
-	while (str[i] != 0)
-	{
-		if (str[i] == '\'' || str[i] == '\"')
-		{
-			c = str[i];
-			b = ft_strlen_t(&str[i + 1], c);
-			i += b + 1;
-			j += b - 1;
-		}
-		else
-		{
-			i++;
-			j++;
-		}
-	}	
-	out = (char *)malloc(j + 1);
-	ft_printf("sizeof %d\n", j + 1);
-	i = 0;
-	j = 0;
-	while (str[i] != 0)
-	{
-		if (str[i] == '\'' || str[i] == '\"')
-		{
-			c = str[i];
-			b = ft_strlen_t(&str[i + 1], c);
-			j += ft_strlcpy(&out[j], &str[i + 1], b + 1);
-			i += b + 1;
-		}
-		else
-		{
-			out[j] = str[j];
-			i++;
-			j++;
-		}
-	}
-	out[j] = 0;
-	return (out);
-
-	*/
-	// OLD
-	/*
+	/* OLD
 	len = ft_strlen(str);
 	if (len == 0)
 		return (NULL);
@@ -174,4 +130,3 @@ char	*ft_strtrim_quote(const char *str)
 	ft_strlcpy(out, str, len + 1);
 	return (out);
 	*/
-}
