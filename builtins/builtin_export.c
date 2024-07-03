@@ -124,7 +124,6 @@ void	export_main(char **args, t_runtime *runtime)
 			}
 		args++;
 	}
-	runtime->err_num = SUCCESS;
 }
 
 // Add quotation character remover

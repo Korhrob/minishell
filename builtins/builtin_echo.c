@@ -1,11 +1,9 @@
 #include "builtins.h"
 
-void    cmd_echo(char **args, t_process *process)
+void    cmd_echo(char **args)
 {
     int i;
 
-	// process->outfile != NULL;
-	
     i = 0;
     while (args[i] != NULL)
     {

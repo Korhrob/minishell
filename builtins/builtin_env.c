@@ -39,5 +39,4 @@ void	cmd_env(t_runtime *runtime)
 		}
 		i++;
 	}
-	runtime->err_num = SUCCESS;
 }

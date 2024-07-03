@@ -42,7 +42,6 @@ typedef struct s_runtime
 {
 	char	**env;
 	t_env	**env_struct;
-	int		err_num;
 	//t_list	**child_pid;
 }	t_runtime;
 

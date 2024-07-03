@@ -18,34 +18,34 @@ static char	*find_env(t_env **environ, char *env)
 	return (NULL);
 }
 
-static int	correct_wd(t_runtime *runtime)
+static int	update_oldpwd(t_runtime *runtime, char *temp_wd)
 {
-	
+	char	*temp;
+
+	temp = ft_strjoin("OLDPWD=", temp_wd);
+	if (!temp)
+		return (MALLOC_FAIL);
+	if (cmd_export(temp, runtime) == MALLOC_FAIL)
+		return (MALLOC_FAIL);
+	free (temp);
+	return (SUCCESS);
 }
 
-// Fixes the old and new wd strings in the env
+// Fixes the old and new wd strings in the environment
 static int	correct_wd(t_runtime *runtime)
 {
 	char	cwd[PATH_MAX];
 	char	*temp_wd;
-	char	*temp_str;
 
-	temp_str = find_env(runtime->env_struct, "PWD");
-	if (temp_str == NULL)
+	temp_wd = find_env(runtime->env_struct, "PWD");
+	if (!temp_wd)
 	{
-		if (find_env(runtime->env_struct, "OLDPWD") != NULL)
-			if (cmd_export("OLDPWD=", runtime) == MALLOC_FAIL)
-				return (MALLOC_FAIL);
+		cmd_unset("OLDPWD", runtime);
 		return (SUCCESS);
 	}
 	if (find_env(runtime->env_struct, "OLDPWD") != NULL)
-	{
-		temp_wd = ft_strjoin("OLDPWD=", temp_str);
-		if (!temp_wd)
+		if (update_oldpwd(runtime, temp_wd) == MALLOC_FAIL)
 			return (MALLOC_FAIL);
-		cmd_export(temp_wd, runtime);
-		free(temp_wd);
-	}
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
 		perror("working directory fail");
 	temp_wd = ft_strjoin("PWD=", cwd);
@@ -53,7 +53,7 @@ static int	correct_wd(t_runtime *runtime)
 		return (MALLOC_FAIL);
 	if (cmd_export(temp_wd, runtime) == MALLOC_FAIL)
 		return (MALLOC_FAIL);
-	free(temp_wd);
+	free (temp_wd);
 	return (SUCCESS);
 }
 
@@ -83,7 +83,6 @@ static void	home_dir(t_runtime *runtime)
 // Changes working directory to the provided path
 void	cmd_cd(char **args, t_runtime *runtime)
 {
-	runtime->err_num = SUCCESS;
 	if (args[1] == NULL)
 	{
 		home_dir(runtime);
