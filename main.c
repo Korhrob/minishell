@@ -149,9 +149,13 @@ void	shell_interactive(t_runtime *runtime)
 		if (*line != 0)
 		{
 			record_history(line, runtime);
-			pipes = ft_split_quotes(line, '|', 0);
-			if (!syntax_error(line) && process_heredoc(line, runtime))
-				status = execute_args(pipes, runtime);
+			pipes = ft_split_quotes(line, '|', 1);
+
+			for (int i = 0; pipes[i] != NULL; i++)
+				ft_printf("%s\n", pipes[i]);
+
+			// if (!syntax_error(line) && process_heredoc(line, runtime))
+			// 	status = execute_args(pipes, runtime);
 			ft_free_arr(pipes);
 			if (status >= 0)
 				ft_exit(status, runtime);

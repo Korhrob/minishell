@@ -66,14 +66,97 @@ char	*ft_strtrim(const char *s1, const char *set)
 	return (out);
 }
 
+
 // trims outer quotes from str and returns a new string
 // TODO: test this
 char	*ft_strtrim_quote(const char *str)
 {
-	char	c;
 	char	*out;
-	int		len;
+	char	*ptr;
+	int		i;
 
+	ptr = (char *)str;
+	i = 0;
+	while (*ptr != 0)
+	{
+		if (*ptr == '\'' || *ptr == '\"')
+		{
+			i += ft_strlen_t(ptr, *ptr);
+			ptr += ft_strlen_t(ptr, *ptr) + 1;
+		}
+		else
+		{
+			i++;
+			ptr++;
+		}
+	}
+	// (b'est=test') >> (best=test), new len = 9
+	out = (char *)ft_calloc(1, i + 1);
+	// MALLOC ERROR
+	ptr = out;
+	while (*str != 0)
+	{
+		if (*str == '\'' || *str == '\"')
+		{
+			i = ft_strlen_t(str, *ptr);
+			ptr += ft_strlcpy(ptr, str, i);
+			str += i + 1;
+		}
+		else
+		{
+			i++;
+			*ptr = *str;
+			str++;
+		}
+	}
+	return (out);
+	/* V2
+	char	*out;
+	int		i;
+	int		j;
+	int		b;
+
+	while (str[i] != 0)
+	{
+		if (str[i] == '\'' || str[i] == '\"')
+		{
+			c = str[i];
+			b = ft_strlen_t(&str[i + 1], c);
+			i += b + 1;
+			j += b - 1;
+		}
+		else
+		{
+			i++;
+			j++;
+		}
+	}	
+	out = (char *)malloc(j + 1);
+	ft_printf("sizeof %d\n", j + 1);
+	i = 0;
+	j = 0;
+	while (str[i] != 0)
+	{
+		if (str[i] == '\'' || str[i] == '\"')
+		{
+			c = str[i];
+			b = ft_strlen_t(&str[i + 1], c);
+			j += ft_strlcpy(&out[j], &str[i + 1], b + 1);
+			i += b + 1;
+		}
+		else
+		{
+			out[j] = str[j];
+			i++;
+			j++;
+		}
+	}
+	out[j] = 0;
+	return (out);
+
+	*/
+	// OLD
+	/*
 	len = ft_strlen(str);
 	if (len == 0)
 		return (NULL);
@@ -90,4 +173,5 @@ char	*ft_strtrim_quote(const char *str)
 		return (NULL);
 	ft_strlcpy(out, str, len + 1);
 	return (out);
+	*/
 }
