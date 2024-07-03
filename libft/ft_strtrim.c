@@ -98,18 +98,18 @@ char	*ft_strtrim_quote(const char *str)
 	{
 		if (*str == '\'' || *str == '\"')
 		{
-			i = ft_strlen_t(str, *ptr);
-			ptr += ft_strlcpy(ptr, str, i);
+			i = ft_strlen_t(str + 1, *str);
+			out += ft_strlcpy(out, str + 1, i + 1);
 			str += i + 1;
 		}
 		else
 		{
-			i++;
-			*ptr = *str;
+			*out = *str;
+			out++;
 			str++;
 		}
 	}
-	return (out);
+	return (ptr);
 	/* V2
 	char	*out;
 	int		i;
