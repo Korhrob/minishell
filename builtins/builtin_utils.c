@@ -69,6 +69,7 @@ char	*minitrim(char *str, char c)
 	char	*strlocal;
 	int		i;
 
+	i = 0;
 	while (str[i])
 		i++;
 	if (i < 2)

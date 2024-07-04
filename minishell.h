@@ -48,7 +48,6 @@ typedef struct s_env
 typedef struct s_runtime
 {
 	t_env	**env_struct;
-	int		enverr;
 	int		pipe_index;
 	int		pipe_count;
 	char	*exepath;
@@ -107,6 +106,9 @@ char		*get_filename(char *str);
 void		align_args(t_process *p);
 int			is_charset(char c, const char *set);
 
+// expansions
+int expand_dollars(char **pipes, t_env **environ);
+
 // file_redirections
 void		file_redirection(t_process *process);
 
@@ -123,8 +125,7 @@ char		*get_cmd_path(char **args, t_env **envp);
 int			redirect(int pipefd[2], t_process *process);
 int			do_redirect(int fd_in, int pipe[2], t_process *p);
 
-// Environment
-
+// environment
 t_env		**set_env_struct(char **envp);
 
 #endif
