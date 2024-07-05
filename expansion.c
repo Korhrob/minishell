@@ -104,10 +104,8 @@ static char	*expand_logic(char *pipe, t_env **environ)
 int expand_dollars(char **pipes, t_env **environ)
 {
 	int	i;
-	int	j;
 
 	i = 0;
-	j = 0;
 	while (pipes[i] != NULL)
 	{
 		printf("string before = [%s]\n", pipes[i]);
