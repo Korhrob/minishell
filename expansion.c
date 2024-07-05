@@ -88,6 +88,8 @@ static char	*expand_logic(char *pipe, t_env **environ)
 			count++;
 		i++;
 	}
+	if (count == 0)
+		return (pipe);
 	splitpipe = (char **)malloc(sizeof(char *)*(count * 2 + 1));
 	splitpipe = create_strings(splitpipe, pipe, environ);
 	free (pipe);
