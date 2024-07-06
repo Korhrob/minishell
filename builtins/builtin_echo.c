@@ -1,6 +1,6 @@
 #include "builtins.h"
 
-void    cmd_echo(char **args)
+static void	quotation_trim(char **args)
 {
 	int i;
 
@@ -13,10 +13,16 @@ void    cmd_echo(char **args)
 			args[i] = minitrim(args[i], '\'');
 		i++;
 	}
-	i = 0;
-	if (args[1])
-		if (ft_strcmp(args[1], "-n"))
-			i++;
+}
+
+void    cmd_echo(char **args)
+{
+	int i;
+
+	i = 1;
+	quotation_trim(args);
+	while (ft_strcmp(args[i], "-n") == 0)
+		i++;
 	while (args[i] != NULL)
 	{
 		ft_printf("%s", args[i]);
@@ -25,6 +31,11 @@ void    cmd_echo(char **args)
 		i++;
 	}
 	if (args[1])
-		if (ft_strcmp(args[1], "-n"))
+	{
+		if (ft_strcmp(args[1], "-n") != 0)
 			ft_printf("\n");
+	}
+	else
+		ft_printf("\n");
+
 }
