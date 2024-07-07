@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+// calculates the lenght of the arrays strings
 static int	calculate_len(char **array, int count)
 {
 	int	i;
@@ -18,6 +19,7 @@ static int	calculate_len(char **array, int count)
 	return (len);
 }
 
+// joins count amount of strings in an array into one string
 static char	*array_join_c(char **array, int count)
 {
 	char	*out;
@@ -38,20 +40,20 @@ static char	*array_join_c(char **array, int count)
 		i++;
 		j = 0;
 		count--;
-		printf("Joined string = [%s]\n", array[i]);
 		out[n] = 0;
-		printf("string joined = [%s]\n", out);
 	}
 	out[n] = 0;
 	return (out);
 }
 
 // free every second string in the array starting with first
-static void	free_expands(char **array)
+static void	*free_expands(char **array, int index)
 {
 	int i;
 
 	i = 0;
+	if (index > 0)
+		array[index] = NULL;
 	while (array[i] != NULL)
 	{
 		free(array[i]);
@@ -60,6 +62,7 @@ static void	free_expands(char **array)
 		i++;
 	}
 	free(array);
+	return (NULL);
 }
 
 // using the key finds the correct value if it exists
@@ -89,7 +92,6 @@ static char	*expand(char *pipe, t_env **environ)
 		i++;
 	key = (char *)malloc(i+1);
 	ft_strlcpy(key, pipe, i+1);
-	printf("Pipe key = [%s]\n", key);
 	return (find_expansion(key, environ));
 }
 
@@ -99,48 +101,34 @@ static char **create_strings(char **splitpipe, char *pipe, t_env **environ)
 {
 	int i;
 	int len;
-	char *temp;
 
 	i = 0;
 	len = 0;
-	temp = pipe;
-	while (*temp != 0)
+	while (*pipe != 0)
 	{
-		printf("temp = [%s]\n", temp);
-		if ((*temp == '$') && (*temp+1 != '$' || *temp-1 != '$'))
+		if ((*pipe == '$') && (*pipe+1 != '$' || *pipe-1 != '$'))
 		{
-			printf("Pipe remainder = [%s] with len = %i\n", pipe, len);
-			splitpipe[i] = ft_strldup(pipe, 0, len);
-			printf("array string %i = [%s]\n", i, splitpipe[i]);
-			splitpipe[i+1] = expand(temp+1, environ);
-			printf("array string %i = [%s]\n", i+1, splitpipe[i+1]);
-			while (ft_isalnum(*temp+1) || *temp+1 == '-' || *temp+1 == '_')
-				temp++;
-			printf("temp = [%s]\n", temp);
-			i = i + 2;
-			pipe = temp+1;
+			splitpipe[i] = ft_strldup(pipe-len, 0, len);
+			if (!splitpipe[i])
+				return (free_expands(splitpipe, i));
+			splitpipe[i+1] = expand(pipe+1, environ);
+			while (ft_isalnum(*pipe+1) || *pipe+1 == '-' || *pipe+1 == '_')
+				pipe++;
+			pipe++;
+			i = i + 2;;
 			len = -1;
-			while (ft_isalnum(*pipe) || *pipe == '-' || *pipe == '_')
-			{
-				pipe++,
-				len--;
-			}
-			printf("--------------------------\n");
 		}
-		printf("len = %i", len);
 		len++;
-		temp++;
+		pipe++;
 	}
 	splitpipe[i] = NULL;
 	return (splitpipe);
 }
 
-// base logic behind expanding the pipes
-static char	*expand_logic(char *pipe, t_env **environ)
+static int	count_expands(char *pipe)
 {
-	char **splitpipe;
 	int i;
-	int count;
+	int	count;
 
 	i = 0;
 	count = 0;
@@ -150,15 +138,31 @@ static char	*expand_logic(char *pipe, t_env **environ)
 			count++;
 		i++;
 	}
-	printf("Quantity of expansions = %i\n", count);
+	return (count);
+}
+
+// base logic behind expanding the pipes
+static char	*expand_logic(char *pipe, t_env **environ)
+{
+	char	**splitpipe;
+	char	*ret;
+	int		count;
+
+	count = count_expands(pipe);
 	if (count == 0)
 		return (pipe);
 	splitpipe = (char **)malloc(sizeof(char *)*(count * 2 + 1));
+	if (!splitpipe)
+		return (NULL);
 	splitpipe = create_strings(splitpipe, pipe, environ);
+	if (!splitpipe)
+		return (NULL);
+	ret = array_join_c(splitpipe, count * 2);
+	if (!ret)
+		return (NULL);
 	free (pipe);
-	pipe = array_join_c(splitpipe, count * 2);
-	free_expands(splitpipe);
-	return (pipe);
+	free_expands(splitpipe, 0);
+	return (ret);
 }
 
 // iterates every single pipe string and expands $ signs with environments
@@ -171,9 +175,11 @@ int expand_dollars(char **pipes, t_env **environ)
 	{
 		printf("string before = [%s]\n", pipes[i]);
 		pipes[i] = expand_logic(pipes[i], environ);
+		if (!pipes[i])
+			return (MALLOC_FAIL);
 		printf("string after = [%s]\n", pipes[i]);
 		i++;
 	}
 	printf("expansion SUCCESS\n");
-	return (0);
+	return (SUCCESS);
 }

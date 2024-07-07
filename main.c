@@ -119,7 +119,8 @@ int	execute_args(char **pipes, t_runtime *runtime)
 	t_list	*list;
 
 	// EXPAND **pipes
-	expand_dollars(pipes, runtime->env_struct);
+	if (expand_dollars(pipes, runtime->env_struct) == MALLOC_FAIL)
+		ft_exit(1, runtime);
 	runtime->pipe_index = 0;
 	runtime->pipe_count = ft_array_len((void **)pipes);
 	list = create_process_list(pipes, runtime);
