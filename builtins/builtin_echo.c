@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin_echo.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: avegis <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/08 18:29:40 by avegis            #+#    #+#             */
+/*   Updated: 2024/07/08 18:29:42 by avegis           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "builtins.h"
 
 // prints on standard output all strings from an array except
 // the first and any -n flags that remove newline
-void    cmd_echo(char **args, int fd)
+void	cmd_echo(char **args, int fd)
 {
-	int i;
+	int	i;
 
 	i = 1;
 	while (args[i])

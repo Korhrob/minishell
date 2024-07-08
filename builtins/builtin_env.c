@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin_env.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: avegis <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/08 18:30:48 by avegis            #+#    #+#             */
+/*   Updated: 2024/07/08 18:30:49 by avegis           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "builtins.h"
 
 static int	existing_path(t_env **environ, char *env)
@@ -16,7 +28,7 @@ static int	existing_path(t_env **environ, char *env)
 }
 
 // Prints all the environments that have a value
-void	cmd_env(t_runtime *runtime)
+void	cmd_env(t_runtime *runtime, int fd)
 {
 	int	i;
 
@@ -34,8 +46,8 @@ void	cmd_env(t_runtime *runtime)
 	{
 		if (runtime->env_struct[i]->value)
 		{
-			ft_printf("\033[1;31m%s\033[0m", runtime->env_struct[i]->key);
-			ft_printf("=%s\n", runtime->env_struct[i]->value);
+			ft_printf_fd(fd, "\033[1;31m%s\033[0m", runtime->env_struct[i]->key);
+			ft_printf_fd(fd, "=%s\n", runtime->env_struct[i]->value);
 		}
 		i++;
 	}

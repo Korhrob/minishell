@@ -131,4 +131,9 @@ int			do_redirect(int fd_in, int pipe[2], t_process *p);
 // environment
 t_env		**set_env_struct(char **envp);
 
+// expansions
+int			expand_dollars(char **pipes, t_env **environ);
+char		**create_strings(char **splitpipe, char *pipe, t_env **environ);
+void		*free_expands(char **array, int index);
+
 #endif

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin_unset.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: avegis <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/08 18:30:25 by avegis            #+#    #+#             */
+/*   Updated: 2024/07/08 18:30:26 by avegis           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "builtins.h"
 
 static int	key_exists(char *line, t_env **env)
@@ -45,22 +57,21 @@ int	cmd_unset(char *env_line, t_runtime *runtime)
 	return (SUCCESS);
 }
 
-// Will change name later to be inline with other builtins, this function was made to
-// perform multiple arguments passed to the function
+// Will change name later to be inline with other builtins, this function was
+// made to perform multiple arguments passed to the function
 void	unset_main(char **args, t_runtime *runtime)
 {
 	args++;
 	while (*args != NULL)
 	{
 		if (key_exists(*args, runtime->env_struct) == SUCCESS)
+		{
 			if (cmd_unset(*args, runtime) == MALLOC_FAIL)
-				{
-					ft_printf("idleshell: unset: not enough memory\n");
-					return ;
-				}
+			{
+				ft_printf("idleshell: unset: not enough memory\n");
+				return ;
+			}
+		}
 		args++;
 	}
 }
-
-// Need to add a malloc check and need to add a check if there is anything to remove
-// Need to add checks that see if the passed env is valid

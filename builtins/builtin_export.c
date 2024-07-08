@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin_export.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: avegis <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/08 18:30:38 by avegis            #+#    #+#             */
+/*   Updated: 2024/07/08 18:30:39 by avegis           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "builtins.h"
 
 // Used in export with no arguments to print all the environments
 // even without value
-static void	cmd_export_info(t_runtime *runtime)
+static void	cmd_export_info(t_runtime *runtime, int fd)
 {
 	int	i;
 
@@ -13,11 +25,11 @@ static void	cmd_export_info(t_runtime *runtime)
 		return ;
 	while (runtime->env_struct[i] != NULL)
 	{
-		ft_printf("declare -x %s", runtime->env_struct[i]->key);
+		ft_printf_fd(fd, "declare -x %s", runtime->env_struct[i]->key);
 		if (runtime->env_struct[i]->value)
-			ft_printf("=%s\n", runtime->env_struct[i]->value);
+			ft_printf_fd(fd, "=%s\n", runtime->env_struct[i]->value);
 		else
-			ft_printf("\n");
+			ft_printf_fd(fd, "\n");
 		i++;
 	}
 }
@@ -76,8 +88,8 @@ static int	add_env(char *env, t_runtime *runtime)
 	return (SUCCESS);
 }
 
-// Adds a string to the env struct inside runtime at the end, checks if it needs
-// to be replaced or created as new
+// Adds a string to the env struct inside runtime at the end, checks if
+// it needs to be replaced or created as new
 int	cmd_export(char *env, t_runtime *runtime)
 {
 	t_env	*temp_env;
@@ -105,23 +117,23 @@ int	cmd_export(char *env, t_runtime *runtime)
 	return (SUCCESS);
 }
 
-// Will change name later to be inline with other builtins, this function was made to
-// perform multiple arguments passed to the function
-void	export_main(char **args, t_runtime *runtime)
+// Will change name later to be inline with other builtins, this function was
+// made to perform multiple arguments passed to the function
+void	export_main(char **args, t_runtime *runtime, int fd)
 {
 	if (!args[1])
 	{
-		cmd_export_info(runtime);
+		cmd_export_info(runtime, fd);
 		return ;
 	}
 	args++;
 	while (*args != NULL)
 	{
 		if (cmd_export(*args, runtime) == MALLOC_FAIL)
-			{
-				ft_printf("idleshell: export: not enough memory\n");
-				return ;
-			}
+		{
+			ft_printf("idleshell: export: not enough memory\n");
+			return ;
+		}
 		args++;
 	}
 }

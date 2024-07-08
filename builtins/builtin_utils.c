@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   builtin_utils.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: avegis <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/08 18:30:12 by avegis            #+#    #+#             */
+/*   Updated: 2024/07/08 18:30:13 by avegis           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "builtins.h"
 
 // Used to free a single env struct inside the env array
@@ -13,7 +25,7 @@ void	free_single_env(t_env *env)
 // Used to free all of the env struct and itself
 void	free_env(t_env **env)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (env[i] != NULL)
