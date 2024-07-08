@@ -107,7 +107,6 @@ int	single_builtin(t_process *process, t_runtime *runtime)
 	builtin = get_builtin(process->args[0]);
 	if (builtin != -1)
 	{
-		printf("debug\n");
 		do_builtin(process, builtin, runtime);
 		return (1);
 	}
