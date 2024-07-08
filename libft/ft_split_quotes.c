@@ -106,6 +106,8 @@ char	**ft_split_quotes(const char *s, char c, int flag)
 	while (*s == c)
 		s++;
 	wordcount = ft_word_count(s, c);
+	if (wordcount <= 0)
+		return (NULL);
 	wordarr = ft_calloc(wordcount + 1, sizeof(char *));
 	if (wordarr == NULL)
 		return (NULL);

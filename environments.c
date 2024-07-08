@@ -26,7 +26,7 @@ t_env	**set_env_struct(char **envp)
 	int		i;
 
 	i = 0;
-	env = (t_env **)malloc(sizeof(t_env *) * ft_array_len((void **)envp) + 1);
+	env = (t_env **)malloc(sizeof(t_env *) * (ft_array_len((void **)envp) + 1));
 	if (!env)
 		malloc_env_fail(env, i);
 	while (envp[i] != NULL)

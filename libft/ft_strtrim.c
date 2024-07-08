@@ -95,43 +95,24 @@ char	*ft_strtrim_quote(const char *str)
 	char	*ptr;
 	int		i;
 
+	i = ft_trim_len(str);
 	out = (char *)ft_calloc(1, i + 1);
 	if (!out)
-		return (str);
+		return ((char *)str);
 	ptr = out;
 	while (*str != 0)
 	{
 		if (*str == '\'' || *str == '\"')
 		{
 			i = ft_strlen_t(str + 1, *str);
-			out += ft_strlcpy(out, str + 1, i + 1);
+			if (i > 0)
+				out += ft_strlcpy(out, str + 1, i + 1);
 			str += i + 1;
+			continue ;
 		}
-		else
-		{
-			*out = *str;
-			out++;
-			str++;
-		}
+		*out = *str;
+		out++;
+		str++;
 	}
 	return (ptr);
 }
-
-	/* OLD
-	len = ft_strlen(str);
-	if (len == 0)
-		return (NULL);
-	c = 0;
-	if (str[len - 1] == '\'' || str[len - 1] == '\"')
-		c = str[len - 1];
-	if (str[0] == c)
-	{
-		str++;
-		len -= 2;
-	}
-	out = (char *)malloc(len + 1);
-	if (out == NULL)
-		return (NULL);
-	ft_strlcpy(out, str, len + 1);
-	return (out);
-	*/
