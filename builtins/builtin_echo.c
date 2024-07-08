@@ -1,21 +1,19 @@
 #include "builtins.h"
 
+// prints on standard output all strings from an array except
+// the first and any -n flags that remove newline
 void    cmd_echo(char **args)
 {
 	int i;
 
-	i = 0;
-	while (args[i] != NULL)
+	i = 1;
+	while (args[i])
 	{
-		if (args[i][0] == '\"')
-			args[i] = minitrim(args[i], '\"');
+		if (ft_strcmp(args[i], "-n") == 0)
+			i++;
 		else
-			args[i] = minitrim(args[i], '\'');
-		i++;
+			break ;
 	}
-	i = 0;
-	if (ft_strcmp(args[1], "-n"))
-		i++;
 	while (args[i] != NULL)
 	{
 		ft_printf("%s", args[i]);
@@ -23,6 +21,11 @@ void    cmd_echo(char **args)
 			ft_printf(" ");
 		i++;
 	}
-	if (ft_strcmp(args[1], "-n"))
+	if (args[1])
+	{
+		if (ft_strcmp(args[1], "-n") != 0)
+			ft_printf("\n");
+	}
+	else
 		ft_printf("\n");
 }

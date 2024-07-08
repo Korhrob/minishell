@@ -7,16 +7,16 @@ static int	key_exists(char *line, t_env **env)
 	i = 0;
 	while (env[i] != NULL)
 	{
-		if (ft_strcmp(env[i]->key, line) == 0)
-			return (1);
+		if (ft_strcmp(env[i]->key, line) == SUCCESS)
+			return (SUCCESS);
 		i++;
 	}
-	return (0);
+	return (1);
 }
 
 // Frees and removes a single node
 // Creates a new struct and populates with the remaining env nodes
-void	cmd_unset(char *env, t_runtime *runtime)
+int	cmd_unset(char *env_line, t_runtime *runtime)
 {
 	t_env	**temp;
 	int		i;
@@ -24,11 +24,13 @@ void	cmd_unset(char *env, t_runtime *runtime)
 
 	j = ft_array_len((void **)runtime->env_struct);
 	temp = (t_env **)malloc(sizeof(t_env *) * j);
+	if (!temp)
+		return (MALLOC_FAIL);
 	i = 0;
 	j = 0;
 	while (runtime->env_struct[i] != NULL)
 	{
-		if (ft_strcmp(runtime->env_struct[i]->key, env) == 0)
+		if (ft_strcmp(runtime->env_struct[i]->key, env_line) == SUCCESS)
 			free_single_env(runtime->env_struct[i]);
 		else if (runtime->env_struct[i])
 		{
@@ -40,6 +42,7 @@ void	cmd_unset(char *env, t_runtime *runtime)
 	temp[j] = NULL;
 	free(runtime->env_struct);
 	runtime->env_struct = temp;
+	return (SUCCESS);
 }
 
 // Will change name later to be inline with other builtins, this function was made to
@@ -49,8 +52,12 @@ void	unset_main(char **args, t_runtime *runtime)
 	args++;
 	while (*args != NULL)
 	{
-		if (key_exists(*args, runtime->env_struct) == 1)
-			cmd_unset(*args, runtime);
+		if (key_exists(*args, runtime->env_struct) == SUCCESS)
+			if (cmd_unset(*args, runtime) == MALLOC_FAIL)
+				{
+					ft_printf("idleshell: unset: not enough memory\n");
+					return ;
+				}
 		args++;
 	}
 }

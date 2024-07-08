@@ -13,8 +13,6 @@ void	cmd_pwd()
 		perror("pwd");
 }
 
-// check cwd return value of NULL
-
 // gets pwd and returns it as allocated string
 char *str_pwd()
 {

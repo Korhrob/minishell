@@ -36,7 +36,7 @@ t_env	**set_env_struct(char **envp)
 			malloc_env_fail(env, i);
 		env_new->key = NULL;
 		env_new->value = NULL;
-		if (create_env(envp[i], env_new) != 1)
+		if (create_env(envp[i], env_new) == MALLOC_FAIL)
 			malloc_env_fail(env, i);
 		env[i] = env_new;
 		i++;

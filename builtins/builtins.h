@@ -17,11 +17,11 @@ void	cmd_cd(char **args, t_runtime *runtime);
 void	cmd_env(t_runtime *runtime);
 
 // Builtin unset
-void	cmd_unset(char *env, t_runtime *runtime);
+int 	cmd_unset(char *env_line, t_runtime *runtime);
 void	unset_main(char **args, t_runtime *runtime);
 
 // Builtin export
-void	cmd_export(char *env, t_runtime *runtime);
+int 	cmd_export(char *env, t_runtime *runtime);
 void	export_main(char **args, t_runtime *runtime);
 
 // Builtin echo
@@ -30,6 +30,7 @@ void	cmd_echo(char **args);
 // Utility functions
 void	free_env(t_env **env);
 void	free_single_env(t_env *env);
+int	    export_malloc_fail(t_env **array, t_env *node);
 int		create_env(char *envp, t_env *env);
 char	*minitrim(char *str, char c);
 
