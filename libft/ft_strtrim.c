@@ -66,6 +66,26 @@ char	*ft_strtrim(const char *s1, const char *set)
 	return (out);
 }
 
+static int	ft_trim_len(const char *str)
+{
+	int	i;
+
+	i = 0;
+	while (*str != 0)
+	{
+		if (*str == '\'' || *str == '\"')
+		{
+			i += ft_strlen_t(str, *str);
+			str += ft_strlen_t(str, *str) + 1;
+		}
+		else
+		{
+			i++;
+			str++;
+		}
+	}
+	return (i);
+}
 
 // trims outer quotes from str and returns a new string
 // TODO: test this
@@ -75,24 +95,9 @@ char	*ft_strtrim_quote(const char *str)
 	char	*ptr;
 	int		i;
 
-	ptr = (char *)str;
-	i = 0;
-	while (*ptr != 0)
-	{
-		if (*ptr == '\'' || *ptr == '\"')
-		{
-			i += ft_strlen_t(ptr, *ptr);
-			ptr += ft_strlen_t(ptr, *ptr) + 1;
-		}
-		else
-		{
-			i++;
-			ptr++;
-		}
-	}
-	// (b'est=test') >> (best=test), new len = 9
 	out = (char *)ft_calloc(1, i + 1);
-	// MALLOC ERROR
+	if (!out)
+		return (str);
 	ptr = out;
 	while (*str != 0)
 	{
