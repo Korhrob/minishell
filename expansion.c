@@ -35,8 +35,9 @@ static char	*array_join_c(char **array, int count)
 		return (NULL);
 	while (count > 0)
 	{
-		while (array[i][j] != 0)
-			out[n++] = array[i][j++];
+		if (array[i])
+			while (array[i][j] != 0)
+				out[n++] = array[i][j++];
 		i++;
 		j = 0;
 		count--;
@@ -112,9 +113,8 @@ static char **create_strings(char **splitpipe, char *pipe, t_env **environ)
 			if (!splitpipe[i])
 				return (free_expands(splitpipe, i));
 			splitpipe[i+1] = expand(pipe+1, environ);
-			while (ft_isalnum(*pipe+1) || *pipe+1 == '-' || *pipe+1 == '_')
+			while (ft_isalnum(*(pipe+1)) || *(pipe+1) == '-' || *(pipe+1) == '_')
 				pipe++;
-			pipe++;
 			i = i + 2;;
 			len = -1;
 		}
@@ -125,6 +125,7 @@ static char **create_strings(char **splitpipe, char *pipe, t_env **environ)
 	return (splitpipe);
 }
 
+// counts the number of expansions in the pipe
 static int	count_expands(char *pipe)
 {
 	int i;
@@ -173,13 +174,10 @@ int expand_dollars(char **pipes, t_env **environ)
 	i = 0;
 	while (pipes[i] != NULL)
 	{
-		printf("string before = [%s]\n", pipes[i]);
 		pipes[i] = expand_logic(pipes[i], environ);
 		if (!pipes[i])
 			return (MALLOC_FAIL);
-		printf("string after = [%s]\n", pipes[i]);
 		i++;
 	}
-	printf("expansion SUCCESS\n");
 	return (SUCCESS);
 }
