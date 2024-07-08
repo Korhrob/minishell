@@ -80,6 +80,9 @@ typedef struct s_pipe
 	int	fd_out;
 }	t_pipe;
 
+// main
+int			single_builtin(t_process *process, t_runtime *runtime, int fd);
+
 // history
 void		record_history(char *line, t_runtime *runtime);
 void		print_history(char **args, t_runtime *runtime);
@@ -107,7 +110,7 @@ void		align_args(t_process *p);
 int			is_charset(char c, const char *set);
 
 // expansions
-int expand_dollars(char **pipes, t_env **environ);
+int			expand_dollars(char **pipes, t_env **environ);
 
 // file_redirections
 void		file_redirection(t_process *process);
@@ -116,7 +119,7 @@ void		file_redirection(t_process *process);
 void		rebind_args(t_process *p);
 
 // pipex
-void		pipex(t_list *process_list);
+void		pipex(t_list *process_list, t_runtime *runtime);
 
 // pipex/path
 char		*get_cmd_path(char **args, t_env **envp);

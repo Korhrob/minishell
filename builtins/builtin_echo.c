@@ -2,7 +2,7 @@
 
 // prints on standard output all strings from an array except
 // the first and any -n flags that remove newline
-void    cmd_echo(char **args)
+void    cmd_echo(char **args, int fd)
 {
 	int i;
 
@@ -16,7 +16,7 @@ void    cmd_echo(char **args)
 	}
 	while (args[i] != NULL)
 	{
-		ft_printf("%s", args[i]);
+		ft_printf_fd(fd, "%s", args[i]);
 		if (args[i + 1] != NULL)
 			ft_printf(" ");
 		i++;
@@ -24,8 +24,8 @@ void    cmd_echo(char **args)
 	if (args[1])
 	{
 		if (ft_strcmp(args[1], "-n") != 0)
-			ft_printf("\n");
+			ft_printf_fd(fd, "\n");
 	}
 	else
-		ft_printf("\n");
+		ft_printf_fd(fd, "\n");
 }

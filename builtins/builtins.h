@@ -25,7 +25,7 @@ int 	cmd_export(char *env, t_runtime *runtime);
 void	export_main(char **args, t_runtime *runtime);
 
 // Builtin echo
-void	cmd_echo(char **args);
+void	cmd_echo(char **args, int fd);
 
 // Utility functions
 void	free_env(t_env **env);
