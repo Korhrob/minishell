@@ -161,7 +161,7 @@ void	shell_interactive(t_runtime *runtime)
 		if (*line != 0)
 		{
 			record_history(line, runtime);
-			pipes = ft_split_quotes(line, '|', 1);
+			pipes = ft_split_quotes(line, '|', 0);
 			if (!syntax_error(line) && process_heredoc(line, runtime))
 			 	status = execute_args(pipes, runtime);
 			ft_free_arr(pipes);
@@ -187,6 +187,3 @@ int	main(int argc, char **argv, char **envp)
 	free_runtime(&runtime);
 	return (0);
 }
-
-// note ft_quote_check doesnt work as it should, 
-// double check all quote related functions

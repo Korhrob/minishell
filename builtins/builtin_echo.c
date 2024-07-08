@@ -18,7 +18,7 @@ void    cmd_echo(char **args, int fd)
 	{
 		ft_printf_fd(fd, "%s", args[i]);
 		if (args[i + 1] != NULL)
-			ft_printf(" ");
+			ft_printf_fd(fd, " ");
 		i++;
 	}
 	if (args[1])
