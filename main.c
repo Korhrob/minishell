@@ -56,15 +56,15 @@ void	do_builtin(t_process *p, int cmd, t_runtime *runtime, int fd)
 	if (cmd == EXIT)
 		ft_exit(0, runtime);
 	else if (cmd == PWD)
-		cmd_pwd();
+		cmd_pwd(fd);
 	else if (cmd == CD)
 		cmd_cd(p->args, runtime);
 	else if (cmd == ENV)
-		cmd_env(runtime);
+		cmd_env(runtime, fd);
 	else if (cmd == UNSET)
 		unset_main(p->args, runtime);
 	else if (cmd == EXPORT)
-		export_main(p->args, runtime);
+		export_main(p->args, runtime, fd);
 	else if (cmd == ECHO)
 		cmd_echo(p->args, fd);
 	else if (cmd == HISTORY)
@@ -110,7 +110,10 @@ int	single_builtin(t_process *process, t_runtime *runtime, int fd)
 	{
 		flag = 1;
 		if (process->outfile != NULL)
+		{
+			ft_printf("redirect\n");
 			fd = open(process->outfile, process->outflag);
+		}
 		else
 			fd = STDOUT_FILENO;
 		if (fd == -1)

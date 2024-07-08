@@ -39,7 +39,7 @@ static t_process	*new_process(char *line, t_runtime *runtime)
 	}
 	rebind_args(p);
 	
-	// ft_printf("process:\n%s\n",p->line);
+	ft_printf("process:\n%s\n",p->line);
 	// for (int i = 0; p->args[i] != NULL; i++)
 	// 	ft_printf("%s\n", p->args[i]);
 
