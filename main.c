@@ -62,9 +62,9 @@ void	do_builtin(t_process *p, int cmd, t_runtime *runtime)
 	else if (cmd == ENV)
 		cmd_env(runtime);
 	else if (cmd == UNSET)
-		cmd_unset(p->args[1], runtime);
+		unset_main(p->args, runtime);
 	else if (cmd == EXPORT)
-		cmd_export(p->args[1], runtime);
+		export_main(p->args, runtime);
 	else if (cmd == ECHO)
 		cmd_echo(p->args);
 	else if (cmd == HISTORY)
@@ -119,6 +119,8 @@ int	execute_args(char **pipes, t_runtime *runtime)
 	t_list	*list;
 
 	// EXPAND **pipes
+	if (expand_dollars(pipes, runtime->env_struct) == MALLOC_FAIL)
+		ft_exit(1, runtime);
 	runtime->pipe_index = 0;
 	runtime->pipe_count = ft_array_len((void **)pipes);
 	list = create_process_list(pipes, runtime);

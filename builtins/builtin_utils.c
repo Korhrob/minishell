@@ -24,6 +24,16 @@ void	free_env(t_env **env)
 	free(env);
 }
 
+// Handles freeing and a return number for malloc fails in export functions
+int	export_malloc_fail(t_env **array, t_env *node)
+{
+	if (node)
+		free(node);
+	if (array)
+		free(array);
+	return (MALLOC_FAIL);
+}
+
 // Creates the strings for the env struct
 int	create_env(char *envp, t_env *env)
 {
@@ -40,7 +50,7 @@ int	create_env(char *envp, t_env *env)
 		if (!env->value)
 		{
 			free (env);
-			return (0);
+			return (MALLOC_FAIL);
 		}
 	}
 	env->key = ft_strldup(envp, 0, i);
@@ -48,16 +58,22 @@ int	create_env(char *envp, t_env *env)
 	{
 		free (env->value);
 		free (env);
-		return (0);
+		return (MALLOC_FAIL);
 	}
-	return (1);
+	return (SUCCESS);
 }
 
 // Trims the first and last character of a string and returns the result
 char	*minitrim(char *str, char c)
 {
 	char	*strlocal;
+	int		i;
 
+	i = 0;
+	while (str[i])
+		i++;
+	if (i < 2)
+		return (str);
 	if (str[0] != c || str[ft_strlen(str)-1] != c)
 		return (str);
 	if (*str == c)
