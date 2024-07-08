@@ -62,9 +62,9 @@ void	do_builtin(t_process *p, int cmd, t_runtime *runtime)
 	else if (cmd == ENV)
 		cmd_env(runtime);
 	else if (cmd == UNSET)
-		cmd_unset(p->args[1], runtime);
+		unset_main(p->args, runtime);
 	else if (cmd == EXPORT)
-		cmd_export(p->args[1], runtime);
+		export_main(p->args, runtime);
 	else if (cmd == ECHO)
 		cmd_echo(p->args);
 	else if (cmd == HISTORY)
@@ -107,6 +107,7 @@ int	single_builtin(t_process *process, t_runtime *runtime)
 	builtin = get_builtin(process->args[0]);
 	if (builtin != -1)
 	{
+		printf("debug\n");
 		do_builtin(process, builtin, runtime);
 		return (1);
 	}
