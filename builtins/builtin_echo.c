@@ -7,9 +7,13 @@ void    cmd_echo(char **args)
 	int i;
 
 	i = 1;
-	if (args[1])
-		while (ft_strcmp(args[i], "-n") == 0)
+	while (args[i])
+	{
+		if (ft_strcmp(args[i], "-n") == 0)
 			i++;
+		else
+			break ;
+	}
 	while (args[i] != NULL)
 	{
 		ft_printf("%s", args[i]);
