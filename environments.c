@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   environments.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: avegis <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/07/08 18:31:24 by avegis            #+#    #+#             */
+/*   Updated: 2024/07/08 18:31:26 by avegis           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft/libft.h"
 #include "minishell.h"
 #include "builtins/builtins.h"
@@ -15,7 +27,7 @@ static void	malloc_env_fail(t_env **environ, int i)
 	}
 	free(environ);
 	ft_printf("idleshell: cannot create process: Not enough memory");
-	exit(1); // Need to see what to free
+	exit(1);
 }
 
 // Creates the entirety of the env struct with the key and value nodes
@@ -26,7 +38,7 @@ t_env	**set_env_struct(char **envp)
 	int		i;
 
 	i = 0;
-	env = (t_env **)malloc(sizeof(t_env *) * ft_array_len((void **)envp) + 1);
+	env = (t_env **)malloc(sizeof(t_env *) * (ft_array_len((void **)envp) + 1));
 	if (!env)
 		malloc_env_fail(env, i);
 	while (envp[i] != NULL)
