@@ -92,7 +92,18 @@ char	**create_strings(char **splitpipe, char *pipe, t_env **environ)
 		len++;
 		pipe++;
 	}
+	if (len > 0)
+	{
+		splitpipe[i] = ft_strldup(pipe - len, 0, len);
+		i++;
+	}
 	splitpipe[i] = NULL;
+	i = 0;
+	while (splitpipe[i] != NULL)
+	{
+		printf("String %i = [%s]\n", i, splitpipe[i]);
+		i++;
+	}
 	return (splitpipe);
 }
 

@@ -111,7 +111,6 @@ int	single_builtin(t_process *process, t_runtime *runtime, int fd)
 		flag = 1;
 		if (process->outfile != NULL)
 		{
-			ft_printf("redirect\n");
 			fd = open(process->outfile, process->outflag);
 		}
 		else

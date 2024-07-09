@@ -45,7 +45,7 @@ static char	*array_join_c(char **array, int count)
 	out = (char *)malloc(calculate_len(array, count) + 1);
 	if (!out)
 		return (NULL);
-	while (count > 0)
+	while (count > 0 || array[i])
 	{
 		if (array[i])
 			while (array[i][j] != 0)
@@ -74,6 +74,27 @@ static int	count_expands(char *pipe)
 		i++;
 	}
 	return (count);
+}
+
+static int	check_extra(char *pipe)
+{
+	int	i;
+	int	count;
+
+	i = 0;
+	count = count_expands(pipe);
+	while (count > 0)
+	{
+		if ((pipe[i] == '$') && (pipe[i - 1] != '$' || pipe[i + 1] != '$'))
+			count--;
+		i++;
+	}
+	while (ft_isalnum(pipe[i]) || pipe[i] == '-' || pipe[i] == '_')
+		i++;
+	if (pipe[i] == 0)
+		return (0);
+	else
+		return (1);
 }
 
 // base logic behind expanding the pipes
@@ -108,11 +129,9 @@ int	expand_dollars(char **pipes, t_env **environ)
 	i = 0;
 	while (pipes[i] != NULL)
 	{
-		ft_printf("%s\n", pipes[i]);
 		pipes[i] = expand_logic(pipes[i], environ);
 		if (!pipes[i])
 			return (MALLOC_FAIL);
-		ft_printf("%s\n", pipes[i]);
 		i++;
 	}
 	return (SUCCESS);
