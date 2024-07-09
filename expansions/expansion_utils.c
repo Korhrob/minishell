@@ -77,7 +77,7 @@ char	**create_strings(char **splitpipe, char *pipe, t_env **environ)
 	len = 0;
 	while (*pipe != 0)
 	{
-		if ((*pipe == '$') && (*pipe + 1 != '$' || *pipe - 1 != '$'))
+		if ((*pipe == '$') && (*(pipe + 1) != '$' || *(pipe - 1) != '$'))
 		{
 			splitpipe[i] = ft_strldup(pipe - len, 0, len);
 			if (!splitpipe[i])
@@ -95,3 +95,5 @@ char	**create_strings(char **splitpipe, char *pipe, t_env **environ)
 	splitpipe[i] = NULL;
 	return (splitpipe);
 }
+
+// echo $PWD > out

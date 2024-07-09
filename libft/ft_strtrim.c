@@ -66,28 +66,53 @@ char	*ft_strtrim(const char *s1, const char *set)
 	return (out);
 }
 
+static int	ft_trim_len(const char *str)
+{
+	int	i;
+
+	i = 0;
+	while (*str != 0)
+	{
+		if (*str == '\'' || *str == '\"')
+		{
+			i += ft_strlen_t(str, *str);
+			str += ft_strlen_t(str, *str) + 1;
+		}
+		else
+		{
+			i++;
+			str++;
+		}
+	}
+	return (i);
+}
+
 // trims outer quotes from str and returns a new string
 // TODO: test this
 char	*ft_strtrim_quote(const char *str)
 {
-	char	c;
 	char	*out;
-	int		len;
+	char	*ptr;
+	int		i;
 
-	len = ft_strlen(str);
-	if (len == 0)
-		return (NULL);
-	c = 0;
-	if (str[len - 1] == '\'' || str[len - 1] == '\"')
-		c = str[len - 1];
-	if (str[0] == c)
+	i = ft_trim_len(str);
+	out = (char *)ft_calloc(1, i + 1);
+	if (!out)
+		return ((char *)str);
+	ptr = out;
+	while (*str != 0)
 	{
+		if (*str == '\'' || *str == '\"')
+		{
+			i = ft_strlen_t(str + 1, *str);
+			if (i > 0)
+				out += ft_strlcpy(out, str + 1, i + 1);
+			str += i + 1;
+			continue ;
+		}
+		*out = *str;
+		out++;
 		str++;
-		len -= 2;
 	}
-	out = (char *)malloc(len + 1);
-	if (out == NULL)
-		return (NULL);
-	ft_strlcpy(out, str, len + 1);
-	return (out);
+	return (ptr);
 }

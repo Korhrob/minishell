@@ -86,7 +86,7 @@ static char	*expand_logic(char *pipe, t_env **environ)
 	count = count_expands(pipe);
 	if (count == 0)
 		return (pipe);
-	splitpipe = (char **)malloc(sizeof(char *) * (count * 2 + 1));
+	splitpipe = (char **)malloc(sizeof(char *) * (count * 2 + check_extra(pipe) + 1));
 	if (!splitpipe)
 		return (NULL);
 	splitpipe = create_strings(splitpipe, pipe, environ);
@@ -108,9 +108,11 @@ int	expand_dollars(char **pipes, t_env **environ)
 	i = 0;
 	while (pipes[i] != NULL)
 	{
+		ft_printf("%s\n", pipes[i]);
 		pipes[i] = expand_logic(pipes[i], environ);
 		if (!pipes[i])
 			return (MALLOC_FAIL);
+		ft_printf("%s\n", pipes[i]);
 		i++;
 	}
 	return (SUCCESS);

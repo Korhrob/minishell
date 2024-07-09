@@ -51,22 +51,22 @@ void	do_command(t_process *p, t_runtime *runtime)
 }
 
 // exectue all builtin commands here
-void	do_builtin(t_process *p, int cmd, t_runtime *runtime)
+void	do_builtin(t_process *p, int cmd, t_runtime *runtime, int fd)
 {
 	if (cmd == EXIT)
 		ft_exit(0, runtime);
 	else if (cmd == PWD)
-		cmd_pwd();
+		cmd_pwd(fd);
 	else if (cmd == CD)
 		cmd_cd(p->args, runtime);
 	else if (cmd == ENV)
-		cmd_env(runtime);
+		cmd_env(runtime, fd);
 	else if (cmd == UNSET)
 		unset_main(p->args, runtime);
 	else if (cmd == EXPORT)
-		export_main(p->args, runtime);
+		export_main(p->args, runtime, fd);
 	else if (cmd == ECHO)
-		cmd_echo(p->args);
+		cmd_echo(p->args, fd);
 	else if (cmd == HISTORY)
 		print_history((p->args + 1), runtime);
 }
@@ -98,18 +98,35 @@ int	get_builtin(char *args)
 }
 
 // execute single builtin in parent
-int	single_builtin(t_process *process, t_runtime *runtime)
+int	single_builtin(t_process *process, t_runtime *runtime, int fd)
 {
 	int	builtin;
+	int	flag;
 
 	if (runtime->pipe_count > 1)
 		return (0);
+	flag = 0;
+	if (fd == -2)
+	{
+		flag = 1;
+		if (process->outfile != NULL)
+		{
+			ft_printf("redirect\n");
+			fd = open(process->outfile, process->outflag);
+		}
+		else
+			fd = STDOUT_FILENO;
+		if (fd == -1)
+			return (1);
+	}
 	builtin = get_builtin(process->args[0]);
 	if (builtin != -1)
 	{
-		do_builtin(process, builtin, runtime);
+		do_builtin(process, builtin, runtime, fd);
 		return (1);
 	}
+	if (flag == 1 && process->outfile != NULL)
+		close(fd);
 	return (0);
 }
 
@@ -118,19 +135,15 @@ int	execute_args(char **pipes, t_runtime *runtime)
 {
 	t_list	*list;
 
-	// EXPAND **pipes
 	if (expand_dollars(pipes, runtime->env_struct) == MALLOC_FAIL)
 		ft_exit(1, runtime);
 	runtime->pipe_index = 0;
 	runtime->pipe_count = ft_array_len((void **)pipes);
 	list = create_process_list(pipes, runtime);
 	if (list == NULL)
-	{
-		// MALLOC FLAG
 		return (-1);
-	}
-	if (!single_builtin(list->content, runtime))
-		pipex(list);
+	if (!single_builtin(list->content, runtime, -2))
+		pipex(list, runtime);
 	clean_process_list(list);
 	return (-1);
 }
@@ -153,11 +166,10 @@ void	shell_interactive(t_runtime *runtime)
 			record_history(line, runtime);
 			pipes = ft_split_quotes(line, '|', 0);
 			if (!syntax_error(line) && process_heredoc(line, runtime))
-				status = execute_args(pipes, runtime);
+			 	status = execute_args(pipes, runtime);
 			ft_free_arr(pipes);
-			unlink(runtime->heredoc);
 			if (status >= 0)
-				exit(status);
+				ft_exit(status, runtime);
 			signal_reset();
 		}
 		free(line);
@@ -178,6 +190,3 @@ int	main(int argc, char **argv, char **envp)
 	free_runtime(&runtime);
 	return (0);
 }
-
-// note ft_quote_check doesnt work as it should, 
-// double check all quote related functions
