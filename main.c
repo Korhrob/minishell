@@ -68,7 +68,7 @@ void	do_builtin(t_process *p, int cmd, t_runtime *runtime, int fd)
 	else if (cmd == ECHO)
 		cmd_echo(p->args, fd);
 	else if (cmd == HISTORY)
-		print_history((p->args + 1), runtime);
+		print_history((p->args + 1), runtime, fd);
 }
 
 // gets and returns enum if current string is builtin command
@@ -103,17 +103,14 @@ int	single_builtin(t_process *process, t_runtime *runtime, int fd)
 	int	builtin;
 	int	flag;
 
-	if (runtime->pipe_count > 1)
+	if (runtime->pipe_count > 1 || process->args[0] == NULL)
 		return (0);
 	flag = 0;
 	if (fd == -2)
 	{
 		flag = 1;
 		if (process->outfile != NULL)
-		{
-			ft_printf("redirect\n");
 			fd = open(process->outfile, process->outflag);
-		}
 		else
 			fd = STDOUT_FILENO;
 		if (fd == -1)

@@ -7,19 +7,27 @@
 #include <elf.h>
 #include <fcntl.h>
 
-static void	child(t_process *process, t_runtime *runtime, int fd)
+static void	child(t_process *process, t_runtime *runtime)
 {
-	if (process->path == NULL)
+	int builtin; 
+
+	if (process->args[0] == NULL)
+		exit(1);
+	builtin = get_builtin(process->args[0]);
+	if (builtin != -1)
 	{
-		ft_printf_fd(STDERR_FILENO, "no such command %s\n", process->args[0]);
-		exit(1);
+		do_builtin(process, builtin, runtime, STDOUT_FILENO);
+		exit (EXIT_SUCCESS);
 	}
-	if (single_builtin(process, runtime, fd))
-		exit(1);
+	if (process->path == NULL || access(process->path, F_OK))
+	{
+		ft_printf_fd(STDERR_FILENO, "idleshell: %s: file not found\n", process->args[0]);
+		exit(127);
+	}
 	if (execve(process->path, process->args, NULL) == -1)
 	{
 		perror("execve");
-		ft_printf_fd(STDERR_FILENO, "execve failed\n");
+		//ft_printf_fd(STDERR_FILENO, "execve failed\n");
 		exit(1);
 	}
 	exit(1);
@@ -55,7 +63,7 @@ static void do_pipe(t_pipe *pipe_info, t_process *p, t_runtime *runtime)
 	{
 		if (do_redirect(pipe_info->fd_in, fd, p) == -1)
 			exit(1);
-		child(p, runtime, fd[WRITE]);
+		child(p, runtime);
 	}
 	end_pipe(fd, pipe_info, p);
 }
@@ -65,7 +73,6 @@ void pipex(t_list *list, t_runtime *runtime)
 {
 	t_pipe	pipe_info;
 	int		pid;
-	int		status;
 
 	pipe_info.fd_in = -1;
 	pipe_info.fd_out = -1;
@@ -76,9 +83,9 @@ void pipex(t_list *list, t_runtime *runtime)
 		if (pipe_info.fd_out != -1)
 			pipe_info.fd_in = pipe_info.fd_out;
 	}
-	pid = wait(&status);
+	pid = wait(&runtime->exit_status);
 	while (pid > 0)
-		pid = wait(&status);
+		pid = wait(&runtime->exit_status);
 	// perror("wait");
 }
 

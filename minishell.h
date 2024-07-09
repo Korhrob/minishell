@@ -50,6 +50,7 @@ typedef struct s_runtime
 	t_env	**env_struct;
 	int		pipe_index;
 	int		pipe_count;
+	int		exit_status;
 	char	*exepath;
 	char	*history;
 	char	*heredoc;
@@ -81,11 +82,13 @@ typedef struct s_pipe
 }	t_pipe;
 
 // main
-int			single_builtin(t_process *process, t_runtime *runtime, int fd);
+//int		single_builtin(t_process *process, t_runtime *runtime, int fd);
+int			get_builtin(char *args);
+void		do_builtin(t_process *p, int cmd, t_runtime *runtime, int fd);
 
 // history
 void		record_history(char *line, t_runtime *runtime);
-void		print_history(char **args, t_runtime *runtime);
+void		print_history(char **args, t_runtime *runtime, int fd);
 
 // signals
 void		signal_init(int flag);

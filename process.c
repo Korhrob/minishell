@@ -38,11 +38,6 @@ static t_process	*new_process(char *line, t_runtime *runtime)
 		return (NULL);
 	}
 	rebind_args(p);
-	
-	ft_printf("process:\n%s\n",p->line);
-	// for (int i = 0; p->args[i] != NULL; i++)
-	// 	ft_printf("%s\n", p->args[i]);
-
 	p->path = get_cmd_path(p->args, runtime->env_struct);
 	set_pflag(p, runtime);
 	return (p);

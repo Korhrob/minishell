@@ -41,3 +41,7 @@ void	cmd_echo(char **args, int fd)
 	else
 		ft_printf_fd(fd, "\n");
 }
+
+pipe   = "asda     $PWD     $TEST     ' a  sd da   '"
+arr    = asda $PWD $TEST 'a  sd da   '
+cpyarr = asda ur/sdasdw/ asdr  'a  sd da   ''

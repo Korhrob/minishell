@@ -47,7 +47,6 @@ static int	ft_word_count(const char *str, char c)
 	ptr = (char *)str;
 	while (ptr != 0)
 	{
-		//ft_printf("word position %s\n", ptr);
 		count++;
 		ptr = (char *)ft_next_word(ptr, c);
 	}
@@ -108,7 +107,6 @@ char	**ft_split_quotes(const char *s, char c, int flag)
 	while (*s == c)
 		s++;
 	wordcount = ft_word_count(s, c);
-	//ft_printf("wordcount %d\n", wordcount);
 	if (wordcount <= 0)
 		return (NULL);
 	wordarr = ft_calloc(wordcount + 1, sizeof(char *));
