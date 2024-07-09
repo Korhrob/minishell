@@ -72,22 +72,9 @@ char	**create_strings(char **splitpipe, char *pipe, t_env **environ)
 {
 	int	i;
 	int	len;
-	char **arr;
 
 	i = 0;
 	len = 0;
-	arr = ft_split_quotes(pipe, ' ', 0);
-	while (*arr != NULL)
-	{
-		if (**arr == '$')
-			splitpipe[i] = expand();
-		else
-			splitpipe[i] = ft_strdup();
-		i++;
-	}
-	
-
-
 	while (*pipe != 0)
 	{
 		if ((*pipe == '$') && (*(pipe + 1) != '$' || *(pipe - 1) != '$'))
