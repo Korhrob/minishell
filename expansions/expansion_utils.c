@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
+#include "../libft/libft.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -70,8 +71,8 @@ static char	*expand(char *pipe, t_env **environ)
 // replaced with corresponding environment values
 char	**create_strings(char **splitpipe, char *pipe, t_env **environ)
 {
-	int	i;
-	int	len;
+	int		i;
+	int		len;
 
 	i = 0;
 	len = 0;
@@ -89,14 +90,15 @@ char	**create_strings(char **splitpipe, char *pipe, t_env **environ)
 			i = i + 2;
 			len = -1;
 		}
+		// printf("pipe = [%s]\n", pipe);
+		// if (*pipe == '\'')
 		len++;
 		pipe++;
 	}
 	if (len > 0)
-	{
-		splitpipe[i] = ft_strldup(pipe - len, 0, len);
-		i++;
-	}
+		splitpipe[i++] = ft_strldup(pipe - len, 0, len);
+	if (!splitpipe[i - 1])
+		return (NULL);
 	splitpipe[i] = NULL;
 	i = 0;
 	while (splitpipe[i] != NULL)

@@ -71,6 +71,12 @@ static int	count_expands(char *pipe)
 	{
 		if ((pipe[i] == '$') && (pipe[i - 1] != '$' || pipe[i + 1] != '$'))
 			count++;
+		if (pipe[i] == '\'')
+		{
+			i++;
+			while (pipe[i] != '\'')
+				i++;
+		}
 		i++;
 	}
 	return (count);
@@ -105,12 +111,13 @@ static char	*expand_logic(char *pipe, t_env **environ)
 	int		count;
 
 	count = count_expands(pipe);
+	printf("count = %i\n", count);
 	if (count == 0)
 		return (pipe);
-	splitpipe = (char **)malloc(sizeof(char *) * (count * 2 + check_extra(pipe) + 1));
+	splitpipe = (char **)ft_calloc(1, 4 * (count * 2 + check_extra(pipe) + 1));
 	if (!splitpipe)
 		return (NULL);
-	splitpipe = create_strings(splitpipe, pipe, environ);
+	create_strings(splitpipe, pipe, environ);
 	if (!splitpipe)
 		return (NULL);
 	ret = array_join_c(splitpipe, count * 2);
