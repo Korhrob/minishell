@@ -11,7 +11,7 @@ static void	child(t_process *process, t_runtime *runtime)
 {
 	int builtin; 
 
-	if (process->args[0] == NULL)
+	if (process->args[0] == NULL || *(process->args[0]) == 0)
 		exit(EXIT_FAILURE);
 	builtin = get_builtin(process->args[0]);
 	if (builtin)

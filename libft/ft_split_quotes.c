@@ -26,10 +26,8 @@ static char	*ft_next_word(const char *str, char c)
 		while (*str != 0 && *str != c)
 		{
 			if (*str == '\'' || *str == '\"')
-				//str += ft_strlen_t(str + 1, *str);
-				str = ft_strchr_q(str, *str);
-			else
-				str++;
+				str += ft_strlen_t(str + 1, *str);
+			str++;
 		}
 		while (*str != 0 && *str == c)
 			str++;

@@ -24,18 +24,3 @@ char	*ft_strchr(const char *s, int c)
 		return ((char *)(s));
 	return (NULL);
 }
-
-// return first occurance of first char in str or the original string if not found in the string
-// ex. "/asd qwerty/zxc" would return the str at "zxc"
-char	*ft_strchr_q(const char *str, int c)
-{
-	str++;
-	while (*str != 0)
-	{
-		while (*str != 0 && *str != c)
-			str++;
-		if (*str != 0)
-			return ((char *)++str);
-	}
-	return ((char *)str);
-}

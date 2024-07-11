@@ -28,23 +28,6 @@ size_t	ft_strlen(const char *str)
 	return (size);
 }
 
-// return len till next occurance of first char in str
-size_t	ft_strlen_c(const char *str)
-{
-	size_t	size;
-	char	c;
-
-	if (str == NULL || *str == 0)
-		return (0);
-	c = str[0];
-	size = 1;
-	while (str[size] != 0 && str[size] != c)
-		size++;
-	if (str[size] == c)
-		size++;
-	return (size);
-}
-
 // return len till first occurance of c
 size_t	ft_strlen_t(const char *str, char c)
 {
