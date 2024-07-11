@@ -13,7 +13,7 @@
 static void	clean_tmp(t_runtime *runtime)
 {
 	unlink(runtime->history);
-	// clean all tmp files
+	// check if possible to clean all
 }
 
 //Initialization of runtime and all the possible content it may have
@@ -21,7 +21,7 @@ static void	init_runtime(t_runtime *runtime, char **envp)
 {
 	runtime->env_struct = set_env_struct(envp);
 	runtime->exepath = str_pwd();
-	runtime->history = ft_strjoin(runtime->exepath, "/.tmp/.history"); //might not need strjoin
+	runtime->history = ft_strjoin(runtime->exepath, "/.tmp/.history");
 	runtime->heredoc = ft_strjoin(runtime->exepath, "/.tmp/.heredoc");
 	runtime->pipe_count = 0;
 	runtime->pipe_index = 0;
@@ -136,7 +136,7 @@ int	execute_args(char **pipes, t_runtime *runtime)
 }
 
 // main readline loop
-void	shell_interactive(t_runtime *runtime)
+static void	shell_interactive(t_runtime *runtime)
 {
 	char	*line;
 	char	**pipes;
@@ -161,6 +161,23 @@ void	shell_interactive(t_runtime *runtime)
 	}
 }
 
+// non interactive (use argument), might not need
+static void	shell_nointeractive(char *line, t_runtime *runtime)
+{
+	char	**pipes;
+
+	main_signals();
+	if (line == NULL)
+		return ;
+	if (*line == 0)
+		return ;
+	pipes = ft_split_quotes(line, '|', 0);
+	if (!syntax_error(line))
+		execute_args(pipes, runtime);
+	ft_free_arr(pipes);
+	free(line);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_runtime	runtime;
@@ -170,6 +187,8 @@ int	main(int argc, char **argv, char **envp)
 		init_runtime(&runtime, envp);
 	if (isatty(STDIN_FILENO) == 1)
 		shell_interactive(&runtime);
+	else
+		shell_nointeractive(argv[0], &runtime);
 	free_runtime(&runtime);
 	return (EXIT_SUCCESS);
 }

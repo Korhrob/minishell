@@ -15,6 +15,8 @@ void	record_history(char *line, t_runtime *runtime)
 	char	*i;
 
 	add_history(line);
+	if (runtime->history == NULL)
+		return ;
 	fd = open(runtime->history, O_WRONLY | O_CREAT | O_APPEND, 0777);
 	if (fd == -1)
 		return ;
@@ -121,6 +123,11 @@ void	print_history(char **next_arg, t_runtime *runtime, int fd)
 			ft_printf_fd(STDERR_FILENO, "history: numeric argument required\n");
 			return ;
 		}
+	}
+	if (runtime->history == NULL)
+	{
+		ft_printf_fd(STDERR_FILENO, "history: null history file\n");
+		return ;
 	}
 	if (count == -1)
 		print_history_all(runtime, fd);

@@ -37,17 +37,18 @@ static void	ft_recursion(int i, char *s, int *depth)
 	s[(*depth)++] = (i % 10) + '0';
 }
 
+// convert int to allocated string
 char	*ft_itoa(int i)
 {
 	char	*s;
 	int		depth;
 
-	s = (char *) malloc(ft_countlen(i) + 1);
-	if (s == 0)
-		return (0);
+	s = (char *) ft_calloc(1, ft_countlen(i) + 1);
+	if (!s)
+		return (NULL);
 	if (i == -2147483648)
 	{
-		ft_strlcpy(s, "-2147483648\0", (unsigned int) 12);
+		ft_strlcpy(s, "-2147483648", 12);
 		return (s);
 	}
 	depth = 0;
@@ -57,6 +58,5 @@ char	*ft_itoa(int i)
 		s[depth++] = '-';
 	}
 	ft_recursion(i, s, &depth);
-	s[depth] = 0;
 	return (s);
 }

@@ -12,8 +12,7 @@
 
 #include <stdlib.h>
 
-// free char arr and its contents
-// returns NULL
+// free char arr and its contents, return NULL
 void	*ft_free_arr(char **arr)
 {
 	int	i;

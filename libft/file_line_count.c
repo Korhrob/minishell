@@ -2,7 +2,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-// NOTE: move to libft
+// count lines in file
 int	file_line_count(char *file)
 {
 	int		count;

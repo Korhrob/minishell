@@ -28,6 +28,7 @@ void		ft_bzero(void *s, size_t n);
 void		*ft_memcpy(void *dst, const void *src, size_t n);
 void		*ft_memmove(void *dst, const void *src, size_t len);
 size_t		ft_strlcpy(char *dst, const char *src, size_t dstsize);
+size_t		ft_strncpy(char *dst, const char *src, size_t n);
 size_t		ft_strlcat(char *dst, const char *src, size_t dstsize);
 int			ft_toupper(int c);
 int			ft_tolower(int c);
@@ -43,7 +44,7 @@ int			ft_atoi(const char *str);
 
 void		*ft_calloc(size_t count, size_t size);
 char		*ft_strdup(const char *s1);
-char		*ft_strldup(const char *s1, size_t i, size_t len);
+char		*ft_strndup(const char *s1, size_t i, size_t len);
 
 char		*ft_substr(const char *s, unsigned int start, size_t len);
 char		*ft_strjoin(const char *s1, const char *s2);
@@ -85,8 +86,12 @@ t_list		*ft_lstmap(t_list *lst, void *(*f)(void*), void (*del)(void *));
 t_list		**ft_lst_create(void);
 void		*ft_lst_clean(t_list **list, int mode);
 
+#ifndef LOWERCASE
 # define LOWERCASE "0123456789abcdef"
+#endif
+#ifndef UPPERCASE
 # define UPPERCASE "0123456789ABCDEF"
+#endif
 
 // ft_printf
 
@@ -96,15 +101,12 @@ int			ft_print_nbr(int fd, int n, char prefix);
 int			ft_print_nbr_u(int fd, unsigned int n);
 int			ft_print_hex(int fd, unsigned long n, const char *base, char pfx);
 int			ft_print_ptr(int fd, void *ptr);
-int			ft_get_int(const char *s);
-int			ft_int_len(int n);
-int			ft_convert_arg(int fd, const char *s, va_list args, char prefix);
 int			ft_printf(const char *s, ...);
 int			ft_printf_fd(int fd, const char *s, ...);
 
+// ft_printf bonus
+
 int			ft_add_or_fail(int *a, int b);
-int			ft_get_int(const char *s);
-int			ft_int_len(int n);
 int			ft_print_nbr_bonus(int fd, const char *s, va_list args, char pfx);
 int			ft_print_str_bonus(int fd, const char *s, va_list args);
 

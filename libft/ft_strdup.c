@@ -18,36 +18,24 @@
 char	*ft_strdup(const char *s1)
 {
 	char	*out;
-	size_t	i;
+	size_t	len;
 
-	out = malloc(ft_strlen(s1) + 1);
+	len = ft_strlen(s1);
+	out = (char *)ft_calloc(1, len + 1);
 	if (out == 0)
 		return (0);
-	i = 0;
-	while (s1[i] != 0)
-	{
-		out[i] = s1[i];
-		i++;
-	}
-	out[i] = 0;
+	ft_strlcpy(out, s1, len + 1);
 	return (out);
 }
 
 // duplicate string till len
-char	*ft_strldup(const char *s1, size_t start, size_t len)
+char	*ft_strndup(const char *s1, size_t start, size_t len)
 {
 	char	*out;
-	size_t	i;
 
-	out = malloc(len + 1);
+	out = (char *) ft_calloc(1, len + 1);
 	if (out == 0)
 		return (0);
-	i = 0;
-	while (s1[start + i] != 0 && i < len)
-	{
-		out[i] = s1[start + i];
-		i++;
-	}
-	out[i] = 0;
+	ft_strlcpy(out, s1 + start, len + 1);
 	return (out);
 }

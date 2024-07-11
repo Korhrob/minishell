@@ -60,6 +60,8 @@ ctrl-d doesnt work, should close the heredoc
 
 cant run makefile from idleshell
 
+DOUBLE CHECK THIS BRANCH THAT LIBFT WORKS AS EXPECTED
+
 ## NON MANDATORY
 
 unset HOME  

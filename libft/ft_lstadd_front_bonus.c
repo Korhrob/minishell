@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include "libft.h"
 
+// add element as last element in pointer to element lst
 void	ft_lstadd_front(t_list **lst, t_list *new)
 {
 	if (lst == NULL || new == NULL)
@@ -21,7 +22,7 @@ void	ft_lstadd_front(t_list **lst, t_list *new)
 	*lst = new;
 }
 
-// creates an empty list
+// creates an empty double pointer list
 t_list	**ft_lst_create(void)
 {
 	t_list	**list;

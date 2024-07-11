@@ -74,9 +74,11 @@ static char	*ft_word(const char *s, char c, int flag)
 	if (flag == 1 && ft_quote_check(word))
 	{
 		trim = ft_strtrim_quote(word);
-		if (word != trim)
+		if (trim != NULL)
+		{
 			free(word);
-		return (trim);
+			return (trim);
+		}
 	}
 	return (word);
 }

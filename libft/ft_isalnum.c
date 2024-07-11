@@ -12,9 +12,8 @@
 
 #include "libft.h"
 
+// c is alphabetical or numerical character
 int	ft_isalnum(unsigned char c)
 {
-	if (ft_isalpha(c) == 1 || ft_isdigit(c) == 1)
-		return (1);
-	return (0);
+	return (ft_isalpha(c) == 1 || ft_isdigit(c) == 1);
 }

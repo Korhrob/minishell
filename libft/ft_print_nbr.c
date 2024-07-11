@@ -43,6 +43,7 @@ static int	ft_print_nbr_recursion(int fd, unsigned int n, int *count)
 	return (out);
 }
 
+// write int to fd
 int	ft_print_nbr(int fd, int n, char prefix)
 {
 	int	count;

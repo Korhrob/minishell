@@ -12,6 +12,7 @@
 
 #include "libft.h"
 
+// return last element in list pointer by lst
 t_list	*ft_lstlast(t_list *lst)
 {
 	if (lst == NULL)

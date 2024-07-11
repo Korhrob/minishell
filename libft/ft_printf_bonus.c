@@ -13,7 +13,7 @@
 #include "libft.h"
 #include <unistd.h>
 
-int	ft_get_int(const char *s)
+static int	ft_get_int(const char *s)
 {
 	int	num;
 
@@ -27,7 +27,7 @@ int	ft_get_int(const char *s)
 	return (num);
 }
 
-int	ft_int_len(int n)
+static int	ft_int_len(int n)
 {
 	int	i;
 
@@ -40,7 +40,7 @@ int	ft_int_len(int n)
 	return (i);
 }
 
-int	ft_print_space(int fd, char c, int size)
+static int	ft_print_space(int fd, char c, int size)
 {
 	int	temp;
 	int	count;
