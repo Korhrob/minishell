@@ -17,9 +17,9 @@ size_t	ft_strlen(const char *str)
 {
 	size_t	size;
 
-	size = 0;
 	if (str == NULL || *str == 0)
-		return (size);
+		return (0);
+	size = 0;
 	while (*str != 0)
 	{
 		size++;
@@ -32,10 +32,10 @@ size_t	ft_strlen(const char *str)
 size_t	ft_strlen_t(const char *str, char c)
 {
 	size_t	size;
-
-	size = 0;
+	
 	if (str == NULL || *str == 0)
-		return (size);
+		return (0);
+	size = 0;
 	while (*str != 0 && *str != c)
 	{
 		size++;
