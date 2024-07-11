@@ -30,7 +30,8 @@ static t_process	*new_process(char *line, t_runtime *runtime)
 	p->outfile = NULL;
 	p->outflag = 0;
 	p->line = line;
-	file_redirection(p);
+	file_redirection(p, runtime);
+	process_heredoc(line, p, runtime);
 	p->args = ft_split_quotes(p->line, ' ', 1);
 	if (p->args == NULL)
 	{
@@ -49,7 +50,11 @@ static void	clean_process(t_process *p)
 	if (p == NULL)
 		return ;
 	if (p->infile != NULL)
+	{
+		if (p->fflag == 1)
+			unlink(p->infile);
 		free(p->infile);
+	}
 	if (p->outfile != NULL)
 		free(p->outfile);
 	if (p->path != NULL)

@@ -9,52 +9,40 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
+// clean tmp folder
+static void	clean_tmp(t_runtime *runtime)
+{
+	unlink(runtime->history);
+	// clean all tmp files
+}
+
 //Initialization of runtime and all the possible content it may have
 static void	init_runtime(t_runtime *runtime, char **envp)
 {
 	runtime->env_struct = set_env_struct(envp);
 	runtime->exepath = str_pwd();
-	runtime->history = ft_strjoin(runtime->exepath, "/.history");
-	runtime->heredoc = ft_strjoin(runtime->exepath, "/.heredoc");
+	runtime->history = ft_strjoin(runtime->exepath, "/.tmp/.history"); //might not need strjoin
+	runtime->heredoc = ft_strjoin(runtime->exepath, "/.tmp/.heredoc");
 	runtime->pipe_count = 0;
 	runtime->pipe_index = 0;
-	unlink(runtime->history);
-	unlink(runtime->heredoc);
+	clean_tmp(runtime);
 }
 
 static void	free_runtime(t_runtime *runtime)
 {
+	clean_tmp(runtime);
 	free_env(runtime->env_struct);
 	free(runtime->exepath);
 	free(runtime->history);
 	free(runtime->heredoc);
 }
 
-// exits program and unlinks history file
-void	ft_exit(int ecode, t_runtime *runtime)
-{
-	unlink(runtime->history);
-	unlink(runtime->heredoc);
-	free_runtime(runtime);
-	exit(ecode);
-}
-
-// DEPRECATED: NO LONGER USED
-void	do_command(t_process *p, t_runtime *runtime)
-{
-	(void)runtime;
-	if (ft_quote_check_arr(p->args) == 0)
-	{
-		ft_printf("idleshell: unexpected EOF\n");
-		ft_exit(2, runtime);
-	}
-}
-
 // exectue all builtin commands here
-void	do_builtin(t_process *p, int cmd, t_runtime *runtime, int fd)
+// should return int back to main
+int	do_builtin(t_process *p, int cmd, t_runtime *runtime, int fd)
 {
 	if (cmd == EXIT)
-		ft_exit(0, runtime);
+		return (1);  //ft_exit(0, runtime);
 	else if (cmd == PWD)
 		cmd_pwd(fd);
 	else if (cmd == CD)
@@ -69,6 +57,7 @@ void	do_builtin(t_process *p, int cmd, t_runtime *runtime, int fd)
 		cmd_echo(p->args, fd);
 	else if (cmd == HISTORY)
 		print_history((p->args + 1), runtime, fd);
+	return (-1);
 }
 
 // gets and returns enum if current string is builtin command
@@ -87,6 +76,8 @@ int	get_builtin(char *args)
 		BUILITIN_HISTORY
 	};
 
+	if (args == NULL)
+		return (-1);
 	i = 0;
 	while (i < BUILTIN_MAX)
 	{
@@ -98,15 +89,15 @@ int	get_builtin(char *args)
 }
 
 // execute single builtin in parent
-int	single_builtin(t_process *process, t_runtime *runtime, int fd)
+static int	single_builtin(t_process *process, t_runtime *runtime, int fd)
 {
 	int	builtin;
 	int	flag;
+	int	return_flag;
 
-	if (runtime->pipe_count > 1 || process->args[0] == NULL)
-		return (0);
 	flag = 0;
-	if (fd == -2)
+	return_flag = -1;
+	if (fd == -2) // figure out a better way to fit this here
 	{
 		flag = 1;
 		if (process->outfile != NULL)
@@ -114,16 +105,22 @@ int	single_builtin(t_process *process, t_runtime *runtime, int fd)
 		else
 			fd = STDOUT_FILENO;
 		if (fd == -1)
-			return (1);
+			return (EXIT_FAILURE);
 	}
 	builtin = get_builtin(process->args[0]);
 	if (builtin != -1)
-	{
-		do_builtin(process, builtin, runtime, fd);
-		return (1);
-	}
+		return_flag = do_builtin(process, builtin, runtime, fd);
 	if (flag == 1 && process->outfile != NULL)
 		close(fd);
+	return (return_flag);
+}
+
+static int	is_builtin(t_process *process)
+{
+	if (process->args[0] == NULL)
+		return (0);
+	if (get_builtin(process->args[0]) != -1)
+		return (1);
 	return (0);
 }
 
@@ -131,18 +128,24 @@ int	single_builtin(t_process *process, t_runtime *runtime, int fd)
 int	execute_args(char **pipes, t_runtime *runtime)
 {
 	t_list	*list;
+	int		return_flag;
 
+	return_flag = -1;
+	if (pipes == NULL)
+		return (-1);
 	if (expand_dollars(pipes, runtime->env_struct) == MALLOC_FAIL)
-		ft_exit(1, runtime);
+		return (return_flag);
 	runtime->pipe_index = 0;
 	runtime->pipe_count = ft_array_len((void **)pipes);
 	list = create_process_list(pipes, runtime);
 	if (list == NULL)
 		return (-1);
-	if (!single_builtin(list->content, runtime, -2))
+	if (runtime->pipe_count <= 1 && is_builtin(list->content))
+		return_flag = single_builtin(list->content, runtime, -2);
+	else
 		pipex(list, runtime);
 	clean_process_list(list);
-	return (-1);
+	return (return_flag);
 }
 
 // read stdin and split the line
@@ -163,11 +166,9 @@ void	shell_interactive(t_runtime *runtime)
 		{
 			record_history(line, runtime);
 			pipes = ft_split_quotes(line, '|', 0);
-			if (!syntax_error(line) && process_heredoc(line, runtime))
+			if (!syntax_error(line))
 			 	status = execute_args(pipes, runtime);
 			ft_free_arr(pipes);
-			if (status >= 0)
-				ft_exit(status, runtime);
 		}
 		free(line);
 	}
@@ -183,5 +184,5 @@ int	main(int argc, char **argv, char **envp)
 	if (isatty(STDIN_FILENO) == 1)
 		shell_interactive(&runtime);
 	free_runtime(&runtime);
-	return (0);
+	return (EXIT_SUCCESS);
 }

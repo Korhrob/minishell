@@ -24,51 +24,23 @@ void	signal_init(int flag)
 	tcsetattr(STDIN_FILENO, TCSAFLUSH, &attributes);
 }
 
-// handle all signals
-/*
-void	signal_signint(int signo)
-{
-	g_exit_status = signo;
-
-	if (signo == SIGINT)
-	{
-		rl_replace_line("", 1);
-		ft_putendl_fd("", STDOUT_FILENO);
-		if (rl_on_new_line() == -1)
-			exit(EXIT_FAILURE);
-		rl_redisplay(); // only do this if executed in child
-	}
-	else if (signo == SIGTERM)
-	{
-		unlink(".history");
-	}
-	else if (signo == SIGQUIT)
-	{
-
-	}
-}
-*/
-
 static void	handle_sigint(int sig)
 {
-	//ft_printf_fd(STDERR_FILENO, "handle sigint\n");
 	(void)sig;
 	rl_replace_line("", 1);
 	ft_putendl_fd("", STDOUT_FILENO);
-	//ft_putstr_fd("\n", STDOUT_FILENO);
 	rl_on_new_line();
-	// if (rl_on_new_line() == -1)
-	// 	exit(EXIT_FAILURE);
-	rl_redisplay(); // only do this line if executed in child
+	rl_redisplay();
 }
 
 int	main_signals(void)
 {
-	struct sigaction	sa_sigint;
+	struct sigaction	sa;
 
-	ft_memset(&sa_sigint, 0, sizeof(struct sigaction));
-	sa_sigint.sa_handler = &handle_sigint;
-	sigaction(SIGINT, &sa_sigint, NULL);
+	ft_memset(&sa, 0, sizeof(struct sigaction));
+	sa.sa_handler = &handle_sigint;
+	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGQUIT, &sa, NULL);
 	/* sigaction can fail?
 	if (sigaction(SIGINT, &sa_sigint, NULL) == -1)
 	{
@@ -102,12 +74,7 @@ int	heredoc_signals(void)
 	sigemptyset(&sa.sa_mask);
 	sa.sa_handler = &handle_sigint;
 	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGTERM, &sa, NULL);
 	sigaction(SIGQUIT, &sa, NULL);
 	return (EXIT_SUCCESS);
 }
-
-// heredoc
-// ctrl-d works and gives EOF to heredoc, bash would complain about wrong EOF
-// ctrl-d doesnt work, should close the heredoc
-
-// heredoc might have to move in the child process

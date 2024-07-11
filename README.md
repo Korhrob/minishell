@@ -55,6 +55,10 @@ Should only execute history and none of the other pipes
 
 # ISSUES
 
+heredoc  
+ctrl-d works and gives EOF to heredoc, bash would complain about wrong EOF  
+ctrl-d doesnt work, should close the heredoc  
+
 ## MANDATORY 
 
 empty cmds might be getting passed to pipex and print  

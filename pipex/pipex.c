@@ -12,7 +12,7 @@ static void	child(t_process *process, t_runtime *runtime)
 	int builtin; 
 
 	if (process->args[0] == NULL)
-		exit(1);
+		exit(EXIT_FAILURE);
 	builtin = get_builtin(process->args[0]);
 	if (builtin != -1)
 	{
@@ -27,10 +27,9 @@ static void	child(t_process *process, t_runtime *runtime)
 	if (execve(process->path, process->args, NULL) == -1)
 	{
 		perror("execve");
-		//ft_printf_fd(STDERR_FILENO, "execve failed\n");
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
-	exit(1);
+	exit(EXIT_SUCCESS);
 }
 
 static void end_pipe(int fd[2], t_pipe *pipe_info, t_process *p)
