@@ -21,7 +21,7 @@ static void	child(t_process *process, t_runtime *runtime)
 	}
 	if (process->path == NULL || access(process->path, F_OK))
 	{
-		ft_printf_fd(STDERR_FILENO, "idleshell: %s: file not found\n", process->args[0]);
+		ft_printf_fd(STDERR_FILENO, "idleshell: %s: command not found\n", process->args[0]);
 		exit(127);
 	}
 	if (execve(process->path, process->args, NULL) == -1)
