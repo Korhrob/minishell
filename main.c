@@ -101,7 +101,7 @@ static int	single_builtin(t_process *process, t_runtime *runtime, int fd)
 	{
 		flag = 1;
 		if (process->outfile != NULL)
-			fd = open(process->outfile, process->outflag);
+			fd = open(process->outfile, process->outflag, 0644);
 		else
 			fd = STDOUT_FILENO;
 		if (fd == -1)
