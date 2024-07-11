@@ -59,6 +59,7 @@ static void do_pipe(t_pipe *pipe_info, t_process *p, t_runtime *runtime)
 		perror("fork");
 		exit(1);
 	}
+	child_signals(pid);
 	if (pid == 0)
 	{
 		if (do_redirect(pipe_info->fd_in, fd, p) == -1)

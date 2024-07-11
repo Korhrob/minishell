@@ -5,6 +5,7 @@
 #include <fcntl.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <signal.h>
 
 // process all heredocs but only retain the last one
 // return 1 if all heredocs succeed
@@ -41,6 +42,7 @@ void	ft_heredoc(int flag, char *delimit, t_runtime *runtime)
 	fd = open(runtime->heredoc, flag, 0666); // test
 	if (fd == -1)
 		return ;
+	heredoc_signals();
 	while (1)
 	{
 		buffer = readline("heredoc> ");

@@ -155,6 +155,7 @@ void	shell_interactive(t_runtime *runtime)
 	status = -1;
 	while (status == -1)
 	{
+		main_signals();
 		line = readline("idleshell$ ");
 		if (line == NULL)
 			break ;
@@ -167,7 +168,6 @@ void	shell_interactive(t_runtime *runtime)
 			ft_free_arr(pipes);
 			if (status >= 0)
 				ft_exit(status, runtime);
-			signal_reset();
 		}
 		free(line);
 	}
@@ -178,8 +178,6 @@ int	main(int argc, char **argv, char **envp)
 	t_runtime	runtime;
 
 	signal_init(0);
-	signal(SIGINT, signal_signint);
-	signal(SIGTERM, signal_signint);
 	if (argc == 1 && argv)
 		init_runtime(&runtime, envp);
 	if (isatty(STDIN_FILENO) == 1)

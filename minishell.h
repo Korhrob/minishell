@@ -92,8 +92,9 @@ void		print_history(char **args, t_runtime *runtime, int fd);
 
 // signals
 void		signal_init(int flag);
-void		signal_signint(int signo);
-void		signal_reset(void);
+int			main_signals(void);
+int			child_signals(int pid);
+int			heredoc_signals(void);
 
 // heredoc
 void		ft_heredoc(int flag, char *delimit, t_runtime *runtime);
