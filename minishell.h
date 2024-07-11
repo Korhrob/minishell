@@ -3,6 +3,7 @@
 
 # include "libft/libft.h"
 
+# define BUILTIN_NONE "null"
 # define BUILTIN_CD "cd"
 # define BUILTIN_ENV "env"
 # define BUILTIN_HELP "help"
@@ -20,6 +21,7 @@ extern int	g_exit_status;
 
 typedef enum e_builtin_cmd
 {
+	NONE,
 	CD,
 	ENV,
 	HELP,

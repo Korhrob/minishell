@@ -65,6 +65,7 @@ int	get_builtin(char *args)
 {
 	int			i;
 	static char	*builtin[] = {
+		BUILTIN_NONE,
 		BUILTIN_CD,
 		BUILTIN_ENV,
 		BUILTIN_HELP,
@@ -77,54 +78,40 @@ int	get_builtin(char *args)
 	};
 
 	if (args == NULL)
-		return (-1);
-	i = 0;
+		return (0);
+	i = 1;
 	while (i < BUILTIN_MAX)
 	{
 		if (ft_strcmp(args, builtin[i]) == 0)
 			return (i);
 		i++;
 	}
-	return (-1);
+	return (0);
 }
 
 // execute single builtin in parent
-static int	single_builtin(t_process *process, t_runtime *runtime, int fd)
+static int	single_builtin(t_process *process, t_runtime *runtime)
 {
+	int fd;
 	int	builtin;
-	int	flag;
 	int	return_flag;
 
-	flag = 0;
+	fd = STDOUT_FILENO;
 	return_flag = -1;
-	if (fd == -2) // figure out a better way to fit this here
+	if (process->outfile != NULL)
 	{
-		flag = 1;
-		if (process->outfile != NULL)
-			fd = open(process->outfile, process->outflag, 0644);
-		else
-			fd = STDOUT_FILENO;
+		fd = open(process->outfile, process->outflag, 0644);
 		if (fd == -1)
 			return (EXIT_FAILURE);
 	}
 	builtin = get_builtin(process->args[0]);
-	if (builtin != -1)
-		return_flag = do_builtin(process, builtin, runtime, fd);
-	if (flag == 1 && process->outfile != NULL)
+	return_flag = do_builtin(process, builtin, runtime, fd);
+	if (process->outfile != NULL)
 		close(fd);
 	return (return_flag);
 }
 
-static int	is_builtin(t_process *process)
-{
-	if (process->args[0] == NULL)
-		return (0);
-	if (get_builtin(process->args[0]) != -1)
-		return (1);
-	return (0);
-}
-
-// expand $, execute args
+// expand $, execute logic
 int	execute_args(char **pipes, t_runtime *runtime)
 {
 	t_list	*list;
@@ -140,15 +127,15 @@ int	execute_args(char **pipes, t_runtime *runtime)
 	list = create_process_list(pipes, runtime);
 	if (list == NULL)
 		return (-1);
-	if (runtime->pipe_count <= 1 && is_builtin(list->content))
-		return_flag = single_builtin(list->content, runtime, -2);
+	if (runtime->pipe_count <= 1 && get_builtin(((t_process*)list->content)->args[0]))
+		return_flag = single_builtin(list->content, runtime);
 	else
 		pipex(list, runtime);
 	clean_process_list(list);
 	return (return_flag);
 }
 
-// read stdin and split the line
+// main readline loop
 void	shell_interactive(t_runtime *runtime)
 {
 	char	*line;

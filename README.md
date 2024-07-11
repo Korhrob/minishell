@@ -52,18 +52,13 @@ Should only execute history and none of the other pipes
 
 # ISSUES
 
+## MANDATORY 
+
 heredoc  
 ctrl-d works and gives EOF to heredoc, bash would complain about wrong EOF  
 ctrl-d doesnt work, should close the heredoc  
 
-## MANDATORY 
-
-empty cmds might be getting passed to pipex and print  
-no such command (null)
-fix: dont pass them to pipex in the first placeexit
-parsing does not handle quotes inside parsing inside strings example [echo b'est="test']
-
-echo "asd" > outfile
+cant run makefile from idleshell
 
 ## NON MANDATORY
 

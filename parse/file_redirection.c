@@ -44,8 +44,7 @@ static int	out_file(t_process *p, char *line)
 	return (1);
 }
 
-// initialize redirections and heredoc
-// also set up file flags for outfile
+// initialize redirections, heredoc and file flags
 void	file_redirection(t_process *p, t_runtime *runtime)
 {
 	char	*ptr;

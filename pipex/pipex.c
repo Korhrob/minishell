@@ -14,7 +14,7 @@ static void	child(t_process *process, t_runtime *runtime)
 	if (process->args[0] == NULL)
 		exit(EXIT_FAILURE);
 	builtin = get_builtin(process->args[0]);
-	if (builtin != -1)
+	if (builtin)
 	{
 		do_builtin(process, builtin, runtime, STDOUT_FILENO);
 		exit (EXIT_SUCCESS);
