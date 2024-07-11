@@ -22,22 +22,10 @@ void	ft_lstadd_front(t_list **lst, t_list *new)
 	*lst = new;
 }
 
-// creates an empty double pointer list
-t_list	**ft_lst_create(void)
-{
-	t_list	**list;
-
-	list = (t_list **) malloc(sizeof(t_list *));
-	if (list == NULL)
-		return (NULL);
-	*list = NULL;
-	return (list);
-}
-
 // free list and its nodes
 // mode = 0 doesnt free node contents
 // mode = 1 free node contents
-// always returns NULL
+// return NULL
 void	*ft_lst_clean(t_list **list, int mode)
 {
 	t_list	*next;

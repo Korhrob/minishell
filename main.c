@@ -13,7 +13,7 @@
 static void	clean_tmp(t_runtime *runtime)
 {
 	unlink(runtime->history);
-	// check if possible to clean all
+	// check if possible to clean all files
 }
 
 //Initialization of runtime and all the possible content it may have

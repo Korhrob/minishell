@@ -13,7 +13,7 @@
 #include <unistd.h>
 #include "libft.h"
 
-// write string s and new line to fd
+// write string s and new line into fd
 void	ft_putendl_fd(char *s, int fd)
 {
 	if (fd == 0 || fd == -1 || s == 0)

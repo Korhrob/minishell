@@ -37,7 +37,7 @@ static void	ft_recursion(int i, char *s, int *depth)
 	s[(*depth)++] = (i % 10) + '0';
 }
 
-// convert int to allocated string
+// convert int into an allocated string
 char	*ft_itoa(int i)
 {
 	char	*s;

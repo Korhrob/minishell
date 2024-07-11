@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-// duplicate string
+// duplicate string s1 into a new string
 char	*ft_strdup(const char *s1)
 {
 	char	*out;
@@ -28,7 +28,7 @@ char	*ft_strdup(const char *s1)
 	return (out);
 }
 
-// duplicate string till len
+// duplicate string into a new string untill length of len
 char	*ft_strndup(const char *s1, size_t start, size_t len)
 {
 	char	*out;

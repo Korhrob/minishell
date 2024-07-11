@@ -32,7 +32,7 @@ void	record_history(char *line, t_runtime *runtime)
 }
 
 // print all history starting from the beginning
-void	print_history_all(t_runtime *runtime, int fd_out)
+static void	print_history_all(t_runtime *runtime, int fd_out)
 {
 	int		fd;
 	char	*line;
@@ -55,15 +55,16 @@ void	print_history_all(t_runtime *runtime, int fd_out)
 // mode 0 = ascending
 // mode 1 = descending (reverse)
 // NOTE: move to libft
-t_list	**read_to_list(int fd, int mode)
+static t_list	*read_to_list(int fd, int mode)
 {
-	t_list	**list;
+	t_list	*list;
 	t_list	*ele;
 	char	*line;
 
-	list = ft_lst_create();
-	if (list == NULL)
-		return (NULL);
+	list = NULL;
+	//list = ft_lst_create();
+	//if (list == NULL)
+	//	return (NULL);
 	line = get_next_line(fd);
 	while (line != NULL)
 	{
@@ -71,20 +72,20 @@ t_list	**read_to_list(int fd, int mode)
 		if (ele == NULL)
 			break ;
 		if (mode == 0)
-			ft_lstadd_back(list, ele);
+			ft_lstadd_back(&list, ele);
 		else
-			ft_lstadd_front(list, ele);
+			ft_lstadd_front(&list, ele);
 		line = get_next_line(fd);
 	}
 	return (list);
 }
 
 // print n number of most recent history
-void	print_history_n(int n, t_runtime *runtime, int fd_out)
+static void	print_history_n(int n, t_runtime *runtime, int fd_out)
 {
 	int		fd;
 	int		skip;
-	t_list	**list;
+	t_list	*list;
 	t_list	*cur;
 
 	fd = open(runtime->history, O_RDONLY);
@@ -97,8 +98,8 @@ void	print_history_n(int n, t_runtime *runtime, int fd_out)
 	close(fd);
 	if (list == NULL)
 		return ;
-	cur = *list;
-	skip = ft_lstsize(*list) - n;
+	cur = list;
+	skip = ft_lstsize(list) - n;
 	while (skip-- > 0 && cur->next != NULL)
 		cur = cur->next;
 	while (n-- > 0 && cur != NULL)
@@ -106,7 +107,7 @@ void	print_history_n(int n, t_runtime *runtime, int fd_out)
 		ft_printf_fd(fd_out, "%s", cur->content);
 		cur = cur->next;
 	}
-	ft_lst_clean(list, 1);
+	ft_lst_clean(&list, 1);
 }
 
 void	print_history(char **next_arg, t_runtime *runtime, int fd)
