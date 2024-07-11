@@ -6,8 +6,6 @@
 #include <sys/stat.h>
 #include <readline/history.h>
 
-// saves in current pwd
-// NOTE: does not save heredoc stuff
 void	record_history(char *line, t_runtime *runtime)
 {
 	int		fd;
@@ -20,7 +18,7 @@ void	record_history(char *line, t_runtime *runtime)
 	fd = open(runtime->history, O_WRONLY | O_CREAT | O_APPEND, 0777);
 	if (fd == -1)
 		return ;
-	count = file_line_count(runtime->history);
+	count = runtime->history_line_count++;
 	i = ft_itoa(1 + count);
 	ft_putstr_fd("  ", fd);
 	ft_putstr_fd(i, fd);

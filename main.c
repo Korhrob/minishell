@@ -25,6 +25,8 @@ static void	init_runtime(t_runtime *runtime, char **envp)
 	runtime->heredoc = ft_strjoin(runtime->exepath, "/.tmp/.heredoc");
 	runtime->pipe_count = 0;
 	runtime->pipe_index = 0;
+	runtime->exit_status = 0;
+	runtime->history_line_count = 0;
 	clean_tmp(runtime);
 }
 

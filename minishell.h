@@ -41,6 +41,13 @@ typedef enum e_error_code
 	MALLOC_FAIL
 }	t_error_code;
 
+typedef enum e_pflag
+{
+	PF_FIRST = 1,
+	PF_MIDDLE = 2,
+	PF_LAST = 4
+}	t_pflag;
+
 typedef struct s_env
 {
 	char	*key;
@@ -53,6 +60,7 @@ typedef struct s_runtime
 	int		pipe_index;
 	int		pipe_count;
 	int		exit_status;
+	int		history_line_count;
 	char	*exepath;
 	char	*history;
 	char	*heredoc;
@@ -80,73 +88,72 @@ typedef struct s_process
 	int		pflag;
 }	t_process;
 
-typedef enum e_pflag
-{
-	PF_FIRST = 1,
-	PF_MIDDLE = 2,
-	PF_LAST = 4
-}	t_pflag;
-
 typedef struct s_pipe
 {
 	int	fd_in;
 	int	fd_out;
 }	t_pipe;
 
-// main
+// main.c
+
 int			get_builtin(char *args);
 int			do_builtin(t_process *p, int cmd, t_runtime *runtime, int fd);
 
-// history
+// history.c
+
 void		record_history(char *line, t_runtime *runtime);
 void		print_history(char **args, t_runtime *runtime, int fd);
 
-// signals
+// signals.c
+
 void		signal_init(int flag);
 int			main_signals(void);
 int			child_signals(int pid);
 int			heredoc_signals(void);
 
-// heredoc
+// heredoc.c
+
 void		ft_heredoc(char *delimit, t_process *process);
 int			process_heredoc(char *line, t_process *process, t_runtime *runtime);
 
-// readline
+// readline.h
+
 void		rl_replace_line(const char *str, int i);
 
-// process
+// process.c
+
 t_list		*create_process_list(char **pipes, t_runtime *runtime);
 void		*clean_process_list(t_list *list);
 
-// parse
+// parse.c
+
 int			syntax_error(char *line);
 char		*get_filename(char *str);
-void		align_args(t_process *p);
 int			is_charset(char c, const char *set); // move to libft
 
-// expansions
-int			expand_dollars(char **pipes, t_env **environ);
+// file_redirections.c
 
-// file_redirections
 void		file_redirection(t_process *process, t_runtime *runtime);
 
-// array_handler
+// array_handler.c
+
 void		rebind_args(t_process *p);
 
-// pipex
+// pipex.c
+
 void		pipex(t_list *process_list, t_runtime *runtime);
 
-// pipex/path
-char		*get_cmd_path(char **args, t_env **envp);
+// pipex.c
 
-// pipex/redirect
-int			redirect(int pipefd[2], t_process *process);
+char		*get_cmd_path(char **args, t_env **envp);
 int			do_redirect(int fd_in, int pipe[2], t_process *p);
 
-// environment
+// environment.c
+
 t_env		**set_env_struct(char **envp);
 
-// expansions
+// expansions.c
+
 int			expand_dollars(char **pipes, t_env **environ);
 char		**create_strings(char **splitpipe, char *pipe, t_env **environ);
 void		*free_expands(char **array, int index);
