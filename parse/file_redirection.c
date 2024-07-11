@@ -51,6 +51,7 @@ void	file_redirection(t_process *p, t_runtime *runtime)
 	char	*ptr;
 
 	ptr = p->line;
+	p->fflag = 0;
 	while (*ptr != 0)
 	{
 		if (ft_strncmp(ptr, "<<", 2) == 0)
