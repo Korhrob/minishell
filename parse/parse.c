@@ -2,6 +2,7 @@
 #include "../minishell.h"
 #include "../libft/libft.h"
 #include <stdlib.h>
+#include <unistd.h>
 
 // if c is any character in set return 1
 // MOVE TO LIBFT
@@ -74,7 +75,7 @@ static int	check_syntax_error(char *cur, char *prev)
 		return (0);
 	if (*prev == '|' && *cur != '|')
 		return (0);
-	ft_printf("syntax error near unexpected token `%s'\n", cur);
+	ft_printf_fd(STDERR_FILENO, "syntax error near unexpected token `%s'\n", cur);
 	return (1);
 }
 
@@ -84,7 +85,7 @@ static int	empty_pipe(char *line)
 		line++;
 	if (*line == '|')
 	{
-		ft_printf("syntax error near unexpected token `|'\n");
+		ft_printf_fd(STDERR_FILENO, "syntax error near unexpected token `|'\n");
 		return (1);
 	}
 	return (0);
@@ -116,7 +117,7 @@ int	syntax_error(char *line)
 	}
 	if (prev != NULL)
 	{
-		ft_printf("syntax error near unexpected token `newline'\n");
+		ft_printf_fd(STDERR_FILENO, "syntax error near unexpected token `newline'\n");
 		return (1);
 	}
 	return (0);

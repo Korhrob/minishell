@@ -131,7 +131,7 @@ void	export_main(char **args, t_runtime *runtime, int fd)
 	{
 		if (cmd_export(*args, runtime) == MALLOC_FAIL)
 		{
-			ft_printf("idleshell: export: not enough memory\n");
+			ft_printf_fd(STDERR_FILENO, "idleshell: export: not enough memory\n");
 			return ;
 		}
 		args++;

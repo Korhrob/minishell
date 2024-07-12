@@ -64,7 +64,7 @@ static char	*ft_word(const char *s, char c, int flag)
 		len--;
 	if (len < 0)
 		return (NULL);
-	word = (char *) malloc(len + 1);
+	word = (char *) ft_calloc(1, len + 1);
 	if (word == 0)
 		return (0);
 	ft_strlcpy(word, s, len + 1);

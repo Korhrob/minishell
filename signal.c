@@ -9,7 +9,6 @@
 
 volatile sig_atomic_t 	g_exit_status;
 
-
 /*
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣤⣤⣤⣤⣤⣶⣦⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀ 
 ⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⡿⠛⠉⠙⠛⠛⠛⠛⠻⢿⣿⣷⣤⡀⠀⠀⠀⠀⠀ 
@@ -107,7 +106,6 @@ int	child_signals(void)
 	sigaction(SIGQUIT, &sa, NULL);
 	return (EXIT_SUCCESS);
 }
-
 
 int	heredoc_signals(void)
 {

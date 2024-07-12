@@ -28,7 +28,7 @@ size_t	ft_strlen(const char *str)
 	return (size);
 }
 
-// return len till first occurance of c
+// return len till first occurance of c, or 0 if not found
 size_t	ft_strlen_t(const char *str, char c)
 {
 	size_t	size;
@@ -41,5 +41,7 @@ size_t	ft_strlen_t(const char *str, char c)
 		size++;
 		str++;
 	}
+	if (*str != c)
+		return (0);
 	return (size);
 }

@@ -26,7 +26,7 @@ static void	malloc_env_fail(t_env **environ, int i)
 		i--;
 	}
 	free(environ);
-	ft_printf("idleshell: cannot create process: Not enough memory");
+	ft_printf_fd(STDERR_FILENO, "idleshell: cannot create process: Not enough memory");
 	exit(1);
 }
 

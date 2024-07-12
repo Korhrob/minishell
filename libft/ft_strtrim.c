@@ -62,14 +62,16 @@ char	*ft_strtrim(const char *s1, const char *set)
 static int	ft_trim_len(const char *str)
 {
 	int	i;
+	int	len;
 
 	i = 0;
 	while (*str != 0)
 	{
 		if (*str == '\'' || *str == '\"')
 		{
-			i += ft_strlen_t(str, *str);
-			str += ft_strlen_t(str, *str) + 1;
+			len = ft_strlen_t(str + 1, *str);
+			i += len;
+			str += len + 1;
 		}
 		else
 		{
@@ -99,8 +101,8 @@ char	*ft_strtrim_quote(const char *str)
 		{
 			i = ft_strlen_t(str + 1, *str);
 			if (i > 0)
-				ptr += ft_strlcpy(ptr, str + 1, i + 1);
-			str += i + 1;
+				ptr += ft_strncpy(ptr, str + 1, i);
+			str += i + 2;
 			continue ;
 		}
 		*ptr = *str;
