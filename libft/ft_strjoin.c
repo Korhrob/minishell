@@ -27,8 +27,8 @@ char	*ft_strjoin(const char *s1, const char *s2)
 	out = (char *) ft_calloc(1, s1_len + s2_len + 1);
 	if (!out)
 		return (NULL);
-	ft_strlcpy(out, s1, s1_len + 1);
-	ft_strlcpy(out + s1_len, s2, s2_len + 1);
+	ft_strncpy(out, s1, s1_len);
+	ft_strncpy(out + s1_len, s2, s2_len);
 	return (out);
 }
 

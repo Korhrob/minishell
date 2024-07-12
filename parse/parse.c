@@ -101,7 +101,7 @@ int	syntax_error(char *line)
 
 	cur = NULL;
 	prev = NULL;
-	if (empty_pipe(line)) // or uneven quotes
+	if (empty_pipe(line))
 		return (1);
 	while (*line != 0)
 	{

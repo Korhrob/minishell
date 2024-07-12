@@ -13,6 +13,8 @@
 #include "libft.h"
 #include <stdlib.h>
 
+//#include <unistd.h>
+
 static int	ft_arrcmp(const char c, const char *set)
 {
 	while (*set != 0)
@@ -59,25 +61,26 @@ char	*ft_strtrim(const char *s1, const char *set)
 	return (out);
 }
 
-static int	ft_trim_len(const char *str)
+static size_t	ft_trim_len(const char *str)
 {
 	int	i;
-	int	len;
+	size_t	len;
 
 	i = 0;
 	while (*str != 0)
 	{
 		if (*str == '\'' || *str == '\"')
 		{
-			len = ft_strlen_t(str + 1, *str);
-			i += len;
-			str += len + 1;
+			len = ft_strlen_t(str, *str);
+			if (len >= 2)
+			{
+				i += len - 2;
+				str += len;
+				continue;
+			}
 		}
-		else
-		{
-			i++;
-			str++;
-		}
+		i++;
+		str++;
 	}
 	return (i);
 }
@@ -88,10 +91,12 @@ char	*ft_strtrim_quote(const char *str)
 {
 	char	*out;
 	char	*ptr;
-	int		i;
+	//char	*debug = (char *)str;
+	size_t	len;
 
-	i = ft_trim_len(str);
-	out = (char *)ft_calloc(1, i + 1);
+	len = ft_trim_len(str);
+	out = (char *)ft_calloc(1, len + 1);
+	//ft_printf_fd(STDERR_FILENO, "calloc %d + 1, size %d\n", len, sizeof(out));
 	if (!out)
 		return (NULL);
 	ptr = out;
@@ -99,15 +104,18 @@ char	*ft_strtrim_quote(const char *str)
 	{
 		if (*str == '\'' || *str == '\"')
 		{
-			i = ft_strlen_t(str + 1, *str);
-			if (i > 0)
-				ptr += ft_strncpy(ptr, str + 1, i);
-			str += i + 2;
-			continue ;
+			len = ft_strlen_t(str, *str);
+			if (len >= 2)
+			{
+				//ft_printf_fd(STDERR_FILENO, "strncpy [%s] %d\n", str, len - 2);
+				out += ft_strncpy(out, str + 1, len - 2);
+				str += len;
+				continue;
+			}
 		}
-		*ptr = *str;
-		ptr++;
-		str++;
+		//ft_printf_fd(STDERR_FILENO, "strncpy [%c]\n", *str);
+		*out++ = *str++;
 	}
-	return (out);
+	//ft_printf_fd(STDERR_FILENO, "original [%s]\ntrimmed [%s]\n\n", debug, ptr);
+	return (ptr);
 }

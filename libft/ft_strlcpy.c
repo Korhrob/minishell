@@ -29,7 +29,7 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 		i++;
 	}
 	dst[i] = '\0';
-	return (len);
+	return (dstsize);
 }
 
 // copy src to dst until n or src ends
@@ -48,5 +48,5 @@ size_t	ft_strncpy(char *dst, const char *src, size_t n)
 		dst[i] = src[i];
 		i++;
 	}
-	return (len);
+	return (n);
 }

@@ -12,32 +12,36 @@
 // clean tmp folder
 static void	clean_tmp(t_runtime *runtime)
 {
-	unlink(runtime->history);
-	// check if possible to clean all files
+	if (runtime->history && access(runtime->history, F_OK))
+		unlink(runtime->history);
 }
 
 //Initialization of runtime and all the possible content it may have
 static void	init_runtime(t_runtime *runtime, char **envp)
 {
+	ft_memset(runtime, 0, sizeof(t_runtime));
 	runtime->envp = envp;
 	runtime->env_struct = set_env_struct(envp);
 	runtime->exepath = str_pwd();
-	runtime->history = ft_strjoin(runtime->exepath, "/.tmp/.history");
-	runtime->heredoc = ft_strjoin(runtime->exepath, "/.tmp/.heredoc");
-	runtime->pipe_count = 0;
-	runtime->pipe_index = 0;
-	runtime->exit_status = 0;
-	runtime->history_line_count = 0;
+	if (runtime->exepath)
+	{
+		runtime->history = ft_strjoin(runtime->exepath, "/.tmp/.history");
+		runtime->heredoc = ft_strjoin(runtime->exepath, "/.tmp/.heredoc");
+	}
 	clean_tmp(runtime);
 }
 
 static void	free_runtime(t_runtime *runtime)
 {
 	clean_tmp(runtime);
-	free_env(runtime->env_struct);
-	free(runtime->exepath);
-	free(runtime->history);
-	free(runtime->heredoc);
+	if (runtime->env_struct)
+		free_env(runtime->env_struct);
+	if (runtime->exepath)
+		free(runtime->exepath);
+	if (runtime->history)
+		free(runtime->history);
+	if (runtime->heredoc)
+		free(runtime->heredoc);
 }
 
 // exectue all builtin commands here
@@ -178,7 +182,6 @@ static void	shell_nointeractive(char *line, t_runtime *runtime)
 	if (!syntax_error(line))
 		execute_args(pipes, runtime);
 	ft_free_arr(pipes);
-	free(line);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -186,12 +189,11 @@ int	main(int argc, char **argv, char **envp)
 	t_runtime	runtime;
 
 	signal_init(0);
-	if (argc == 1 && argv)
-		init_runtime(&runtime, envp);
-	if (isatty(STDIN_FILENO) == 1)
-		shell_interactive(&runtime);
+	init_runtime(&runtime, envp);
+	if (isatty(STDIN_FILENO) == 1 || argc <= 1)
+	 	shell_interactive(&runtime);
 	else
-		shell_nointeractive(argv[0], &runtime);
+		shell_nointeractive(argv[1], &runtime);
 	free_runtime(&runtime);
 	return (EXIT_SUCCESS);
 }

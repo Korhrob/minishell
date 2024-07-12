@@ -66,10 +66,10 @@ typedef struct s_runtime
 	int		pipe_count;
 	int		exit_status;
 	int		history_line_count;
+	char	**envp;
 	char	*exepath;
 	char	*history;
 	char	*heredoc;
-	char	**envp;
 }	t_runtime;
 
 // args		= arg array
