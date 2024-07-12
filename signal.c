@@ -85,10 +85,9 @@ int	main_signals(void)
 	struct sigaction	sa;
 
 	g_exit_status = 0;
-	ft_memset(&sa, 0, sizeof(struct sigaction));
-	sa.sa_flags = 0;
-	sigemptyset(&sa.sa_mask);
 	sa.sa_handler = &handle_sigint;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
 	sigaction(SIGINT, &sa, NULL);
 	sa.sa_handler = SIG_IGN;
 	sigaction(SIGQUIT, &sa, NULL);
@@ -100,10 +99,9 @@ int	child_signals(void)
 	struct sigaction	sa;
 
 	g_exit_status = 0;
-	ft_memset(&sa, 0, sizeof(struct sigaction));
-	sa.sa_flags = 0;
-	sigemptyset(&sa.sa_mask);
 	sa.sa_handler = &handle_sigint_child;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
 	sigaction(SIGINT, &sa, NULL);
 	sa.sa_handler = SIG_IGN;
 	sigaction(SIGQUIT, &sa, NULL);
@@ -116,10 +114,9 @@ int	heredoc_signals(void)
 	struct sigaction	sa;
 
 	rl_event_hook = event;
-	ft_memset(&sa, 0, sizeof(struct sigaction));
-	sa.sa_flags = 0;
-	sigemptyset(&sa.sa_mask);
 	sa.sa_handler = &handle_sigint_heredoc;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
 	sigaction(SIGINT, &sa, NULL);
 	sa.sa_handler = SIG_IGN;
 	sigaction(SIGQUIT, &sa, NULL);
