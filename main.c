@@ -190,7 +190,7 @@ int	main(int argc, char **argv, char **envp)
 
 	signal_init(0);
 	init_runtime(&runtime, envp);
-	if (isatty(STDIN_FILENO) == 1 || argc <= 1)
+	if (isatty(STDIN_FILENO) == 1 && argc <= 1)
 	 	shell_interactive(&runtime);
 	else
 		shell_nointeractive(argv[1], &runtime);
