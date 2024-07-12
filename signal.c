@@ -51,9 +51,8 @@ static void handle_sigint_child(int sig)
 static void	handle_sigint_heredoc(int sig)
 {
 	g_exit_status = sig;
-	if (sig == 2)
-		//ft_putendl_fd("", STDOUT_FILENO);
-	rl_replace_line("", 1);
+	rl_replace_line("", 0);
+	rl_on_new_line();
 	rl_redisplay();
 	rl_done = 1;
 }
@@ -87,6 +86,8 @@ int	main_signals(void)
 
 	g_exit_status = 0;
 	ft_memset(&sa, 0, sizeof(struct sigaction));
+	sa.sa_flags = 0;
+	sigemptyset(&sa.sa_mask);
 	sa.sa_handler = &handle_sigint;
 	sigaction(SIGINT, &sa, NULL);
 	sa.sa_handler = SIG_IGN;
@@ -94,7 +95,7 @@ int	main_signals(void)
 	return (EXIT_SUCCESS);
 }
 
-int	child_signals(int pid)
+int	child_signals(void)
 {
 	struct sigaction	sa;
 
@@ -104,10 +105,7 @@ int	child_signals(int pid)
 	sigemptyset(&sa.sa_mask);
 	sa.sa_handler = &handle_sigint_child;
 	sigaction(SIGINT, &sa, NULL);
-	if (pid == 0)
-		sa.sa_handler = SIG_DFL;
-	else
-		sa.sa_handler = SIG_IGN;
+	sa.sa_handler = SIG_IGN;
 	sigaction(SIGQUIT, &sa, NULL);
 	return (EXIT_SUCCESS);
 }
