@@ -15,8 +15,12 @@
 # define BUILTIN_ECHO "echo"
 # define BUILITIN_HISTORY "history"
 
+#ifndef READ
 # define READ 0
+#endif
+#ifndef WRITE
 # define WRITE 1
+#endif
 
 extern volatile sig_atomic_t 	g_exit_status;
 

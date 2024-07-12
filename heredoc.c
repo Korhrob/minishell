@@ -85,6 +85,3 @@ void	ft_heredoc(char *delimit, t_process *p)
 	}
 	close (fd);
 }
-
-// should save heredoc as heredoc_x
-// then delete childs heredoc_x after done

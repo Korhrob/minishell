@@ -54,12 +54,9 @@ Should only execute history and none of the other pipes
 
 ## MANDATORY 
 
-heredoc  
-ctrl-d (SIGCLOSE) works and gives EOF to heredoc, bash would complain about wrong EOF  
-ctrl-c (SIGINT) doesnt work, should close the heredoc  
+ctrl-d (SIGCLOSE) works
+ctrl-c (SIGINT) works, but some sussy prints in heredoc if not on empty prompt
 ctrl-\ (SIGQUIT) works
-
-cant run makefile from idleshell
 
 DOUBLE CHECK THIS BRANCH THAT LIBFT WORKS AS EXPECTED
 
