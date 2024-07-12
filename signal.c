@@ -116,7 +116,6 @@ int	heredoc_signals(void)
 	struct sigaction	sa;
 
 	rl_event_hook = event;
-	g_exit_status = 0;
 	ft_memset(&sa, 0, sizeof(struct sigaction));
 	sa.sa_flags = 0;
 	sigemptyset(&sa.sa_mask);

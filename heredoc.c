@@ -47,11 +47,11 @@ int	process_heredoc(char *line, t_process *p, t_runtime *runtime)
 				return (0);
 			ft_heredoc(delimiter, p);
 			free(delimiter);
-			if (g_exit_status)
-				break ;
 		}
 		else
 			line++;
+		if (g_exit_status)
+			break ;
 	}
 	return (1);
 }

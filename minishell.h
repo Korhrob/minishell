@@ -114,7 +114,7 @@ void		print_history(char **args, t_runtime *runtime, int fd);
 
 void		signal_init(int flag);
 int			main_signals(void);
-int			child_signals(int pid);
+int			child_signals(void);
 int			heredoc_signals(void);
 
 // heredoc.c
