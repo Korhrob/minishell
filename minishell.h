@@ -2,6 +2,7 @@
 # define MINISHELL_H
 
 # include "libft/libft.h"
+# include <signal.h>
 
 # define BUILTIN_NONE "null"
 # define BUILTIN_CD "cd"
@@ -17,7 +18,7 @@
 # define READ 0
 # define WRITE 1
 
-extern int	g_exit_status;
+extern volatile sig_atomic_t 	g_exit_status;
 
 typedef enum e_builtin_cmd
 {
@@ -64,6 +65,7 @@ typedef struct s_runtime
 	char	*exepath;
 	char	*history;
 	char	*heredoc;
+	char	**envp;
 }	t_runtime;
 
 // args		= arg array

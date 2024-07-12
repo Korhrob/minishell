@@ -24,7 +24,7 @@ static void	child(t_process *process, t_runtime *runtime)
 		ft_printf_fd(STDERR_FILENO, "idleshell: %s: command not found\n", process->args[0]);
 		exit(127);
 	}
-	if (execve(process->path, process->args, NULL) == -1)
+	if (execve(process->path, process->args, runtime->envp) == -1)
 	{
 		perror("execve");
 		exit(EXIT_FAILURE);

@@ -20,7 +20,7 @@ int	is_charset(char c, const char *set)
 }
 
 // moves str to first char after << < or >
-// then gets length until next syntax symbol
+// then gets length until next syntax symbol or space
 // then copies the chars until that point into a new string
 char	*get_filename(char *str)
 {

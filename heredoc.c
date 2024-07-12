@@ -36,9 +36,7 @@ int	process_heredoc(char *line, t_process *p, t_runtime *runtime)
 
 	if (p->fflag != 1)
 		return (0);
-	set_heredoc_id(p, runtime);
-	// check if set_heredoc_id failed
-
+	set_heredoc_id(p, runtime); // check this
 	while (*line != 0)
 	{
 		if (ft_strncmp(line, "<<", 2) == 0)
@@ -49,6 +47,8 @@ int	process_heredoc(char *line, t_process *p, t_runtime *runtime)
 				return (0);
 			ft_heredoc(delimiter, p);
 			free(delimiter);
+			if (g_exit_status)
+				break ;
 		}
 		else
 			line++;
@@ -67,7 +67,8 @@ void	ft_heredoc(char *delimit, t_process *p)
 	fd = open(p->infile, O_WRONLY | O_CREAT, 0666); // test
 	if (fd == -1)
 		return ;
-	while (1)
+	heredoc_signals();
+	while (!g_exit_status)
 	{
 		buffer = readline("heredoc> ");
 		if (buffer == NULL)

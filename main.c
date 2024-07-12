@@ -19,6 +19,7 @@ static void	clean_tmp(t_runtime *runtime)
 //Initialization of runtime and all the possible content it may have
 static void	init_runtime(t_runtime *runtime, char **envp)
 {
+	runtime->envp = envp;
 	runtime->env_struct = set_env_struct(envp);
 	runtime->exepath = str_pwd();
 	runtime->history = ft_strjoin(runtime->exepath, "/.tmp/.history");
