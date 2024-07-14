@@ -34,9 +34,9 @@ static void ft_cut_str(char **str, const char *set)
 	i = 0;
 	while ((*str)[i] != 0)
 	{
-		if ((*str)[i] == '\'' || (*str)[i] == '\"') // new addition
+		if ((*str)[i] == '\'' || (*str)[i] == '\"')
 			i += ft_strlen_t((*str), (*str)[i]);
-		else if (is_charset((*str)[i], set)) // 
+		else if (is_charset((*str)[i], set))
 		{
 			while ((*str)[i] != 0)
 			{
@@ -46,17 +46,6 @@ static void ft_cut_str(char **str, const char *set)
 		}
 		else
 			i++;
-	}
-}
-
-static void	clear_array(char **arr)
-{
-	while (*arr != NULL)
-	{
-		ft_printf_fd(STDERR_FILENO, "clear_array [%s]\n", *arr);
-		free(*arr);
-		*arr = NULL;
-		arr++;
 	}
 }
 
@@ -73,9 +62,9 @@ void	rebind_args(char **args, t_process *p)
 	{
 		line = *args;
 		set_flag(line, &flag);
-		//if (*line == '\'' || *line == '\"') // new addition
-		//	line += ft_strlen_t(line, *line);
-		if (!is_charset(*line, "<>")) // 
+		if (*line == '\'' || *line == '\"')
+			line += ft_strlen_t(line, *line);
+		if (!is_charset(*line, "<>"))
 		{
 			if (flag == 0)
 			{
@@ -87,5 +76,5 @@ void	rebind_args(char **args, t_process *p)
 		}
 		args++;
 	}
-	clear_array(&p->args[i]);
+	ft_clear_arr(&p->args[i]);
 }

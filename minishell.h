@@ -41,9 +41,10 @@ typedef enum e_builtin_cmd
 
 typedef enum e_error_code
 {
-	SUCCESS,
-	FAIL,
-	MALLOC_FAIL
+	SUCCESS 	= 0,
+	FAIL		= 1,
+	MALLOC_FAIL = 2,
+	WRITE_FAIL	= 4,
 }	t_error_code;
 
 typedef enum e_pflag
@@ -92,6 +93,7 @@ typedef struct s_process
 	int		outflag;
 	int		fflag;
 	int		pflag;
+	int		eflag;
 }	t_process;
 
 typedef struct s_pipe
@@ -99,6 +101,9 @@ typedef struct s_pipe
 	int	fd_in;
 	int	fd_out;
 }	t_pipe;
+
+// minishell_utils.c
+void		*ft_free(void *ptr);
 
 // main.c
 
@@ -134,6 +139,9 @@ void		*clean_process_list(t_list *list);
 // parse.c
 
 int			syntax_error(char *line);
+
+// parse_utils.c
+
 char		*get_filename(char *str);
 int			is_charset(char c, const char *set); // move to libft
 
@@ -163,5 +171,9 @@ t_env		**set_env_struct(char **envp);
 int			expand_dollars(char **pipes, t_env **environ);
 char		**create_strings(char **splitpipe, char *pipe, t_env **environ);
 void		*free_expands(char **array, int index);
+
+// error.c
+
+void		print_error_msg(int ecode);
 
 #endif

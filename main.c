@@ -148,6 +148,7 @@ static void	shell_interactive(t_runtime *runtime)
 	char	*line;
 	char	**pipes;
 	int		status;
+	int		syntax;
 
 	status = -1;
 	while (status == -1)
@@ -159,9 +160,10 @@ static void	shell_interactive(t_runtime *runtime)
 		if (*line != 0)
 		{
 			record_history(line, runtime);
+			syntax = syntax_error(line);
 			pipes = ft_split_quotes(line, '|', 0);
-			if (!syntax_error(line))
-			 	status = execute_args(pipes, runtime);
+			if (!syntax)
+				status = execute_args(pipes, runtime);
 			ft_free_arr(pipes);
 		}
 		free(line);

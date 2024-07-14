@@ -36,7 +36,8 @@ int	process_heredoc(char *line, t_process *p, t_runtime *runtime)
 
 	if (p->fflag != 1)
 		return (0);
-	set_heredoc_id(p, runtime); // check this
+	if (!set_heredoc_id(p, runtime))
+		return (0);
 	while (*line != 0)
 	{
 		if (*line == '\'' || *line == '\"')
@@ -51,7 +52,7 @@ int	process_heredoc(char *line, t_process *p, t_runtime *runtime)
 			free(delimiter);
 		}
 		else
-			line++; // should only happen if line wasnt moved by quote check
+			line++;
 		if (g_exit_status)
 			break ;
 	}
@@ -66,8 +67,7 @@ void	ft_heredoc(char *delimit, t_process *p)
 	int		fd;
 	char	*buffer;
 
-	ft_printf_fd(STDERR_FILENO, "heredoc delimiter [%s]\n", delimit); // debug
-	fd = open(p->infile, O_WRONLY | O_CREAT, 0666); // test
+	fd = open(p->infile, O_WRONLY | O_CREAT, 0666);
 	if (fd == -1)
 		return ;
 	heredoc_signals();

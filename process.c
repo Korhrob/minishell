@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <fcntl.h>
 
+// set process flag
 static void	set_pflag(t_process *p, t_runtime *runtime)
 {
 	p->pflag = 0;
@@ -22,26 +23,25 @@ static t_process	*new_process(char *line, t_runtime *runtime)
 {
 	t_process	*p;
 
-	p = (t_process *)malloc(sizeof(t_process));
+	p = (t_process *)ft_calloc(1, sizeof(t_process));
 	if (p == NULL)
 		return (NULL);
-	p->infile = NULL;
 	p->inflag = O_RDONLY;
-	p->outfile = NULL;
-	p->outflag = 0;
 	p->line = line;
 	file_redirection(p, runtime);
 	process_heredoc(line, p, runtime);
-	p->args = ft_split_quotes(p->line, ' ', 0); // used to be 1
-	if (p->args == NULL)
-	{
-		free(p);
-		return (NULL);
-	}
-	rebind_args(p->args, p);
-	p->args = ft_strtrim_quote_arr(p->args, 1); // new addition, trimming quotes after rebind
+	p->args = ft_split_quotes(line, ' ', 0);
+	if (p->args)
+		rebind_args(p->args, p);
+	p->args = ft_strtrim_quote_arr(p->args, 1);
 	p->path = get_cmd_path(p->args, runtime->env_struct);
 	set_pflag(p, runtime);
+	if (p->eflag != 0)
+	{
+		print_error_msg(p->eflag);
+		ft_free_arr(p->args);
+		return (ft_free(p));
+	}
 	return (p);
 }
 
@@ -64,6 +64,7 @@ static void	clean_process(t_process *p)
 	free(p);
 }
 
+// create and init all processes
 t_list	*create_process_list(char **pipes, t_runtime *runtime)
 {
 	t_list		*list;
@@ -92,6 +93,7 @@ t_list	*create_process_list(char **pipes, t_runtime *runtime)
 	return (list);
 }
 
+// clean all processes
 void	*clean_process_list(t_list *list)
 {
 	t_list	*cur;
