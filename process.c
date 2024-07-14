@@ -30,19 +30,16 @@ static t_process	*new_process(char *line, t_runtime *runtime)
 	p->outfile = NULL;
 	p->outflag = 0;
 	p->line = line;
-	file_redirection(p);
-	p->args = ft_split_quotes(p->line, ' ', 1);
+	file_redirection(p, runtime);
+	process_heredoc(line, p, runtime);
+	p->args = ft_split_quotes(p->line, ' ', 0); // used to be 1
 	if (p->args == NULL)
 	{
 		free(p);
 		return (NULL);
 	}
-	rebind_args(p);
-	
-	// ft_printf("process:\n%s\n",p->line);
-	// for (int i = 0; p->args[i] != NULL; i++)
-	// 	ft_printf("%s\n", p->args[i]);
-
+	rebind_args(p->args, p);
+	p->args = ft_strtrim_quote_arr(p->args, 1); // new addition, trimming quotes after rebind
 	p->path = get_cmd_path(p->args, runtime->env_struct);
 	set_pflag(p, runtime);
 	return (p);
@@ -54,7 +51,11 @@ static void	clean_process(t_process *p)
 	if (p == NULL)
 		return ;
 	if (p->infile != NULL)
+	{
+		if (p->fflag == 1)
+			unlink(p->infile);
 		free(p->infile);
+	}
 	if (p->outfile != NULL)
 		free(p->outfile);
 	if (p->path != NULL)

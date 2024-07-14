@@ -13,7 +13,7 @@
 #include "libft.h"
 #include <unistd.h>
 
-int	ft_convert_arg(int fd, const char *s, va_list args, char prefix)
+static int	ft_convert_arg(int fd, const char *s, va_list args, char prefix)
 {
 	int	count;
 
@@ -66,6 +66,8 @@ static void	ft_move_pad(const char **s, char prefix)
 	}
 }
 
+// write string s, with optional arguments %c %s %p %d %u %x %X
+// return write length
 int	ft_printf(const char *s, ...)
 {
 	va_list	args;
@@ -95,6 +97,8 @@ int	ft_printf(const char *s, ...)
 	return (i);
 }
 
+// write string s, with optional arguments %c %s %p %d %u %x %X to fd
+// return write length
 int	ft_printf_fd(int fd, const char *s, ...)
 {
 	va_list	args;

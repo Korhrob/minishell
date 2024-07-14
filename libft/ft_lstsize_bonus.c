@@ -12,6 +12,7 @@
 
 #include "libft.h"
 
+// return count of list elements pointed by lst
 int	ft_lstsize(t_list *lst)
 {
 	unsigned int	i;

@@ -65,7 +65,7 @@ int	create_env(char *envp, t_env *env)
 			return (MALLOC_FAIL);
 		}
 	}
-	env->key = ft_strldup(envp, 0, i);
+	env->key = ft_strndup(envp, 0, i);
 	if (!env->key && env->value)
 	{
 		free (env->value);

@@ -80,7 +80,7 @@ char	**create_strings(char **splitpipe, char *pipe, t_env **environ)
 	{
 		if ((*pipe == '$') && (*(pipe + 1) != '$' || *(pipe - 1) != '$'))
 		{
-			splitpipe[i] = ft_strldup(pipe - len, 0, len);
+			splitpipe[i] = ft_strndup(pipe - len, 0, len);
 			if (!splitpipe[i])
 				return (free_expands(splitpipe, i));
 			splitpipe[i + 1] = expand(pipe + 1, environ);

@@ -14,7 +14,6 @@
 #include "libft.h"
 
 // return start of next word
-// does not handle escaped quotes
 static char	*ft_next_word(const char *str, char c)
 {
 	while (*str != 0)
@@ -26,8 +25,7 @@ static char	*ft_next_word(const char *str, char c)
 		while (*str != 0 && *str != c)
 		{
 			if (*str == '\'' || *str == '\"')
-				//str += ft_strlen_t(str + 1, *str);
-				str = ft_strchr_q(str, *str);
+				str += ft_strlen_t(str, *str);
 			else
 				str++;
 		}
@@ -47,7 +45,6 @@ static int	ft_word_count(const char *str, char c)
 	ptr = (char *)str;
 	while (ptr != 0)
 	{
-		//ft_printf("word position %s\n", ptr);
 		count++;
 		ptr = (char *)ft_next_word(ptr, c);
 	}
@@ -68,16 +65,18 @@ static char	*ft_word(const char *s, char c, int flag)
 		len--;
 	if (len < 0)
 		return (NULL);
-	word = (char *) malloc(len + 1);
+	word = (char *) ft_calloc(1, len + 1);
 	if (word == 0)
 		return (0);
 	ft_strlcpy(word, s, len + 1);
 	if (flag == 1 && ft_quote_check(word))
 	{
 		trim = ft_strtrim_quote(word);
-		if (word != trim)
+		if (trim != NULL)
+		{
 			free(word);
-		return (trim);
+			return (trim);
+		}
 	}
 	return (word);
 }
@@ -94,9 +93,11 @@ static void	*ft_clean(char **arr, int cur)
 	return (0);
 }
 
-// split a string into an array seperated by c or quotes
-// flag 0 retains the quotes
-// flag 1 trims outer quotes
+/// @brief Split string s into an array, seperated by delimiter c, while respecting quotation
+/// @param s input string
+/// @param c delimiter
+/// @param flag 0 retain quotes, 1 trim quotes
+/// @return NULL terminated string array, or NULL on failure
 char	**ft_split_quotes(const char *s, char c, int flag)
 {
 	char	**wordarr;
@@ -108,7 +109,6 @@ char	**ft_split_quotes(const char *s, char c, int flag)
 	while (*s == c)
 		s++;
 	wordcount = ft_word_count(s, c);
-	//ft_printf("wordcount %d\n", wordcount);
 	if (wordcount <= 0)
 		return (NULL);
 	wordarr = ft_calloc(wordcount + 1, sizeof(char *));

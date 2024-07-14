@@ -77,7 +77,7 @@ static void	home_dir(t_runtime *runtime)
 	home = find_env(runtime->env_struct, "HOME");
 	if (home == NULL)
 	{
-		ft_printf("idleshell: cd: HOME not set\n");
+		ft_printf_fd(STDERR_FILENO, "idleshell: cd: HOME not set\n");
 		return ;
 	}
 	else
@@ -85,7 +85,7 @@ static void	home_dir(t_runtime *runtime)
 		if (chdir(home) == 0)
 		{
 			if (correct_wd(runtime) == MALLOC_FAIL)
-				ft_printf("idleshell: cd: not enough memory");
+				ft_printf_fd(STDERR_FILENO, "idleshell: cd: not enough memory");
 		}
 		else
 			perror("cd");
@@ -103,7 +103,7 @@ void	cmd_cd(char **args, t_runtime *runtime)
 	if (chdir(args[1]) == 0)
 	{
 		if (correct_wd(runtime) == MALLOC_FAIL)
-			ft_printf("idleshell: cd: not enough memory");
+			ft_printf_fd(STDERR_FILENO, "idleshell: cd: not enough memory");
 	}
 	else
 		perror("cd");

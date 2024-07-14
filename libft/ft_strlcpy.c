@@ -12,6 +12,7 @@
 
 #include "libft.h"
 
+// copy src to dst until (dstsize - 1) or src ends and place null terminator
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 {
 	size_t	i;
@@ -27,6 +28,25 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 		dst[i] = src[i];
 		i++;
 	}
-	dst[i] = 0;
-	return (len);
+	dst[i] = '\0';
+	return (dstsize);
+}
+
+// copy src to dst until n or src ends
+size_t	ft_strncpy(char *dst, const char *src, size_t n)
+{
+	size_t	i;
+	size_t	len;
+	
+	len = 0;
+	if (n <= 0)
+		return (len);
+	len = ft_strlen(src);
+	i = 0;
+	while (src[i] != 0 && i < n)
+	{
+		dst[i] = src[i];
+		i++;
+	}
+	return (n);
 }

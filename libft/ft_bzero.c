@@ -12,6 +12,7 @@
 
 #include "libft.h"
 
+// memset ptr s to 0 for n length
 void	ft_bzero(void *s, size_t n)
 {
 	ft_memset((void *) s, 0, n);

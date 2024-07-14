@@ -13,6 +13,7 @@
 #include "libft.h"
 #include <unistd.h>
 
+// write char c to fd
 int	ft_print_chr(int fd, unsigned int c)
 {
 	return (write(fd, &c, 1));

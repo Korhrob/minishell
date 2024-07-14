@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+// c is ascii character
 int	ft_isascii(unsigned char c)
 {
 	return (c <= 127);

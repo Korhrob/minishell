@@ -12,6 +12,7 @@
 
 #include "libft.h"
 
+// run function f to all list elemets pointed by list
 void	ft_lstiter(t_list *list, void (*f)(void *))
 {
 	t_list	*cur;

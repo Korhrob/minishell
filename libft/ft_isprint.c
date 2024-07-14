@@ -10,9 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+// c is printable character
 int	ft_isprint(unsigned char c)
 {
-	if (c >= ' ' && c <= '~')
-		return (1);
-	return (0);
+	return (c >= ' ' && c <= '~');
 }

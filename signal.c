@@ -7,7 +7,60 @@
 #include <readline/history.h>
 #include <termios.h>
 
-int	g_exit_status;
+volatile sig_atomic_t 	g_exit_status;
+
+/*
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣤⣤⣤⣤⣤⣶⣦⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀ 
+⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⡿⠛⠉⠙⠛⠛⠛⠛⠻⢿⣿⣷⣤⡀⠀⠀⠀⠀⠀ 
+⠀⠀⠀⠀⠀⠀⠀⠀⣼⣿⠋⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⠈⢻⣿⣿⡄⠀⠀⠀⠀ This file is SUS
+⠀⠀⠀⠀⠀⠀⠀⣸⣿⡏⠀⠀⠀⣠⣶⣾⣿⣿⣿⠿⠿⠿⢿⣿⣿⣿⣄⠀⠀⠀ 
+⠀⠀⠀⠀⠀⠀⠀⣿⣿⠁⠀⠀⢰⣿⣿⣯⠁⠀⠀⠀⠀⠀⠀⠀⠈⠙⢿⣷⡄⠀ 
+⠀⠀⣀⣤⣴⣶⣶⣿⡟⠀⠀⠀⢸⣿⣿⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣷⠀ 
+⠀⢰⣿⡟⠋⠉⣹⣿⡇⠀⠀⠀⠘⣿⣿⣿⣿⣷⣦⣤⣤⣤⣶⣶⣶⣶⣿⣿⣿⠀ 
+⠀⢸⣿⡇⠀⠀⣿⣿⡇⠀⠀⠀⠀⠹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠃⠀ 
+⠀⣸⣿⡇⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠉⠻⠿⣿⣿⣿⣿⡿⠿⠿⠛⢻⣿⡇⠀⠀ 
+⠀⣿⣿⠁⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣧⠀⠀ 
+⠀⣿⣿⠀⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⠀⠀ 
+⠀⣿⣿⠀⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⠀⠀ 
+⠀⢿⣿⡆⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡇⠀⠀ 
+⠀⠸⣿⣧⡀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⠃⠀⠀ 
+⠀⠀⠛⢿⣿⣿⣿⣿⣇⠀⠀⠀⠀⠀⣰⣿⣿⣷⣶⣶⣶⣶⠶⠀⢠⣿⣿⠀⠀⠀ 
+⠀⠀⠀⠀⠀⠀⠀⣿⣿⠀⠀⠀⠀⠀⣿⣿⡇⠀⣽⣿⡏⠁⠀⠀⢸⣿⡇⠀⠀⠀ 
+⠀⠀⠀⠀⠀⠀⠀⣿⣿⠀⠀⠀⠀⠀⣿⣿⡇⠀⢹⣿⡆⠀⠀⠀⣸⣿⠇⠀⠀⠀ 
+⠀⠀⠀⠀⠀⠀⠀⢿⣿⣦⣄⣀⣠⣴⣿⣿⠁⠀⠈⠻⣿⣿⣿⣿⡿⠏⠀⠀⠀⠀ 
+⠀⠀⠀⠀⠀⠀⠀⠈⠛⠻⠿⠿⠿⠿⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+*/
+
+static void	handle_sigint(int sig)
+{
+	g_exit_status = sig;
+	rl_replace_line("", 1);
+	ft_putendl_fd("", STDOUT_FILENO);
+	rl_on_new_line();
+	rl_redisplay();
+}
+
+static void handle_sigint_child(int sig)
+{
+	g_exit_status = sig;
+	rl_replace_line("", 0);
+	rl_redisplay();
+}
+
+static void	handle_sigint_heredoc(int sig)
+{
+	g_exit_status = sig;
+	rl_replace_line("", 0);
+	rl_on_new_line();
+	rl_redisplay();
+	rl_done = 1;
+}
+
+// readline bullshit
+int	event(void)
+{
+	return (EXIT_SUCCESS);
+}
 
 // toggles echo caret
 // flag 0 = off
@@ -24,29 +77,46 @@ void	signal_init(int flag)
 	tcsetattr(STDIN_FILENO, TCSAFLUSH, &attributes);
 }
 
-// handle all signals
-void	signal_signint(int signo)
+// sigaction can fail and return -1
+// perror("sigaction"); return (EXIT_FAILURE);
+int	main_signals(void)
 {
-	(void)signo;
-	g_exit_status = signo;
-	if (signo == SIGINT)
-	{
-		rl_replace_line("", 1);
-		ft_putendl_fd("", STDOUT_FILENO);
-		if (rl_on_new_line() == -1)
-			exit(EXIT_FAILURE);
-		rl_redisplay();
-	}
-	else if (signo == SIGTERM)
-	{
-		unlink(".history");
-	}
-	//if (g_exit_status)
-	//	ft_printf("signal %d\n", g_exit_status);
+	struct sigaction	sa;
+
+	g_exit_status = 0;
+	sa.sa_handler = &handle_sigint;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	sigaction(SIGINT, &sa, NULL);
+	sa.sa_handler = SIG_IGN;
+	sigaction(SIGQUIT, &sa, NULL);
+	return (EXIT_SUCCESS);
 }
 
-// sets g_exit_status back to 0
-void	signal_reset(void)
+int	child_signals(void)
 {
+	struct sigaction	sa;
+
 	g_exit_status = 0;
+	sa.sa_handler = &handle_sigint_child;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	sigaction(SIGINT, &sa, NULL);
+	sa.sa_handler = SIG_IGN;
+	sigaction(SIGQUIT, &sa, NULL);
+	return (EXIT_SUCCESS);
+}
+
+int	heredoc_signals(void)
+{
+	struct sigaction	sa;
+
+	rl_event_hook = event;
+	sa.sa_handler = &handle_sigint_heredoc;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	sigaction(SIGINT, &sa, NULL);
+	sa.sa_handler = SIG_IGN;
+	sigaction(SIGQUIT, &sa, NULL);
+	return (EXIT_SUCCESS);
 }
