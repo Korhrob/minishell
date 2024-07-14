@@ -24,29 +24,57 @@ void	signal_init(int flag)
 	tcsetattr(STDIN_FILENO, TCSAFLUSH, &attributes);
 }
 
-// handle all signals
-void	signal_signint(int signo)
+static void	handle_sigint(int sig)
 {
-	(void)signo;
-	g_exit_status = signo;
-	if (signo == SIGINT)
-	{
-		rl_replace_line("", 1);
-		ft_putendl_fd("", STDOUT_FILENO);
-		if (rl_on_new_line() == -1)
-			exit(EXIT_FAILURE);
-		rl_redisplay();
-	}
-	else if (signo == SIGTERM)
-	{
-		unlink(".history");
-	}
-	//if (g_exit_status)
-	//	ft_printf("signal %d\n", g_exit_status);
+	(void)sig;
+	rl_replace_line("", 1);
+	ft_putendl_fd("", STDOUT_FILENO);
+	rl_on_new_line();
+	rl_redisplay();
 }
 
-// sets g_exit_status back to 0
-void	signal_reset(void)
+int	main_signals(void)
 {
-	g_exit_status = 0;
+	struct sigaction	sa;
+
+	ft_memset(&sa, 0, sizeof(struct sigaction));
+	sa.sa_handler = &handle_sigint;
+	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGQUIT, &sa, NULL);
+	/* sigaction can fail?
+	if (sigaction(SIGINT, &sa_sigint, NULL) == -1)
+	{
+		perror("sigaction");
+		return (EXIT_FAILURE);
+	}
+	*/
+	return (EXIT_SUCCESS);
+}
+
+int	child_signals(int pid)
+{
+	struct sigaction	sa;
+
+	sa.sa_flags = 0;
+	sigemptyset(&sa.sa_mask);
+	if (pid == 0)
+		sa.sa_handler = SIG_DFL;
+	else
+		sa.sa_handler = SIG_IGN;
+	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGQUIT, &sa, NULL);
+	return (EXIT_SUCCESS);
+}
+
+int	heredoc_signals(void)
+{
+	struct sigaction	sa;
+
+	sa.sa_flags = 0;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_handler = &handle_sigint;
+	sigaction(SIGINT, &sa, NULL);
+	sigaction(SIGTERM, &sa, NULL);
+	sigaction(SIGQUIT, &sa, NULL);
+	return (EXIT_SUCCESS);
 }

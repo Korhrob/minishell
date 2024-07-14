@@ -108,11 +108,9 @@ int	expand_dollars(char **pipes, t_env **environ)
 	i = 0;
 	while (pipes[i] != NULL)
 	{
-		ft_printf("%s\n", pipes[i]);
 		pipes[i] = expand_logic(pipes[i], environ);
 		if (!pipes[i])
 			return (MALLOC_FAIL);
-		ft_printf("%s\n", pipes[i]);
 		i++;
 	}
 	return (SUCCESS);

@@ -3,6 +3,7 @@
 
 # include "libft/libft.h"
 
+# define BUILTIN_NONE "null"
 # define BUILTIN_CD "cd"
 # define BUILTIN_ENV "env"
 # define BUILTIN_HELP "help"
@@ -20,6 +21,7 @@ extern int	g_exit_status;
 
 typedef enum e_builtin_cmd
 {
+	NONE,
 	CD,
 	ENV,
 	HELP,
@@ -56,6 +58,15 @@ typedef struct s_runtime
 	char	*heredoc;
 }	t_runtime;
 
+// args		= arg array
+// line		= entire pipe string
+// infile	= input file name
+// outfile	= outfile file name
+// path		= cmd path
+// inflag	= input file flags
+// outflag	= output file flags
+// pflag	= process flag bitmask, PF_FIRST, PF_MIDDLE, PF_LAST
+// fflag	= file flag, 1 = use heredoc
 typedef struct s_process
 {
 	char	**args;
@@ -65,6 +76,7 @@ typedef struct s_process
 	char	*path;
 	int		inflag;
 	int		outflag;
+	int		fflag;
 	int		pflag;
 }	t_process;
 
@@ -82,9 +94,8 @@ typedef struct s_pipe
 }	t_pipe;
 
 // main
-//int		single_builtin(t_process *process, t_runtime *runtime, int fd);
 int			get_builtin(char *args);
-void		do_builtin(t_process *p, int cmd, t_runtime *runtime, int fd);
+int			do_builtin(t_process *p, int cmd, t_runtime *runtime, int fd);
 
 // history
 void		record_history(char *line, t_runtime *runtime);
@@ -92,12 +103,13 @@ void		print_history(char **args, t_runtime *runtime, int fd);
 
 // signals
 void		signal_init(int flag);
-void		signal_signint(int signo);
-void		signal_reset(void);
+int			main_signals(void);
+int			child_signals(int pid);
+int			heredoc_signals(void);
 
 // heredoc
-void		ft_heredoc(int flag, char *delimit, t_runtime *runtime);
-int			process_heredoc(char *line, t_runtime *runtime);
+void		ft_heredoc(char *delimit, t_process *process);
+int			process_heredoc(char *line, t_process *process, t_runtime *runtime);
 
 // readline
 void		rl_replace_line(const char *str, int i);
@@ -110,13 +122,13 @@ void		*clean_process_list(t_list *list);
 int			syntax_error(char *line);
 char		*get_filename(char *str);
 void		align_args(t_process *p);
-int			is_charset(char c, const char *set);
+int			is_charset(char c, const char *set); // move to libft
 
 // expansions
 int			expand_dollars(char **pipes, t_env **environ);
 
 // file_redirections
-void		file_redirection(t_process *process);
+void		file_redirection(t_process *process, t_runtime *runtime);
 
 // array_handler
 void		rebind_args(t_process *p);

@@ -12,25 +12,24 @@ static void	child(t_process *process, t_runtime *runtime)
 	int builtin; 
 
 	if (process->args[0] == NULL)
-		exit(1);
+		exit(EXIT_FAILURE);
 	builtin = get_builtin(process->args[0]);
-	if (builtin != -1)
+	if (builtin)
 	{
 		do_builtin(process, builtin, runtime, STDOUT_FILENO);
 		exit (EXIT_SUCCESS);
 	}
 	if (process->path == NULL || access(process->path, F_OK))
 	{
-		ft_printf_fd(STDERR_FILENO, "idleshell: %s: file not found\n", process->args[0]);
+		ft_printf_fd(STDERR_FILENO, "idleshell: %s: command not found\n", process->args[0]);
 		exit(127);
 	}
 	if (execve(process->path, process->args, NULL) == -1)
 	{
 		perror("execve");
-		//ft_printf_fd(STDERR_FILENO, "execve failed\n");
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
-	exit(1);
+	exit(EXIT_SUCCESS);
 }
 
 static void end_pipe(int fd[2], t_pipe *pipe_info, t_process *p)
@@ -59,6 +58,7 @@ static void do_pipe(t_pipe *pipe_info, t_process *p, t_runtime *runtime)
 		perror("fork");
 		exit(1);
 	}
+	child_signals(pid);
 	if (pid == 0)
 	{
 		if (do_redirect(pipe_info->fd_in, fd, p) == -1)

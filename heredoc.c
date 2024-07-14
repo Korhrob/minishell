@@ -5,13 +5,39 @@
 #include <fcntl.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#include <signal.h>
+
+static int	set_heredoc_id(t_process *p, t_runtime *runtime)
+{
+	char	*temp;
+	char	*id;
+
+	id = ft_itoa(runtime->pipe_index);
+	if (!id)
+		return (0);
+	temp = ft_strjoin_c(p->infile, id, '_');
+	if (!temp)
+	{
+		free(id);
+		return(0);
+	}
+	free(p->infile);
+	free(id);
+	p->infile = temp;
+	return (1);
+}
 
 // process all heredocs but only retain the last one
 // return 1 if all heredocs succeed
 // return 0 if any heredoc fails
-int	process_heredoc(char *line, t_runtime *runtime)
+int	process_heredoc(char *line, t_process *p, t_runtime *runtime)
 {
 	char	*delimiter;
+
+	if (p->fflag != 1)
+		return (0);
+	set_heredoc_id(p, runtime);
+	// check if set_heredoc_id failed
 
 	while (*line != 0)
 	{
@@ -21,7 +47,7 @@ int	process_heredoc(char *line, t_runtime *runtime)
 			delimiter = get_filename(line);
 			if (delimiter == NULL)
 				return (0);
-			ft_heredoc(O_WRONLY | O_CREAT, delimiter, runtime);
+			ft_heredoc(delimiter, p);
 			free(delimiter);
 		}
 		else
@@ -33,12 +59,12 @@ int	process_heredoc(char *line, t_runtime *runtime)
 // handle heredoc behavior
 // only the last heredoc should matter
 // and this function shouldnt have to return anything
-void	ft_heredoc(int flag, char *delimit, t_runtime *runtime)
+void	ft_heredoc(char *delimit, t_process *p)
 {
 	int		fd;
 	char	*buffer;
 
-	fd = open(runtime->heredoc, flag, 0666); // test
+	fd = open(p->infile, O_WRONLY | O_CREAT, 0666); // test
 	if (fd == -1)
 		return ;
 	while (1)
@@ -58,3 +84,6 @@ void	ft_heredoc(int flag, char *delimit, t_runtime *runtime)
 	}
 	close (fd);
 }
+
+// should save heredoc as heredoc_x
+// then delete childs heredoc_x after done

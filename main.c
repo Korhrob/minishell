@@ -9,49 +9,37 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
+// clean tmp folder
+static void	clean_tmp(t_runtime *runtime)
+{
+	unlink(runtime->history);
+	// clean all tmp files
+}
+
 //Initialization of runtime and all the possible content it may have
 static void	init_runtime(t_runtime *runtime, char **envp)
 {
 	runtime->env_struct = set_env_struct(envp);
 	runtime->exepath = str_pwd();
-	runtime->history = ft_strjoin(runtime->exepath, "/.history");
-	runtime->heredoc = ft_strjoin(runtime->exepath, "/.heredoc");
+	runtime->history = ft_strjoin(runtime->exepath, "/.tmp/.history"); //might not need strjoin
+	runtime->heredoc = ft_strjoin(runtime->exepath, "/.tmp/.heredoc");
 	runtime->pipe_count = 0;
 	runtime->pipe_index = 0;
-	unlink(runtime->history);
-	unlink(runtime->heredoc);
+	clean_tmp(runtime);
 }
 
 static void	free_runtime(t_runtime *runtime)
 {
+	clean_tmp(runtime);
 	free_env(runtime->env_struct);
 	free(runtime->exepath);
 	free(runtime->history);
 	free(runtime->heredoc);
 }
 
-// exits program and unlinks history file
-void	ft_exit(int ecode, t_runtime *runtime)
-{
-	unlink(runtime->history);
-	unlink(runtime->heredoc);
-	free_runtime(runtime);
-	exit(ecode);
-}
-
-// DEPRECATED: NO LONGER USED
-void	do_command(t_process *p, t_runtime *runtime)
-{
-	(void)runtime;
-	if (ft_quote_check_arr(p->args) == 0)
-	{
-		ft_printf("idleshell: unexpected EOF\n");
-		ft_exit(2, runtime);
-	}
-}
-
 // exectue all builtin commands here
-void	do_builtin(t_process *p, int cmd, t_runtime *runtime, int fd)
+// should return int back to main
+int	do_builtin(t_process *p, int cmd, t_runtime *runtime, int fd)
 {
 	if (cmd == EXIT)
 		ft_exit(0, runtime); // go back to main test valgrind
@@ -69,6 +57,7 @@ void	do_builtin(t_process *p, int cmd, t_runtime *runtime, int fd)
 		cmd_echo(p->args, fd);
 	else if (cmd == HISTORY)
 		print_history((p->args + 1), runtime, fd);
+	return (-1);
 }
 
 // gets and returns enum if current string is builtin command
@@ -76,6 +65,7 @@ int	get_builtin(char *args)
 {
 	int			i;
 	static char	*builtin[] = {
+		BUILTIN_NONE,
 		BUILTIN_CD,
 		BUILTIN_ENV,
 		BUILTIN_HELP,
@@ -87,65 +77,65 @@ int	get_builtin(char *args)
 		BUILITIN_HISTORY
 	};
 
-	i = 0;
+	if (args == NULL)
+		return (0);
+	i = 1;
 	while (i < BUILTIN_MAX)
 	{
 		if (ft_strcmp(args, builtin[i]) == 0)
 			return (i);
 		i++;
 	}
-	return (-1);
-}
-
-// execute single builtin in parent
-int	single_builtin(t_process *process, t_runtime *runtime, int fd)
-{
-	int	builtin;
-	int	flag;
-
-	if (runtime->pipe_count > 1 || process->args[0] == NULL)
-		return (0);
-	flag = 0;
-	if (fd == -2)
-	{
-		flag = 1;
-		if (process->outfile != NULL)
-			fd = open(process->outfile, process->outflag);
-		else
-			fd = STDOUT_FILENO;
-		if (fd == -1)
-			return (1);
-	}
-	builtin = get_builtin(process->args[0]);
-	if (builtin != -1)
-	{
-		do_builtin(process, builtin, runtime, fd);
-		return (1);
-	}
-	if (flag == 1 && process->outfile != NULL)
-		close(fd);
 	return (0);
 }
 
-// expand $, execute args
+// execute single builtin in parent
+static int	single_builtin(t_process *process, t_runtime *runtime)
+{
+	int fd;
+	int	builtin;
+	int	return_flag;
+
+	fd = STDOUT_FILENO;
+	return_flag = -1;
+	if (process->outfile != NULL)
+	{
+		fd = open(process->outfile, process->outflag, 0644);
+		if (fd == -1)
+			return (EXIT_FAILURE);
+	}
+	builtin = get_builtin(process->args[0]);
+	return_flag = do_builtin(process, builtin, runtime, fd);
+	if (process->outfile != NULL)
+		close(fd);
+	return (return_flag);
+}
+
+// expand $, execute logic
 int	execute_args(char **pipes, t_runtime *runtime)
 {
 	t_list	*list;
+	int		return_flag;
 
+	return_flag = -1;
+	if (pipes == NULL)
+		return (-1);
 	if (expand_dollars(pipes, runtime->env_struct) == MALLOC_FAIL)
-		ft_exit(1, runtime);
+		return (return_flag);
 	runtime->pipe_index = 0;
 	runtime->pipe_count = ft_array_len((void **)pipes);
 	list = create_process_list(pipes, runtime);
 	if (list == NULL)
 		return (-1);
-	if (!single_builtin(list->content, runtime, -2))
+	if (runtime->pipe_count <= 1 && get_builtin(((t_process*)list->content)->args[0]))
+		return_flag = single_builtin(list->content, runtime);
+	else
 		pipex(list, runtime);
 	clean_process_list(list);
-	return (-1);
+	return (return_flag);
 }
 
-// read stdin and split the line
+// main readline loop
 void	shell_interactive(t_runtime *runtime)
 {
 	char	*line;
@@ -155,6 +145,7 @@ void	shell_interactive(t_runtime *runtime)
 	status = -1;
 	while (status == -1)
 	{
+		main_signals();
 		line = readline("idleshell$ ");
 		if (line == NULL)
 			break ;
@@ -162,12 +153,9 @@ void	shell_interactive(t_runtime *runtime)
 		{
 			record_history(line, runtime);
 			pipes = ft_split_quotes(line, '|', 0);
-			if (!syntax_error(line) && process_heredoc(line, runtime))
+			if (!syntax_error(line))
 			 	status = execute_args(pipes, runtime);
 			ft_free_arr(pipes);
-			if (status >= 0)
-				ft_exit(status, runtime);
-			signal_reset();
 		}
 		free(line);
 	}
@@ -178,12 +166,10 @@ int	main(int argc, char **argv, char **envp)
 	t_runtime	runtime;
 
 	signal_init(0);
-	signal(SIGINT, signal_signint);
-	signal(SIGTERM, signal_signint);
 	if (argc == 1 && argv)
 		init_runtime(&runtime, envp);
 	if (isatty(STDIN_FILENO) == 1)
 		shell_interactive(&runtime);
 	free_runtime(&runtime);
-	return (0);
+	return (EXIT_SUCCESS);
 }

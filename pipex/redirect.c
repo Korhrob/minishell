@@ -58,12 +58,12 @@ int do_redirect(int fd_in, int pipe[2], t_process *p)
 {
 	if (set_infile(fd_in, p) == -1)
 	{
-		//dup error
+		perror("dup2");
 		return (-1);
 	}
 	if (set_outfile(pipe, p) == -1)
 	{
-		//dup error
+		perror("dup2");
 		return (-1);
 	}
 	return (1);

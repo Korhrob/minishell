@@ -32,11 +32,8 @@ NOTE: "arg1>outfile" will simply overwrite the ">outfile" portion with 0's and n
 ## Builtins
 We check our first arg in process structs string array and compare it to defined strings for builtin commands,
 then return an enum for the specific builtin command (or -1 if command is not a builtin).  
-
-!!!NOTE: TODO!!!  
-If the runtime has more than 1 pipe, all the commands should be executed in child processes.  
-Only the last builtin in the pipe should execute.  
-If there are no pipes, handle builtins in the parent and non builtins in child.  
+If the runtime has more than 1 pipe, all the commands are executed in child processes.  
+If there are no pipes, handle builtins in the parent and non builtins in a single child.  
 
 ## Signals
 
@@ -57,12 +54,11 @@ Should only execute history and none of the other pipes
 
 ## MANDATORY 
 
-empty cmds might be getting passed to pipex and print  
-no such command (null)
-fix: dont pass them to pipex in the first placeexit
-parsing does not handle quotes inside parsing inside strings example [echo b'est="test']
+heredoc  
+ctrl-d works and gives EOF to heredoc, bash would complain about wrong EOF  
+ctrl-d doesnt work, should close the heredoc  
 
-echo "asd" > outfile
+cant run makefile from idleshell
 
 ## NON MANDATORY
 

@@ -29,8 +29,7 @@ $(NAME): $(OBJ)
 clean:
 	rm -f $(OBJ)
 	$(MAKE) -C $(LIBFT) clean
-	rm -f .history
-	rm -f .heredoc
+	rm -f .tmp/*
 
 fclean: clean
 	rm -f $(NAME)
