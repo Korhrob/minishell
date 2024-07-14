@@ -54,7 +54,7 @@ void	do_command(t_process *p, t_runtime *runtime)
 void	do_builtin(t_process *p, int cmd, t_runtime *runtime, int fd)
 {
 	if (cmd == EXIT)
-		ft_exit(0, runtime);
+		ft_exit(0, runtime); // go back to main test valgrind
 	else if (cmd == PWD)
 		cmd_pwd(fd);
 	else if (cmd == CD)
