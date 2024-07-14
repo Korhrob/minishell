@@ -107,13 +107,6 @@ typedef struct s_exp
 	char	*pipe;
 }	t_exp;
 
-typedef struct s_exp
-{
-	int		len;
-	int		i;
-	char	*pipe;
-}	t_exp;
-
 // main.c
 
 int			get_builtin(char *args);
@@ -177,5 +170,6 @@ t_env		**set_env_struct(char **envp);
 int			expand_dollars(char **pipes, t_env **environ);
 char		**create_strings(char **splitpipe, char *pipe, t_env **environ);
 void		*free_expands(char **array, int index);
+char		*array_join_c(char **array, int count);
 
 #endif

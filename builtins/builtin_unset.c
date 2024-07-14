@@ -68,7 +68,7 @@ void	unset_main(char **args, t_runtime *runtime)
 		{
 			if (cmd_unset(*args, runtime) == MALLOC_FAIL)
 			{
-				ft_printf_fd(STDERR_FILENO, "idleshell: unset: not enough memory\n");
+				ft_printf_fd(2, "idleshell: unset: not enough memory\n");
 				return ;
 			}
 		}

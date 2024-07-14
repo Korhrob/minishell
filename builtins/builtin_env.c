@@ -39,7 +39,7 @@ void	cmd_env(t_runtime *runtime, int fd)
 		return ;
 	if (existing_path(runtime->env_struct, "PATH") == FAIL)
 	{
-		ft_printf_fd(STDERR_FILENO, "idleshell: env: No such file or directory\n");
+		ft_printf_fd(2, "idleshell: env: No such file or directory\n");
 		return ;
 	}
 	while (runtime->env_struct[i] != NULL)

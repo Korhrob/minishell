@@ -28,7 +28,7 @@ char	*ft_strdup(const char *s1)
 	return (out);
 }
 
-// duplicate string into a new string untill length of len
+// duplicate string into a new string until length of len
 char	*ft_strndup(const char *s1, size_t start, size_t len)
 {
 	char	*out;

@@ -14,51 +14,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-// calculates the lenght of the arrays strings
-static int	calculate_len(char **array, int count)
-{
-	int	i;
-	int	len;
-
-	i = 0;
-	len = 0;
-	while (count > 0)
-	{
-		len = len + ft_strlen(array[i]);
-		i++;
-		count--;
-	}
-	return (len);
-}
-
-// joins count amount of strings in an array into one string
-static char	*array_join_c(char **array, int count)
-{
-	char	*out;
-	int		i;
-	int		j;
-	int		n;
-
-	i = 0;
-	j = 0;
-	n = 0;
-	out = (char *)malloc(calculate_len(array, count) + 1);
-	if (!out)
-		return (NULL);
-	while (count > 0 || array[i])
-	{
-		if (array[i])
-			while (array[i][j] != 0)
-				out[n++] = array[i][j++];
-		i++;
-		j = 0;
-		count--;
-		out[n] = 0;
-	}
-	out[n] = 0;
-	return (out);
-}
-
 // counts the number of expansions in the pipe
 static int	count_expands(char *pipe)
 {
@@ -111,10 +66,10 @@ static char	*expand_logic(char *pipe, t_env **environ)
 	int		count;
 
 	count = count_expands(pipe);
-	printf("count = %i\n", count);
 	if (count == 0)
 		return (pipe);
-	splitpipe = (char **)ft_calloc(1, 4 * (count * 2 + check_extra(pipe) + 1));
+	splitpipe = (char **)ft_calloc(4, 4 * (count * 2 + check_extra(pipe) + 1));
+	(void)check_extra;
 	if (!splitpipe)
 		return (NULL);
 	create_strings(splitpipe, pipe, environ);
