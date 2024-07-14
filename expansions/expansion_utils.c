@@ -91,7 +91,12 @@ char	**create_strings(char **splitpipe, char *pipe, t_env **environ)
 			len = -1;
 		}
 		// printf("pipe = [%s]\n", pipe);
-		// if (*pipe == '\'')
+		if (*pipe == '\'')
+		{
+			pipe += ft_strlen_t(pipe, '\'');
+			len += ft_strlen_t(pipe, '\'');
+			continue ;
+		}
 		len++;
 		pipe++;
 	}

@@ -80,6 +80,13 @@ typedef struct s_pipe
 	int	fd_out;
 }	t_pipe;
 
+typedef struct s_exp
+{
+	int		len;
+	int		i;
+	char	*pipe;
+}	t_exp;
+
 // main
 int			single_builtin(t_process *process, t_runtime *runtime, int fd);
 
