@@ -48,7 +48,6 @@ char		*ft_substr(const char *s, unsigned int start, size_t len);
 char		*ft_strjoin(const char *s1, const char *s2);
 char		*ft_strjoin_c(const char *s1, const char *s2, char c);
 char		*ft_strtrim(const char *s1, const char *set);
-char		*ft_strtrim_quote(const char *str);
 char		**ft_split(const char *s, char c);
 char		**ft_split_quotes(const char *s, char c, int flag);
 char		*ft_itoa(int n);
@@ -61,6 +60,8 @@ void		ft_putnbr_fd(int n, int fd);
 
 int			ft_quote_check(const char *str);
 int			ft_quote_check_arr(char **arr);
+char		*ft_strtrim_quote(const char *str);
+char		**ft_strtrim_quote_arr(char **arr, int flag);
 void		*ft_free_arr(char **arr);
 int			ft_array_len(void **array);
 char		*ft_array_join(char **array);

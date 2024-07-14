@@ -143,7 +143,7 @@ void		file_redirection(t_process *process, t_runtime *runtime);
 
 // array_handler.c
 
-void		rebind_args(t_process *p);
+void		rebind_args(char **args, t_process *p);
 
 // pipex.c
 

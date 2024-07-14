@@ -96,7 +96,7 @@ static void	*ft_clean(char **arr, int cur)
 /// @brief Split string s into an array, seperated by delimiter c, while respecting quotation
 /// @param s input string
 /// @param c delimiter
-/// @param flag 0 = retain outer quotes, 1 = trim outer quotes
+/// @param flag 0 retain quotes, 1 trim quotes
 /// @return NULL terminated string array, or NULL on failure
 char	**ft_split_quotes(const char *s, char c, int flag)
 {

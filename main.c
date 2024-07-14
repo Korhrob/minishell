@@ -126,14 +126,14 @@ int	execute_args(char **pipes, t_runtime *runtime)
 
 	return_flag = -1;
 	if (pipes == NULL)
-		return (-1);
+		return (return_flag);
 	if (expand_dollars(pipes, runtime->env_struct) == MALLOC_FAIL)
 		return (return_flag);
 	runtime->pipe_index = 0;
 	runtime->pipe_count = ft_array_len((void **)pipes);
 	list = create_process_list(pipes, runtime);
 	if (list == NULL)
-		return (-1);
+		return (return_flag);
 	if (runtime->pipe_count <= 1 && get_builtin(((t_process*)list->content)->args[0]))
 		return_flag = single_builtin(list->content, runtime);
 	else

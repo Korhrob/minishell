@@ -33,6 +33,11 @@ char	*get_filename(char *str)
 	len = 0;
 	while (str[len] != 0)
 	{
+		if (str[len] == '\'' || str[len] == '\"')
+		{
+			len += ft_strlen_t(&str[len], str[len]);
+			continue ;
+		}
 		if (is_charset(str[len], "|<> ")) //
 			break ;
 		len++;
@@ -41,11 +46,13 @@ char	*get_filename(char *str)
 	if (out == NULL)
 		return (NULL);
 	ft_strlcpy(out, str, len + 1);
+	ft_printf("get_filename [%s]\n", out);
 	return (out);
 }
 
 // check if str is contains syntax
 // flag 1 prints the syntax error
+// return the invalid syntax symbol
 static char	*syntax_cmp(char *line)
 {
 	int			i;
@@ -99,12 +106,18 @@ int	syntax_error(char *line)
 	char	*cur;
 	char	*prev;
 
-	cur = NULL;
 	prev = NULL;
+	if (!ft_quote_check(line)) // new addition
+	{
+		ft_printf_fd(STDERR_FILENO, "syntax error unclosed quote\n");
+		return (1);
+	}
 	if (empty_pipe(line))
 		return (1);
 	while (*line != 0)
 	{
+		if (*line == '\'' || *line == '\"') // new addition
+			line += ft_strlen_t(line, *line);
 		cur = syntax_cmp(line);
 		if (check_syntax_error(cur, prev))
 			return (1);
