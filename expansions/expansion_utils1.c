@@ -30,6 +30,7 @@ static char	*find_expansion(char *key, t_env **environ)
 		}
 		i++;
 	}
+	free (key);
 	return (NULL);
 }
 
@@ -73,8 +74,8 @@ void	iterate(t_exp *exp)
 {
 	if (*exp->pipe == '\'')
 	{
-		exp->pipe += ft_strlen_t(exp->pipe, '\'');
 		exp->len += ft_strlen_t(exp->pipe, '\'');
+		exp->pipe += ft_strlen_t(exp->pipe, '\'');
 		return ;
 	}
 	exp->len++;
