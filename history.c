@@ -52,7 +52,6 @@ static void	print_history_all(t_runtime *runtime, int fd_out)
 // requires fd where to read from
 // mode 0 = ascending
 // mode 1 = descending (reverse)
-// NOTE: move to libft
 static t_list	*read_to_list(int fd, int mode)
 {
 	t_list	*list;
@@ -60,9 +59,6 @@ static t_list	*read_to_list(int fd, int mode)
 	char	*line;
 
 	list = NULL;
-	//list = ft_lst_create();
-	//if (list == NULL)
-	//	return (NULL);
 	line = get_next_line(fd);
 	while (line != NULL)
 	{
@@ -108,6 +104,7 @@ static void	print_history_n(int n, t_runtime *runtime, int fd_out)
 	ft_lst_clean(&list, 1);
 }
 
+// print history, if next arg is set to integer, print only most recently history until n
 void	print_history(char **next_arg, t_runtime *runtime, int fd)
 {
 	int		count;

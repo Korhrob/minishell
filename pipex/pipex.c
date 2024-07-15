@@ -88,6 +88,5 @@ void pipex(t_list *list, t_runtime *runtime)
 	pid = wait(&runtime->exit_status);
 	while (pid > 0)
 		pid = wait(&runtime->exit_status);
-	// perror("wait");
 }
 

@@ -122,6 +122,9 @@ int			main_signals(void);
 int			child_signals(void);
 int			heredoc_signals(void);
 int			close_signals(void);
+void		handle_sigint(int sig);
+void		handle_sigint_child(int sig);
+void		handle_sigint_heredoc(int sig);
 
 // heredoc.c
 
