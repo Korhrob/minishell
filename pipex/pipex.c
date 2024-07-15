@@ -24,6 +24,7 @@ static void	child(t_process *process, t_runtime *runtime)
 		ft_printf_fd(STDERR_FILENO, "idleshell: %s: command not found\n", process->args[0]);
 		exit(127);
 	}
+	// convert env struct to array
 	if (execve(process->path, process->args, runtime->envp) == -1)
 	{
 		perror("execve");
@@ -58,9 +59,9 @@ static void do_pipe(t_pipe *pipe_info, t_process *p, t_runtime *runtime)
 		perror("fork");
 		exit(1);
 	}
-	child_signals();
 	if (pid == 0)
 	{
+		child_signals();
 		if (do_redirect(pipe_info->fd_in, fd, p) == -1)
 			exit(1);
 		child(p, runtime);
@@ -76,6 +77,7 @@ void pipex(t_list *list, t_runtime *runtime)
 
 	pipe_info.fd_in = -1;
 	pipe_info.fd_out = -1;
+	close_signals();
 	while (list != NULL)
 	{
 		do_pipe(&pipe_info, list->content, runtime);

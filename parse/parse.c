@@ -40,6 +40,7 @@ static int	print_syntax_error(char *cur, char *prev)
 	return (1);
 }
 
+// ||
 static int	empty_pipe(char *line)
 {
 	while (*line == ' ')
@@ -52,29 +53,29 @@ static int	empty_pipe(char *line)
 	return (0);
 }
 
-static char	*check_syntax(char *line, char *cur, char *prev)
+// main syntax check logic
+static int	check_syntax(char *line, char **cur, char **prev)
 {
 	while (*line != 0)
 	{
 		if (*line == '\'' || *line == '\"')
 			line += ft_strlen_t(line, *line);
-		cur = syntax_cmp(line);
-		if (print_syntax_error(cur, prev))
-			return (NULL);
+		*cur = syntax_cmp(line);
+		if (print_syntax_error(*cur, *prev))
+			return (1);
 		if (*line != ' ')
-			prev = cur;
-		if (cur != NULL)
-			line += ft_strlen(cur);
+			*prev = *cur;
+		if (*cur != NULL)
+			line += ft_strlen(*cur);
 		else
 			line++;
 	}
-	return (prev);
+	return (0);
 }
 
 // check if str is invalid
 // return 1 if syntax error is found
 // NOTE: after syntax there must be a non syntax character
-// DOUBLECHECK
 int	syntax_error(char *line)
 {
 	char	*cur;
@@ -89,8 +90,9 @@ int	syntax_error(char *line)
 		ft_printf_fd(STDERR_FILENO, "idleshell: syntax error unclosed quote\n");
 		return (1);
 	}
-	// CHECK THE LOOP check_syntax
-	if (prev != NULL)
+	if (check_syntax(line, &cur, &prev))
+		return (1);
+	if (cur != NULL && cur == prev)
 	{
 		ft_printf_fd(STDERR_FILENO, "idleshell: syntax error near unexpected token `newline'\n");
 		return (1);

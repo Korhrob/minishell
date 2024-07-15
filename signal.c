@@ -77,6 +77,20 @@ void	signal_init(int flag)
 	tcsetattr(STDIN_FILENO, TCSAFLUSH, &attributes);
 }
 
+int close_signals(void)
+{
+	struct sigaction	sa;
+
+	g_exit_status = 0;
+	sa.sa_handler = SIG_IGN;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	sigaction(SIGINT, &sa, NULL);
+	sa.sa_handler = SIG_IGN;
+	sigaction(SIGQUIT, &sa, NULL);
+	return (EXIT_SUCCESS);
+}
+
 // sigaction can fail and return -1
 // perror("sigaction"); return (EXIT_FAILURE);
 int	main_signals(void)

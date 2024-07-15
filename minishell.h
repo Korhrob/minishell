@@ -121,6 +121,7 @@ void		signal_init(int flag);
 int			main_signals(void);
 int			child_signals(void);
 int			heredoc_signals(void);
+int			close_signals(void);
 
 // heredoc.c
 
