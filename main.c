@@ -49,7 +49,7 @@ static void	free_runtime(t_runtime *runtime)
 int	do_builtin(t_process *p, int cmd, t_runtime *runtime, int fd)
 {
 	if (cmd == EXIT)
-		return (1);  //ft_exit(0, runtime);
+		return (1);
 	else if (cmd == PWD)
 		cmd_pwd(fd);
 	else if (cmd == CD)

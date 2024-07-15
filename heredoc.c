@@ -19,7 +19,7 @@ static int	set_heredoc_id(t_process *p, t_runtime *runtime)
 	if (!temp)
 	{
 		free(id);
-		return(0);
+		return (0);
 	}
 	free(p->infile);
 	free(id);

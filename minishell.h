@@ -15,14 +15,14 @@
 # define BUILTIN_ECHO "echo"
 # define BUILITIN_HISTORY "history"
 
-#ifndef READ
-# define READ 0
-#endif
-#ifndef WRITE
-# define WRITE 1
-#endif
+# ifndef READ
+#  define READ 0
+# endif
+# ifndef WRITE
+#  define WRITE 1
+# endif
 
-extern volatile sig_atomic_t 	g_exit_status;
+extern volatile sig_atomic_t	g_exit_status;
 
 typedef enum e_builtin_cmd
 {
@@ -41,7 +41,7 @@ typedef enum e_builtin_cmd
 
 typedef enum e_error_code
 {
-	SUCCESS 	= 0,
+	SUCCESS		= 0,
 	FAIL		= 1,
 	MALLOC_FAIL = 2,
 	WRITE_FAIL	= 4,

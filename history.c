@@ -104,7 +104,8 @@ static void	print_history_n(int n, t_runtime *runtime, int fd_out)
 	ft_lst_clean(&list, 1);
 }
 
-// print history, if next arg is set to integer, print only most recently history until n
+// print history, if next arg is set to integer
+// print only most recently history until n
 void	print_history(char **next_arg, t_runtime *runtime, int fd)
 {
 	int		count;
