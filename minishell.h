@@ -176,6 +176,7 @@ int			do_redirect(int fd_in, int pipe[2], t_process *p);
 // environment.c
 
 t_env		**set_env_struct(char **envp);
+char		**convert_environ(t_env **environ);
 
 // expansions.c
 

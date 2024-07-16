@@ -14,72 +14,35 @@
 #include "minishell.h"
 #include "builtins/builtins.h"
 
-// Used to create envp for the new shell level
-// char	**convert_environ(t_env **environ)
-// {
-// 	char	**envp;
-// 	char	*env;
-// 	int		len;
-// 	int		i;
+// Used to create envp for the pipex
+char	**convert_environ(t_env **environ)
+{
+	char	**envp;
+	char	*env;
+	int		len;
+	int		i;
 
-// 	i = 0;
-// 	envp = (char **)ft_calloc(sizeof(char *), (ft_array_len((void **)environ) + 1));
-// 	if (!envp)
-// 		return (NULL);
-// 	while (environ[i] != NULL)
-// 	{
-// 		len = ft_strlen(environ[i]->key) + ft_strlen(environ[i]->value);
-// 		env = (char *)ft_calloc(sizeof(char *), (len + 2));
-// 		if (!env)
-// 		{
-// 			ft_free_arr(envp);
-// 			return (NULL);
-// 		}
-// 		ft_strlcat(env, environ[i]->key, ft_strlen(environ[i]->key));
-// 		env[ft_strlen(env) + 1] = '=';
-// 		ft_strlcat(env, environ[i]->value, ft_strlen(environ[i]->value));
-// 		i++;
-// 	}
-// 	return (envp);
-// }
-
-// // Converts the key and value into a string for the envp
-// static char	*convert_string(t_env **environ, char **envp, int i)
-// {
-// 	char	*env;
-// 	int		len;
-
-// 	len = ft_strlen(environ[i]->key) + ft_strlen(environ[i]->value);
-// 	env = (char *)ft_calloc(sizeof(char *), (len + 2));
-// 	if (!env)
-// 	{
-// 		ft_free_arr(envp);
-// 		return (NULL);
-// 	}
-// 	ft_strlcat(env, environ[i]->key, ft_strlen(environ[i]->key));
-// 	env[ft_strlen(env) + 1] = '=';
-// 	ft_strlcat(env, environ[i]->value, ft_strlen(environ[i]->value));
-// 	envp[i] = env;
-// }
-
-// // Used to create envp for the new shell level
-// char	**convert_environ(t_env **environ)
-// {
-// 	char	**envp;
-// 	int		i;
-
-// 	i = 0;
-// 	envp = (char **)ft_calloc(sizeof(char *), (ft_array_len((void **)environ) + 1));
-// 	if (!envp)
-// 		return (NULL);
-// 	while (environ[i] != NULL)
-// 	{
-// 		if (convert_string(environ, envp, i) == NULL)
-// 			return (NULL);
-// 		i++;
-// 	}
-// 	return (envp);
-// }
+	i = 0;
+	envp = (char **)ft_calloc(sizeof(char *), (ft_array_len((void **)environ) + 1));
+	if (!envp)
+		return (NULL);
+	while (environ[i] != NULL)
+	{
+		len = ft_strlen(environ[i]->key) + ft_strlen(environ[i]->value);
+		env = (char *)ft_calloc(sizeof(char *), (len + 2));
+		if (!env)
+		{
+			ft_free_arr(envp);
+			return (NULL);
+		}
+		ft_strncpy(env, environ[i]->key, ft_strlen(environ[i]->key));
+		env[ft_strlen(env)] = '=';
+		ft_strncpy(env + ft_strlen(env), environ[i]->value, ft_strlen(environ[i]->value));
+		envp[i] = env;
+		i++;
+	}
+	return (envp);
+}
 
 // Malloc error in env creation causes the program to not start
 static void	malloc_env_fail(t_env **environ, int i)

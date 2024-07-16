@@ -24,7 +24,16 @@ static void	child(t_process *process, t_runtime *runtime)
 		ft_printf_fd(STDERR_FILENO, "idleshell: %s: command not found\n", process->args[0]);
 		exit(127);
 	}
-	// convert env struct to array
+	runtime->envp = convert_environ(runtime->env_struct);
+	if (runtime->envp == NULL)
+		exit(EXIT_FAILURE);
+	int i = 0;
+	while (runtime->envp[i])
+	{
+		ft_printf_fd(STDERR_FILENO, "envp %i = [%s]\n", i, runtime->envp[i]);
+		i++;
+	}
+	ft_printf_fd(STDERR_FILENO, "done\n");
 	if (execve(process->path, process->args, runtime->envp) == -1)
 	{
 		perror("execve");
