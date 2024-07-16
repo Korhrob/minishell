@@ -118,10 +118,11 @@ static int	add_shlvl(char *env, t_env **environ)
 	if (create_env(env, new) == MALLOC_FAIL)
 		return (export_malloc_fail(NULL, new));
 	temp[i] = new;
-	i++;
-	temp[i] = NULL;
+	temp[i + 1] = NULL;
+	printf("environ 0 = [%s]\n", environ[0]->key);
 	free(environ);
 	environ = temp;
+	printf("environ 0 = [%s]\n", environ[0]->key);
 	return (SUCCESS);
 }
 
@@ -149,6 +150,7 @@ static int	assign_shlvl(t_env **environ)
 	}
 	if (add_shlvl("SHLVL=1", environ) == MALLOC_FAIL)
 		return (MALLOC_FAIL);
+	printf("environ 0 = [%s]\n", environ[0]->key);
 	return (SUCCESS);
 }
 
