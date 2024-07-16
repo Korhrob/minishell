@@ -15,14 +15,14 @@
 # define BUILTIN_ECHO "echo"
 # define BUILITIN_HISTORY "history"
 
-#ifndef READ
-# define READ 0
-#endif
-#ifndef WRITE
-# define WRITE 1
-#endif
+# ifndef READ
+#  define READ 0
+# endif
+# ifndef WRITE
+#  define WRITE 1
+# endif
 
-extern volatile sig_atomic_t 	g_exit_status;
+extern volatile sig_atomic_t	g_exit_status;
 
 typedef enum e_builtin_cmd
 {
@@ -41,9 +41,10 @@ typedef enum e_builtin_cmd
 
 typedef enum e_error_code
 {
-	SUCCESS,
-	FAIL,
-	MALLOC_FAIL
+	SUCCESS		= 0,
+	FAIL		= 1,
+	MALLOC_FAIL = 2,
+	WRITE_FAIL	= 4,
 }	t_error_code;
 
 typedef enum e_pflag
@@ -92,6 +93,7 @@ typedef struct s_process
 	int		outflag;
 	int		fflag;
 	int		pflag;
+	int		eflag;
 }	t_process;
 
 typedef struct s_pipe
@@ -106,6 +108,9 @@ typedef struct s_exp
 	int		i;
 	char	*pipe;
 }	t_exp;
+
+// minishell_utils.c
+void		*ft_free(void *ptr);
 
 // main.c
 
@@ -123,6 +128,10 @@ void		signal_init(int flag);
 int			main_signals(void);
 int			child_signals(void);
 int			heredoc_signals(void);
+int			close_signals(void);
+void		handle_sigint(int sig);
+void		handle_sigint_child(int sig);
+void		handle_sigint_heredoc(int sig);
 
 // heredoc.c
 
@@ -141,6 +150,9 @@ void		*clean_process_list(t_list *list);
 // parse.c
 
 int			syntax_error(char *line);
+
+// parse_utils.c
+
 char		*get_filename(char *str);
 int			is_charset(char c, const char *set); // move to libft
 
@@ -171,5 +183,9 @@ int			expand_dollars(char **pipes, t_env **environ);
 char		**create_strings(char **splitpipe, char *pipe, t_env **environ);
 void		*free_expands(char **array, int index);
 char		*array_join_c(char **array, int count);
+
+// error.c
+
+void		print_error_msg(int ecode);
 
 #endif

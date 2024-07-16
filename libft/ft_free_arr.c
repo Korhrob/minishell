@@ -28,3 +28,14 @@ void	*ft_free_arr(char **arr)
 	free(arr);
 	return (NULL);
 }
+
+// clear array from current position
+void	ft_clear_arr(char **arr)
+{
+	while (*arr != NULL)
+	{
+		free(*arr);
+		*arr = NULL;
+		arr++;
+	}
+}

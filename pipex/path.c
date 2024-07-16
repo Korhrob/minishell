@@ -68,10 +68,7 @@ char	*get_cmd_path(char **args, t_env **envp)
 	if (!path)
 		return (out);
 	out = try_path(out, path);
-	if (access(out, F_OK) == -1)
-	{
-		free(out);
-		return (NULL);
-	}
+	if (out && access(out, F_OK) == -1)
+		return (ft_free(out));
 	return (out);
 }

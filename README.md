@@ -62,6 +62,8 @@ ctrl-\ (SIGQUIT), does nothing
 
 DOUBLE CHECK THIS BRANCH THAT LIBFT WORKS AS EXPECTED
 
+heredoc opens without delimiter same as any redirection
+
 ## NON MANDATORY
 
 unset HOME  

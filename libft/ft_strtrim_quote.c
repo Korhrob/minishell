@@ -1,6 +1,8 @@
 #include "libft.h"
 #include <stdlib.h>
 
+#include <unistd.h>
+
 static size_t	ft_trim_len(const char *str)
 {
 	int	i;
@@ -31,12 +33,10 @@ char	*ft_strtrim_quote(const char *str)
 {
 	char	*out;
 	char	*ptr;
-	//char	*debug = (char *)str;
 	size_t	len;
 
 	len = ft_trim_len(str);
 	out = (char *)ft_calloc(1, len + 1);
-	//ft_printf_fd(STDERR_FILENO, "calloc %d + 1, size %d\n", len, sizeof(out));
 	if (!out)
 		return (NULL);
 	ptr = out;
@@ -47,16 +47,13 @@ char	*ft_strtrim_quote(const char *str)
 			len = ft_strlen_t(str, *str);
 			if (len >= 2)
 			{
-				//ft_printf_fd(STDERR_FILENO, "strncpy [%s] %d\n", str, len - 2);
 				out += ft_strncpy(out, str + 1, len - 2);
 				str += len;
 				continue;
 			}
 		}
-		//ft_printf_fd(STDERR_FILENO, "strncpy [%c]\n", *str);
 		*out++ = *str++;
 	}
-	//ft_printf_fd(STDERR_FILENO, "original [%s]\ntrimmed [%s]\n\n", debug, ptr);
 	return (ptr);
 }
 
@@ -69,17 +66,18 @@ char	**ft_strtrim_quote_arr(char **arr, int flag)
 
 	if (arr == NULL || *arr == NULL)
 		return (arr);
-	out = (char **) ft_calloc(1, sizeof(arr));
+	out = (char **) ft_calloc(sizeof(char *), ft_array_len((void *)arr) + 1);
 	if (!out)
-		return (arr);
+		return (NULL);
 	i = 0;
-	while (arr[i])
+	while (arr[i] != NULL)
 	{
 		out[i] = ft_strtrim_quote(arr[i]);
 		if (!out[i])
 		{
+			ft_printf_fd(STDERR_FILENO, "malloc fail\n");
 			ft_free_arr(out);
-			return (arr);
+			return (NULL);
 		}
 		i++;
 	}

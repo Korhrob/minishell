@@ -1,11 +1,11 @@
-#include "libft/libft.h"
-#include "minishell.h"
+#include "../minishell.h"
 #include <unistd.h>
 #include <stdlib.h>
 #include <signal.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <termios.h>
+#include <sys/ioctl.h>
 
 volatile sig_atomic_t 	g_exit_status;
 
@@ -31,37 +31,6 @@ volatile sig_atomic_t 	g_exit_status;
 ⠀⠀⠀⠀⠀⠀⠀⠈⠛⠻⠿⠿⠿⠿⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 */
 
-static void	handle_sigint(int sig)
-{
-	g_exit_status = sig;
-	rl_replace_line("", 1);
-	ft_putendl_fd("", STDOUT_FILENO);
-	rl_on_new_line();
-	rl_redisplay();
-}
-
-static void handle_sigint_child(int sig)
-{
-	g_exit_status = sig;
-	rl_replace_line("", 0);
-	rl_redisplay();
-}
-
-static void	handle_sigint_heredoc(int sig)
-{
-	g_exit_status = sig;
-	rl_replace_line("", 0);
-	rl_on_new_line();
-	rl_redisplay();
-	rl_done = 1;
-}
-
-// readline bullshit
-int	event(void)
-{
-	return (EXIT_SUCCESS);
-}
-
 // toggles echo caret
 // flag 0 = off
 // flag 1 = on
@@ -75,6 +44,20 @@ void	signal_init(int flag)
 	else
 		attributes.c_lflag |= ECHOCTL;
 	tcsetattr(STDIN_FILENO, TCSAFLUSH, &attributes);
+}
+
+int close_signals(void)
+{
+	struct sigaction	sa;
+
+	g_exit_status = 0;
+	sa.sa_handler = SIG_IGN;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	sigaction(SIGINT, &sa, NULL);
+	sa.sa_handler = SIG_IGN;
+	sigaction(SIGQUIT, &sa, NULL);
+	return (EXIT_SUCCESS);
 }
 
 // sigaction can fail and return -1
@@ -111,7 +94,6 @@ int	heredoc_signals(void)
 {
 	struct sigaction	sa;
 
-	rl_event_hook = event;
 	sa.sa_handler = &handle_sigint_heredoc;
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = 0;
