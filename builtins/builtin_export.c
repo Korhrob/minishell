@@ -67,7 +67,7 @@ static int	add_env(char *env, t_runtime *runtime)
 	int		i;
 
 	i = ft_array_len((void **)runtime->env_struct);
-	temp = (t_env **)malloc(sizeof(t_env *) * i + 2);
+	temp = (t_env **)malloc(sizeof(t_env *) * (i + 2));
 	if (!temp)
 		return (export_malloc_fail(temp, NULL));
 	i = -1;
@@ -95,6 +95,7 @@ int	cmd_export(char *env, t_runtime *runtime)
 	t_env	*temp_env;
 	int		old_i;
 
+	printf("debug\n");
 	if (env[0] == '\"')
 		env = minitrim(env, '\"');
 	else
@@ -131,7 +132,7 @@ void	export_main(char **args, t_runtime *runtime, int fd)
 	{
 		if (cmd_export(*args, runtime) == MALLOC_FAIL)
 		{
-			ft_printf("idleshell: export: not enough memory\n");
+			ft_printf_fd(2, "idleshell: export: not enough memory\n");
 			return ;
 		}
 		args++;
@@ -139,3 +140,4 @@ void	export_main(char **args, t_runtime *runtime, int fd)
 }
 
 // Add quotation character remover
+// export this=what then cat _whte 123=wer

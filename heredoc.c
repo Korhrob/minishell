@@ -19,7 +19,7 @@ static int	set_heredoc_id(t_process *p, t_runtime *runtime)
 	if (!temp)
 	{
 		free(id);
-		return(0);
+		return (0);
 	}
 	free(p->infile);
 	free(id);
@@ -36,11 +36,12 @@ int	process_heredoc(char *line, t_process *p, t_runtime *runtime)
 
 	if (p->fflag != 1)
 		return (0);
-	set_heredoc_id(p, runtime);
-	// check if set_heredoc_id failed
-
+	if (!set_heredoc_id(p, runtime))
+		return (0);
 	while (*line != 0)
 	{
+		if (*line == '\'' || *line == '\"')
+			line += ft_strlen_t(line, *line);
 		if (ft_strncmp(line, "<<", 2) == 0)
 		{
 			line += 2;
@@ -52,6 +53,8 @@ int	process_heredoc(char *line, t_process *p, t_runtime *runtime)
 		}
 		else
 			line++;
+		if (g_exit_status)
+			break ;
 	}
 	return (1);
 }
@@ -64,10 +67,11 @@ void	ft_heredoc(char *delimit, t_process *p)
 	int		fd;
 	char	*buffer;
 
-	fd = open(p->infile, O_WRONLY | O_CREAT, 0666); // test
+	fd = open(p->infile, O_WRONLY | O_CREAT, 0666);
 	if (fd == -1)
 		return ;
-	while (1)
+	heredoc_signals();
+	while (!g_exit_status)
 	{
 		buffer = readline("heredoc> ");
 		if (buffer == NULL)
@@ -84,6 +88,3 @@ void	ft_heredoc(char *delimit, t_process *p)
 	}
 	close (fd);
 }
-
-// should save heredoc as heredoc_x
-// then delete childs heredoc_x after done

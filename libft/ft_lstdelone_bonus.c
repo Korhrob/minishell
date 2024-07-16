@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include "libft.h"
 
+// run function del to list element lst
 void	ft_lstdelone(t_list *lst, void (*del)(void *))
 {
 	if (lst == NULL)

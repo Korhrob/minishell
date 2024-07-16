@@ -25,6 +25,7 @@ static void	ft_putnbr_recursion(int n, int fd)
 	write(fd, &c, 1);
 }
 
+// write nbr n into fd
 void	ft_putnbr_fd(int n, int fd)
 {
 	if (fd == 0 || fd == -1)

@@ -12,8 +12,7 @@
 
 #include <stdlib.h>
 
-// free char arr and its contents
-// returns NULL
+// free char arr and its contents, return NULL
 void	*ft_free_arr(char **arr)
 {
 	int	i;
@@ -28,4 +27,15 @@ void	*ft_free_arr(char **arr)
 	}
 	free(arr);
 	return (NULL);
+}
+
+// clear array from current position
+void	ft_clear_arr(char **arr)
+{
+	while (*arr != NULL)
+	{
+		free(*arr);
+		*arr = NULL;
+		arr++;
+	}
 }

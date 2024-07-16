@@ -13,31 +13,23 @@
 #include <stdlib.h>
 #include "libft.h"
 
+// return allocated string, copied from s[start] until len, or untill s ends
+// if start is outside of s bounds, return empty string
 char	*ft_substr(const char *s, unsigned int start, size_t len)
 {
 	char			*out;
-	unsigned int	i;
-	unsigned int	max;
+	unsigned int	s_len;
 
 	if (s == 0)
 		return (0);
-	max = ft_strlen(s) - start;
-	if (ft_strlen(s) < start)
-		max = 0;
-	if (len > max)
-		len = max;
-	out = (char *) malloc(len + 1);
+	s_len = ft_strlen(s);
+	if (start > s_len)
+		len = 0;
+	else if (len > (s_len - start))
+		len = s_len - start;
+	out = (char *) ft_calloc(1, len + 1);
 	if (out == 0)
 		return (0);
-	i = 0;
-	if (start < ft_strlen(s))
-	{
-		while (i < len)
-		{
-			out[i] = s[start + i];
-			i++;
-		}
-	}
-	out[i] = 0;
+	ft_strlcpy(out, s + start, len + 1);
 	return (out);
 }

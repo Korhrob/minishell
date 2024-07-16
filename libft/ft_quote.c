@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-// check that str has even amount of quotes
-// return 1 if all quotes in str are closed
-// return 0 if str has unclosed quotes
+// check that all quotes in string str are closed
+// return 1 if all quotes are closed
+// return 0 if contains unclosed quotes
 int	ft_quote_check(const char *str)
 {
 	int		flag;
@@ -35,6 +35,9 @@ int	ft_quote_check(const char *str)
 	return (!(flag & 1));
 }
 
+// check that all quotes in string array arr are closed
+// return 1 if all quotes are closed
+// return 0 if contains unclosed quotes
 int	ft_quote_check_arr(char **arr)
 {
 	char	*cur;

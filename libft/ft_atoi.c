@@ -15,12 +15,11 @@
 
 static int	ft_isspace(char *str)
 {
-	if (*str == '\t' || *str == '\n' || *str == '\v'
-		|| *str == '\f' || *str == '\r' || *str == ' ')
-		return (1);
-	return (0);
+	return (*str == '\t' || *str == '\n' || *str == '\v'
+		|| *str == '\f' || *str == '\r' || *str == ' ');
 }
 
+// converts a numerical string to int
 int	ft_atoi(const char *str)
 {
 	long long	count;

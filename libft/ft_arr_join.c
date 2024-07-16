@@ -28,6 +28,7 @@ static int	calculate_len(char **array)
 	return (len);
 }
 
+// join string in array into a single allocated string
 char	*ft_array_join(char **array)
 {
 	char	*out;

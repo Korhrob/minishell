@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+// return the last occurance of char c or 0 if not found in the string
 char	*ft_strrchr(const char *s, int c)
 {
 	char	*d;

@@ -77,6 +77,7 @@ static void	*ft_clean(char **arr, int cur)
 	return (0);
 }
 
+// split the string s into allocated NULL terminated array with seperator char c
 char	**ft_split(const char *s, char c)
 {
 	char	**wordarr;

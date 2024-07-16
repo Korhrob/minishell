@@ -12,29 +12,36 @@
 // clean tmp folder
 static void	clean_tmp(t_runtime *runtime)
 {
-	unlink(runtime->history);
-	// clean all tmp files
+	if (runtime->history && access(runtime->history, F_OK))
+		unlink(runtime->history);
 }
 
 //Initialization of runtime and all the possible content it may have
 static void	init_runtime(t_runtime *runtime, char **envp)
 {
+	ft_memset(runtime, 0, sizeof(t_runtime));
+	runtime->envp = envp;
 	runtime->env_struct = set_env_struct(envp);
 	runtime->exepath = str_pwd();
-	runtime->history = ft_strjoin(runtime->exepath, "/.tmp/.history"); //might not need strjoin
-	runtime->heredoc = ft_strjoin(runtime->exepath, "/.tmp/.heredoc");
-	runtime->pipe_count = 0;
-	runtime->pipe_index = 0;
+	if (runtime->exepath)
+	{
+		runtime->history = ft_strjoin(runtime->exepath, "/.tmp/.history");
+		runtime->heredoc = ft_strjoin(runtime->exepath, "/.tmp/.heredoc");
+	}
 	clean_tmp(runtime);
 }
 
 static void	free_runtime(t_runtime *runtime)
 {
 	clean_tmp(runtime);
-	free_env(runtime->env_struct);
-	free(runtime->exepath);
-	free(runtime->history);
-	free(runtime->heredoc);
+	if (runtime->env_struct)
+		free_env(runtime->env_struct);
+	if (runtime->exepath)
+		free(runtime->exepath);
+	if (runtime->history)
+		free(runtime->history);
+	if (runtime->heredoc)
+		free(runtime->heredoc);
 }
 
 // exectue all builtin commands here
@@ -42,7 +49,7 @@ static void	free_runtime(t_runtime *runtime)
 int	do_builtin(t_process *p, int cmd, t_runtime *runtime, int fd)
 {
 	if (cmd == EXIT)
-		ft_exit(0, runtime); // go back to main test valgrind
+		return (1);
 	else if (cmd == PWD)
 		cmd_pwd(fd);
 	else if (cmd == CD)
@@ -119,14 +126,14 @@ int	execute_args(char **pipes, t_runtime *runtime)
 
 	return_flag = -1;
 	if (pipes == NULL)
-		return (-1);
+		return (return_flag);
 	if (expand_dollars(pipes, runtime->env_struct) == MALLOC_FAIL)
 		return (return_flag);
 	runtime->pipe_index = 0;
 	runtime->pipe_count = ft_array_len((void **)pipes);
 	list = create_process_list(pipes, runtime);
 	if (list == NULL)
-		return (-1);
+		return (return_flag);
 	if (runtime->pipe_count <= 1 && get_builtin(((t_process*)list->content)->args[0]))
 		return_flag = single_builtin(list->content, runtime);
 	else
@@ -136,11 +143,12 @@ int	execute_args(char **pipes, t_runtime *runtime)
 }
 
 // main readline loop
-void	shell_interactive(t_runtime *runtime)
+static void	shell_interactive(t_runtime *runtime)
 {
 	char	*line;
 	char	**pipes;
 	int		status;
+	int		syntax;
 
 	status = -1;
 	while (status == -1)
@@ -152,13 +160,30 @@ void	shell_interactive(t_runtime *runtime)
 		if (*line != 0)
 		{
 			record_history(line, runtime);
+			syntax = syntax_error(line);
 			pipes = ft_split_quotes(line, '|', 0);
-			if (!syntax_error(line))
-			 	status = execute_args(pipes, runtime);
+			if (!syntax)
+				status = execute_args(pipes, runtime);
 			ft_free_arr(pipes);
 		}
 		free(line);
 	}
+}
+
+// non interactive (use argument), might not need
+static void	shell_nointeractive(char *line, t_runtime *runtime)
+{
+	char	**pipes;
+
+	main_signals();
+	if (line == NULL)
+		return ;
+	if (*line == 0)
+		return ;
+	pipes = ft_split_quotes(line, '|', 0);
+	if (!syntax_error(line))
+		execute_args(pipes, runtime);
+	ft_free_arr(pipes);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -166,10 +191,11 @@ int	main(int argc, char **argv, char **envp)
 	t_runtime	runtime;
 
 	signal_init(0);
-	if (argc == 1 && argv)
-		init_runtime(&runtime, envp);
-	if (isatty(STDIN_FILENO) == 1)
-		shell_interactive(&runtime);
+	init_runtime(&runtime, envp);
+	if (isatty(STDIN_FILENO) == 1 && argc <= 1)
+	 	shell_interactive(&runtime);
+	else
+		shell_nointeractive(argv[1], &runtime);
 	free_runtime(&runtime);
 	return (EXIT_SUCCESS);
 }

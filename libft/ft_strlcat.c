@@ -12,6 +12,7 @@
 
 #include "libft.h"
 
+// join two strings into dst, up to dstsize len
 size_t	ft_strlcat(char *dst, const char *src, size_t dstsize)
 {
 	size_t	dstlen;

@@ -11,7 +11,7 @@ static void	child(t_process *process, t_runtime *runtime)
 {
 	int builtin; 
 
-	if (process->args[0] == NULL)
+	if (process->args[0] == NULL || *(process->args[0]) == 0)
 		exit(EXIT_FAILURE);
 	builtin = get_builtin(process->args[0]);
 	if (builtin)
@@ -24,7 +24,10 @@ static void	child(t_process *process, t_runtime *runtime)
 		ft_printf_fd(STDERR_FILENO, "idleshell: %s: command not found\n", process->args[0]);
 		exit(127);
 	}
-	if (execve(process->path, process->args, NULL) == -1)
+	runtime->envp = convert_environ(runtime->env_struct);
+	if (runtime->envp == NULL)
+		exit(EXIT_FAILURE);
+	if (execve(process->path, process->args, runtime->envp) == -1)
 	{
 		perror("execve");
 		exit(EXIT_FAILURE);
@@ -58,9 +61,9 @@ static void do_pipe(t_pipe *pipe_info, t_process *p, t_runtime *runtime)
 		perror("fork");
 		exit(1);
 	}
-	child_signals(pid);
 	if (pid == 0)
 	{
+		child_signals();
 		if (do_redirect(pipe_info->fd_in, fd, p) == -1)
 			exit(1);
 		child(p, runtime);
@@ -76,6 +79,7 @@ void pipex(t_list *list, t_runtime *runtime)
 
 	pipe_info.fd_in = -1;
 	pipe_info.fd_out = -1;
+	close_signals();
 	while (list != NULL)
 	{
 		do_pipe(&pipe_info, list->content, runtime);
@@ -86,6 +90,5 @@ void pipex(t_list *list, t_runtime *runtime)
 	pid = wait(&runtime->exit_status);
 	while (pid > 0)
 		pid = wait(&runtime->exit_status);
-	// perror("wait");
 }
 

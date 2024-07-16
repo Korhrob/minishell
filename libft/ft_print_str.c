@@ -13,6 +13,7 @@
 #include "libft.h"
 #include <unistd.h>
 
+// write str to fd
 int	ft_print_str(int fd, const char *str)
 {
 	int	i;

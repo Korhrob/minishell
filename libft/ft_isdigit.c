@@ -11,14 +11,13 @@
 /* ************************************************************************** */
 #include "libft.h"
 
+// c is numerical character
 int	ft_isdigit(unsigned char c)
 {
-	if (c >= '0' && c <= '9')
-		return (1);
-	return (0);
+	return (c >= '0' && c <= '9');
 }
 
-// returns 1 if entire string consists of digits
+// str contains only numerical characters
 int	ft_isdigit_str(char *str)
 {
 	while (*str != 0)
