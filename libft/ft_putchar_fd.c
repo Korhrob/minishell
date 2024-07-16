@@ -12,6 +12,7 @@
 
 #include <unistd.h>
 
+// write char c into fd
 void	ft_putchar_fd(char c, int fd)
 {
 	if (fd == 0 || fd == -1)

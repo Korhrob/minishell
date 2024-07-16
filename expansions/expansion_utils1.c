@@ -11,27 +11,9 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
+#include "../libft/libft.h"
 #include <stdlib.h>
 #include <stdio.h>
-
-// free every second string in the array starting with first
-void	*free_expands(char **array, int index)
-{
-	int	i;
-
-	i = 0;
-	if (index > 0)
-		array[index] = NULL;
-	while (array[i] != NULL)
-	{
-		free(array[i]);
-		if (array[i + 1] != NULL)
-			i++;
-		i++;
-	}
-	free(array);
-	return (NULL);
-}
 
 // using the key finds the correct value if it exists
 static char	*find_expansion(char *key, t_env **environ)
@@ -48,6 +30,7 @@ static char	*find_expansion(char *key, t_env **environ)
 		}
 		i++;
 	}
+	free (key);
 	return (NULL);
 }
 
@@ -66,34 +49,61 @@ static char	*expand(char *pipe, t_env **environ)
 	return (find_expansion(key, environ));
 }
 
+static int	create_duo(t_exp *exp, t_env **environ, char **splitpipe)
+{
+	if ((*exp->pipe == '$') && (*(exp->pipe + 1) != '$'
+			|| *(exp->pipe - 1) != '$'))
+	{
+		splitpipe[exp->i] = ft_strndup(exp->pipe - exp->len, 0, exp->len);
+		if (!splitpipe[exp->i])
+		{
+			free_expands(splitpipe, exp->i);
+			return (MALLOC_FAIL);
+		}
+		splitpipe[exp->i + 1] = expand(exp->pipe + 1, environ);
+		while (ft_isalnum(*(exp->pipe + 1))
+			|| *(exp->pipe + 1) == '-' || *(exp->pipe + 1) == '_')
+			exp->pipe++;
+		exp->i = exp->i + 2;
+		exp->len = -1;
+	}
+	return (SUCCESS);
+}
+
+void	iterate(t_exp *exp)
+{
+	if (*exp->pipe == '\'')
+	{
+		exp->len += ft_strlen_t(exp->pipe, '\'');
+		exp->pipe += ft_strlen_t(exp->pipe, '\'');
+		return ;
+	}
+	exp->len++;
+	exp->pipe++;
+}
+
 // iterates the pipe and creates an array with expandable portions
 // replaced with corresponding environment values
 char	**create_strings(char **splitpipe, char *pipe, t_env **environ)
 {
-	int	i;
-	int	len;
+	t_exp	exp;
 
-	i = 0;
-	len = 0;
-	while (*pipe != 0)
+	exp.i = 0;
+	exp.len = 0;
+	exp.pipe = pipe;
+	while (*exp.pipe != 0)
 	{
-		if ((*pipe == '$') && (*(pipe + 1) != '$' || *(pipe - 1) != '$'))
-		{
-			splitpipe[i] = ft_strldup(pipe - len, 0, len);
-			if (!splitpipe[i])
-				return (free_expands(splitpipe, i));
-			splitpipe[i + 1] = expand(pipe + 1, environ);
-			while (ft_isalnum(*(pipe + 1))
-				|| *(pipe + 1) == '-' || *(pipe + 1) == '_')
-				pipe++;
-			i = i + 2;
-			len = -1;
-		}
-		len++;
-		pipe++;
+		if (create_duo(&exp, environ, splitpipe) == MALLOC_FAIL)
+			return (NULL);
+		iterate(&exp);
 	}
-	splitpipe[i] = NULL;
+	if (exp.len > 0)
+		splitpipe[exp.i++] = ft_strndup(exp.pipe - exp.len, 0, exp.len);
+	if (!splitpipe[exp.i - 1])
+	{
+		free_expands(splitpipe, exp.i - 1);
+		return (NULL);
+	}
+	splitpipe[exp.i] = NULL;
 	return (splitpipe);
 }
-
-// echo $PWD > out

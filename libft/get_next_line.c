@@ -26,18 +26,15 @@
 */
 void	init_buffer(int fd, struct s_read_buffer *buffer)
 {
-	if (fd < 0)
-		return ;
 	buffer->start = buffer->index;
 	if (buffer->str != NULL)
 		return ;
 	buffer->index = 0;
 	buffer->start = 0;
 	buffer->bytes = 0;
-	buffer->str = malloc(BUFFER_SIZE);
+	buffer->str = ft_calloc(1, BUFFER_SIZE);
 	if (!buffer->str)
 		return ;
-	ft_memset(buffer->str, 0, BUFFER_SIZE);
 	buffer->bytes = read(fd, buffer->str, BUFFER_SIZE);
 	if (buffer->bytes <= 0)
 	{
@@ -109,6 +106,8 @@ char	*get_next_line(int fd)
 	static struct s_read_buffer	buffer[128];
 	char						*output;
 
+	if (fd < 0)
+		return (NULL);
 	output = 0;
 	init_buffer(fd, &buffer[fd]);
 	if (buffer[fd].str == NULL)

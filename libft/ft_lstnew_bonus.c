@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include "libft.h"
 
+// return a new list element
 t_list	*ft_lstnew(void *content)
 {
 	t_list	*obj;

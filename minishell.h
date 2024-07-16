@@ -2,7 +2,9 @@
 # define MINISHELL_H
 
 # include "libft/libft.h"
+# include <signal.h>
 
+# define BUILTIN_NONE "null"
 # define BUILTIN_CD "cd"
 # define BUILTIN_ENV "env"
 # define BUILTIN_HELP "help"
@@ -13,13 +15,18 @@
 # define BUILTIN_ECHO "echo"
 # define BUILITIN_HISTORY "history"
 
-# define READ 0
-# define WRITE 1
+# ifndef READ
+#  define READ 0
+# endif
+# ifndef WRITE
+#  define WRITE 1
+# endif
 
-extern int	g_exit_status;
+extern volatile sig_atomic_t	g_exit_status;
 
 typedef enum e_builtin_cmd
 {
+	NONE,
 	CD,
 	ENV,
 	HELP,
@@ -34,10 +41,18 @@ typedef enum e_builtin_cmd
 
 typedef enum e_error_code
 {
-	SUCCESS,
-	FAIL,
-	MALLOC_FAIL
+	SUCCESS		= 0,
+	FAIL		= 1,
+	MALLOC_FAIL = 2,
+	WRITE_FAIL	= 4,
 }	t_error_code;
+
+typedef enum e_pflag
+{
+	PF_FIRST = 1,
+	PF_MIDDLE = 2,
+	PF_LAST = 4
+}	t_pflag;
 
 typedef struct s_env
 {
@@ -50,11 +65,23 @@ typedef struct s_runtime
 	t_env	**env_struct;
 	int		pipe_index;
 	int		pipe_count;
+	int		exit_status;
+	int		history_line_count;
+	char	**envp;
 	char	*exepath;
 	char	*history;
 	char	*heredoc;
 }	t_runtime;
 
+// args		= arg array
+// line		= entire pipe string
+// infile	= input file name
+// outfile	= outfile file name
+// path		= cmd path
+// inflag	= input file flags
+// outflag	= output file flags
+// pflag	= process flag bitmask, PF_FIRST, PF_MIDDLE, PF_LAST
+// fflag	= file flag, 1 = use heredoc
 typedef struct s_process
 {
 	char	**args;
@@ -64,15 +91,10 @@ typedef struct s_process
 	char	*path;
 	int		inflag;
 	int		outflag;
+	int		fflag;
 	int		pflag;
+	int		eflag;
 }	t_process;
-
-typedef enum e_pflag
-{
-	PF_FIRST = 1,
-	PF_MIDDLE = 2,
-	PF_LAST = 4
-}	t_pflag;
 
 typedef struct s_pipe
 {
@@ -80,60 +102,91 @@ typedef struct s_pipe
 	int	fd_out;
 }	t_pipe;
 
-// main
-int			single_builtin(t_process *process, t_runtime *runtime, int fd);
+typedef struct s_exp
+{
+	int		len;
+	int		i;
+	char	*pipe;
+}	t_exp;
 
-// history
+// minishell_utils.c
+void		*ft_free(void *ptr);
+
+// main.c
+
+int			get_builtin(char *args);
+int			do_builtin(t_process *p, int cmd, t_runtime *runtime, int fd);
+
+// history.c
+
 void		record_history(char *line, t_runtime *runtime);
-void		print_history(char **args, t_runtime *runtime);
+void		print_history(char **args, t_runtime *runtime, int fd);
 
-// signals
+// signals.c
+
 void		signal_init(int flag);
-void		signal_signint(int signo);
-void		signal_reset(void);
+int			main_signals(void);
+int			child_signals(void);
+int			heredoc_signals(void);
+int			close_signals(void);
+void		handle_sigint(int sig);
+void		handle_sigint_child(int sig);
+void		handle_sigint_heredoc(int sig);
 
-// heredoc
-void		ft_heredoc(int flag, char *delimit, t_runtime *runtime);
-int			process_heredoc(char *line, t_runtime *runtime);
+// heredoc.c
 
-// readline
+void		ft_heredoc(char *delimit, t_process *process);
+int			process_heredoc(char *line, t_process *process, t_runtime *runtime);
+
+// readline.h
+
 void		rl_replace_line(const char *str, int i);
 
-// process
+// process.c
+
 t_list		*create_process_list(char **pipes, t_runtime *runtime);
 void		*clean_process_list(t_list *list);
 
-// parse
+// parse.c
+
 int			syntax_error(char *line);
+
+// parse_utils.c
+
 char		*get_filename(char *str);
-void		align_args(t_process *p);
-int			is_charset(char c, const char *set);
+int			is_charset(char c, const char *set); // move to libft
 
-// expansions
-int			expand_dollars(char **pipes, t_env **environ);
+// file_redirections.c
 
-// file_redirections
-void		file_redirection(t_process *process);
+void		file_redirection(t_process *process, t_runtime *runtime);
 
-// array_handler
-void		rebind_args(t_process *p);
+// array_handler.c
 
-// pipex
+void		rebind_args(char **args, t_process *p);
+
+// pipex.c
+
 void		pipex(t_list *process_list, t_runtime *runtime);
 
-// pipex/path
-char		*get_cmd_path(char **args, t_env **envp);
+// pipex.c
 
-// pipex/redirect
-int			redirect(int pipefd[2], t_process *process);
+char		*get_cmd_path(char **args, t_env **envp);
 int			do_redirect(int fd_in, int pipe[2], t_process *p);
 
-// environment
-t_env		**set_env_struct(char **envp);
+// environment.c
 
-// expansions
+t_env		**set_env_struct(char **envp);
+char		**convert_environ(t_env **environ);
+
+// expansions.c
+
 int			expand_dollars(char **pipes, t_env **environ);
 char		**create_strings(char **splitpipe, char *pipe, t_env **environ);
 void		*free_expands(char **array, int index);
+char		*array_join_c(char **array, int count);
+
+// error.c
+
+void		print_error_msg(int ecode);
 
 #endif

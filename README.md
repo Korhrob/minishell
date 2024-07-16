@@ -31,12 +31,9 @@ NOTE: "arg1>outfile" will simply overwrite the ">outfile" portion with 0's and n
 
 ## Builtins
 We check our first arg in process structs string array and compare it to defined strings for builtin commands,
-then return an enum for the specific builtin command (or -1 if command is not a builtin).  
-
-!!!NOTE: TODO!!!  
-If the runtime has more than 1 pipe, all the commands should be executed in child processes.  
-Only the last builtin in the pipe should execute.  
-If there are no pipes, handle builtins in the parent and non builtins in child.  
+then return an enum for the specific builtin command (or 0 if command is not a builtin).  
+If the runtime has more than 1 pipe, all the commands are executed in child processes.  
+If there are no pipes, handle builtins in the parent and non builtins in a single child.  
 
 ## Signals
 
@@ -53,16 +50,19 @@ Should only execute the last pipe with heredoc
 !!!NOTE: TODO!!!
 Should only execute history and none of the other pipes
 
+## Signals
+
+ctrl-d (SIGCLOSE), exits the shell if no task is ongoing
+ctrl-c (SIGINT), exits current task and displays a new prompt on a new line
+ctrl-\ (SIGQUIT), does nothing
+
 # ISSUES
 
 ## MANDATORY 
 
-empty cmds might be getting passed to pipex and print  
-no such command (null)
-fix: dont pass them to pipex in the first placeexit
-parsing does not handle quotes inside parsing inside strings example [echo b'est="test']
+DOUBLE CHECK THIS BRANCH THAT LIBFT WORKS AS EXPECTED
 
-echo "asd" > outfile
+heredoc opens without delimiter same as any redirection
 
 ## NON MANDATORY
 

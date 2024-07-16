@@ -13,6 +13,7 @@
 #include "libft.h"
 #include <unistd.h>
 
+// write memory address to fd
 int	ft_print_ptr(int fd, void *ptr)
 {
 	int	count;

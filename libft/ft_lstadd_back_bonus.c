@@ -12,6 +12,7 @@
 
 #include "libft.h"
 
+// add element as last element in pointer to element lst
 void	ft_lstadd_back(t_list **lst, t_list *element)
 {
 	t_list	*cur;

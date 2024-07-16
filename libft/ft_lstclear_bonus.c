@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include "libft.h"
 
+// run function del to all list elements pointed by lst
 void	ft_lstclear(t_list **lst, void (*del)(void *))
 {
 	t_list	*cur;

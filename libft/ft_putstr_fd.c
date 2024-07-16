@@ -13,6 +13,7 @@
 #include <unistd.h>
 #include "libft.h"
 
+// write string s into fd
 void	ft_putstr_fd(char *s, int fd)
 {
 	if (fd == 0 || fd == -1 || s == NULL)

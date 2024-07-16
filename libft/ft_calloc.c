@@ -14,19 +14,24 @@
 #include <stdlib.h>
 #include <errno.h>
 
-void	*ft_calloc_err(void)
+static void	*ft_calloc_err(void)
 {
 	errno = ENOMEM;
-	return (0);
+	return (NULL);
 }
 
+// allocate (count * size) and memset values to 0
 void	*ft_calloc(size_t count, size_t size)
 {
 	void	*ptr;
+	size_t	total;
 
-	ptr = (void *) malloc(count * size);
-	if (ptr == 0)
+	total = count * size;
+	if (total <= 0)
+		return (NULL);
+	ptr = (void *) malloc(total);
+	if (!ptr)
 		return (ft_calloc_err());
-	ft_bzero(ptr, count * size);
+	ft_bzero(ptr, total);
 	return (ptr);
 }
