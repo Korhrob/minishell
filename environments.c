@@ -97,19 +97,19 @@ static void	malloc_env_fail(t_env **environ, int i)
 	exit(1);
 }
 
-static int	add_shlvl(char *env, t_env **environ)
+static int	add_shlvl(char *env, t_env ***environ)
 {
 	t_env	**temp;
 	t_env	*new;
 	int		i;
 
-	i = ft_array_len((void **)environ);
+	i = ft_array_len((void **)*environ);
 	temp = (t_env **)malloc(sizeof(t_env *) * (i + 2));
 	if (!temp)
 		return (export_malloc_fail(temp, NULL));
 	i = -1;
-	while (environ[++i] != NULL)
-		temp[i] = environ[i];
+	while ((*environ)[++i] != NULL)
+		temp[i] = (*environ)[i];
 	new = (t_env *)malloc(sizeof(t_env));
 	if (!new)
 		return (export_malloc_fail(NULL, new));
@@ -119,38 +119,35 @@ static int	add_shlvl(char *env, t_env **environ)
 		return (export_malloc_fail(NULL, new));
 	temp[i] = new;
 	temp[i + 1] = NULL;
-	printf("environ 0 = [%s]\n", environ[0]->key);
-	free(environ);
-	environ = temp;
-	printf("environ 0 = [%s]\n", environ[0]->key);
+	free(*environ);
+	*environ = temp;
 	return (SUCCESS);
 }
 
 // Finds the shell level and increments it by 1
-static int	assign_shlvl(t_env **environ)
+static int	assign_shlvl(t_env ***environ)
 {
 	char	*new_value;
 	int		value;
 	int		i;
 
 	i = 0;
-	while (environ[i] != NULL)
+	while ((*environ)[i] != NULL)
 	{
-		if (ft_strcmp(environ[i]->key, "SHLVL") == 0)
+		if (ft_strcmp((*environ)[i]->key, "SHLVL") == 0)
 		{
-			value = ft_atoi(environ[i]->value) + 1;
+			value = ft_atoi((*environ)[i]->value) + 1;
 			new_value = ft_itoa(value);
 			if (!new_value)
 				return (MALLOC_FAIL);
-			free(environ[i]->value);
-			environ[i]->value = new_value;
+			free((*environ)[i]->value);
+			(*environ)[i]->value = new_value;
 			return (SUCCESS);
 		}
 		i++;
 	}
 	if (add_shlvl("SHLVL=1", environ) == MALLOC_FAIL)
 		return (MALLOC_FAIL);
-	printf("environ 0 = [%s]\n", environ[0]->key);
 	return (SUCCESS);
 }
 
@@ -177,7 +174,7 @@ t_env	**set_env_struct(char **envp)
 		environ[i] = env_new;
 		i++;
 	}
-	if (assign_shlvl(environ) == MALLOC_FAIL)
+	if (assign_shlvl(&environ) == MALLOC_FAIL)
 		malloc_env_fail(environ, i);
 	return (environ);
 }
