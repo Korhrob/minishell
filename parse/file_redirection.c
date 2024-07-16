@@ -60,7 +60,9 @@ void	file_redirection(t_process *p, t_runtime *runtime)
 	p->fflag = 0;
 	while (*ptr != 0)
 	{
-		if (ft_strncmp(ptr, "<<", 2) == 0)
+		if (*ptr == '\'' || *ptr == '\"')
+			ptr += ft_strlen_t(ptr, *ptr);
+		else if (ft_strncmp(ptr, "<<", 2) == 0)
 			ptr += in_heredoc(p, runtime);
 		else if (ft_strncmp(ptr, ">>", 2) == 0)
 			ptr += out_file_append(p, ptr + 2);
