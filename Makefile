@@ -9,7 +9,7 @@ SIGNAL		=	signal/signal.c signal/signal_handlers.c
 PARSE		=	parse/parse.c parse/file_redirection.c parse/array_handler.c parse/parse_utils.c
 BUILTIN		=	builtins/builtin_pwd.c builtins/builtin_cd.c builtins/builtin_env.c builtins/builtin_unset.c	\
 				builtins/builtin_export.c builtins/builtin_echo.c builtins/builtin_utils.c
-PIPEX		=	pipex/pipex.c pipex/redirect.c pipex/path.c
+PIPEX		=	pipex/pipex.c pipex/redirect.c pipex/path.c pipex/pipex_utils.c
 EXPANSION	=	expansions/expansions.c expansions/expansion_utils1.c expansions/expansion_utils2.c
 OBJ			=	$(SRC:.c=.o) $(PARSE:.c=.o) $(SIGNAL:.c=.o) $(BUILTIN:.c=.o) $(PIPEX:.c=.o) $(EXPANSION:.c=.o)
 LIBFT		=	libft

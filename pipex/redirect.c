@@ -33,7 +33,6 @@ static int  set_outfile(int pipe[2], t_process *p)
 
 	if (p->outfile != NULL)
 	{
-		
 		fd = open(p->outfile, p->outflag, 0644);
 		if (fd == -1)
 			return (-1);
