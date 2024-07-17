@@ -73,7 +73,7 @@ static char	*expand_logic(char *pipe, t_env **environ)
 		4 * (count * 2 + check_extra(pipe) + 1));
 	if (!splitpipe)
 		return (NULL);
-	create_strings(splitpipe, pipe, environ);
+	count += create_strings(splitpipe, pipe, environ);
 	if (!splitpipe)
 		return (NULL);
 	ret = array_join_c(splitpipe, count * 2);

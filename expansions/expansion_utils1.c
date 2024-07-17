@@ -84,26 +84,31 @@ void	iterate(t_exp *exp)
 
 // iterates the pipe and creates an array with expandable portions
 // replaced with corresponding environment values
-char	**create_strings(char **splitpipe, char *pipe, t_env **environ)
+int	create_strings(char **splitpipe, char *pipe, t_env **environ)
 {
 	t_exp	exp;
+	int		extra;
 
+	extra = 0;
 	exp.i = 0;
 	exp.len = 0;
 	exp.pipe = pipe;
 	while (*exp.pipe != 0)
 	{
 		if (create_duo(&exp, environ, splitpipe) == MALLOC_FAIL)
-			return (NULL);
+			return (0);
 		iterate(&exp);
 	}
 	if (exp.len > 0)
+	{
+		extra++;
 		splitpipe[exp.i++] = ft_strndup(exp.pipe - exp.len, 0, exp.len);
+	}
 	if (!splitpipe[exp.i - 1])
 	{
 		free_expands(splitpipe, exp.i - 1);
-		return (NULL);
+		return (0);
 	}
 	splitpipe[exp.i] = NULL;
-	return (splitpipe);
+	return (extra);
 }

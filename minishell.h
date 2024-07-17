@@ -181,7 +181,7 @@ char		**convert_environ(t_env **environ);
 // expansions.c
 
 int			expand_dollars(char **pipes, t_env **environ);
-char		**create_strings(char **splitpipe, char *pipe, t_env **environ);
+int			create_strings(char **splitpipe, char *pipe, t_env **environ);
 void		*free_expands(char **array, int index);
 char		*array_join_c(char **array, int count);
 
