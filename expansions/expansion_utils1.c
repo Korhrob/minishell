@@ -31,25 +31,31 @@ static char	*find_expansion(char *key, t_env **environ)
 		i++;
 	}
 	free (key);
-	return (NULL);
+	return ("");
 }
 
 // Creates the key for which were looking for in the environ
-static char	*expand(char *pipe, t_env **environ)
+static char	*expand(char *pipe, t_env **environ, t_runtime *runtime)
 {
 	char	*key;
 	int		i;
 
 	i = 0;
 	key = NULL;
+	if (pipe[i] == '?')
+		return (runtime->errorcode);
 	while (ft_isalnum(pipe[i]) || pipe[i] == '-' || pipe[i] == '_')
 		i++;
 	key = (char *)malloc(i + 1);
+	if (!key)
+		return (NULL);
 	ft_strlcpy(key, pipe, i + 1);
 	return (find_expansion(key, environ));
 }
 
-static int	create_duo(t_exp *exp, t_env **environ, char **splitpipe)
+// creates a string for the content before the expansions and the expansion
+static int	create_duo(t_exp *exp, t_env **environ,
+	char **splitpipe, t_runtime *runtime)
 {
 	if ((*exp->pipe == '$') && (*(exp->pipe + 1) != '$'
 			|| *(exp->pipe - 1) != '$'))
@@ -60,9 +66,16 @@ static int	create_duo(t_exp *exp, t_env **environ, char **splitpipe)
 			free_expands(splitpipe, exp->i);
 			return (MALLOC_FAIL);
 		}
-		splitpipe[exp->i + 1] = expand(exp->pipe + 1, environ);
+		splitpipe[exp->i + 1] = expand(exp->pipe + 1, environ, runtime);
+		if (!splitpipe[exp->i + 1])
+		{
+			free_expands(splitpipe, exp->i);
+			return (MALLOC_FAIL);
+		}
 		while (ft_isalnum(*(exp->pipe + 1))
 			|| *(exp->pipe + 1) == '-' || *(exp->pipe + 1) == '_')
+			exp->pipe++;
+		if (*(exp->pipe + 1) == '?')
 			exp->pipe++;
 		exp->i = exp->i + 2;
 		exp->len = -1;
@@ -84,26 +97,32 @@ void	iterate(t_exp *exp)
 
 // iterates the pipe and creates an array with expandable portions
 // replaced with corresponding environment values
-char	**create_strings(char **splitpipe, char *pipe, t_env **environ)
+int	create_strings(char **splitpipe, char *pipe,
+	t_env **environ, t_runtime *runtime)
 {
 	t_exp	exp;
+	int		extra;
 
+	extra = 0;
 	exp.i = 0;
 	exp.len = 0;
 	exp.pipe = pipe;
 	while (*exp.pipe != 0)
 	{
-		if (create_duo(&exp, environ, splitpipe) == MALLOC_FAIL)
-			return (NULL);
+		if (create_duo(&exp, environ, splitpipe, runtime) == MALLOC_FAIL)
+			return (0);
 		iterate(&exp);
 	}
 	if (exp.len > 0)
-		splitpipe[exp.i++] = ft_strndup(exp.pipe - exp.len, 0, exp.len);
-	if (!splitpipe[exp.i - 1])
 	{
-		free_expands(splitpipe, exp.i - 1);
-		return (NULL);
+		extra++;
+		splitpipe[exp.i++] = ft_strndup(exp.pipe - exp.len, 0, exp.len);
+		if (!splitpipe[exp.i - 1])
+		{
+			free_expands(splitpipe, exp.i - 1);
+			return (0);
+		}
 	}
 	splitpipe[exp.i] = NULL;
-	return (splitpipe);
+	return (extra);
 }
