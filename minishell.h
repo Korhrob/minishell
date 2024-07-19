@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rkorhone <rkorhone@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/10 16:07:23 by rkorhone          #+#    #+#             */
+/*   Updated: 2023/11/13 15:51:26 by rkorhone         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -45,6 +56,8 @@ typedef enum e_error_code
 	FAIL		= 1,
 	MALLOC_FAIL = 2,
 	WRITE_FAIL	= 4,
+	FILE_FAIL	= 8,
+	PIPE_FAIL	= 16,
 }	t_error_code;
 
 typedef enum e_pflag
@@ -67,6 +80,7 @@ typedef struct s_runtime
 	int		pipe_count;
 	int		exit_status;
 	int		history_line_count;
+	char	errorcode[12];
 	char	**envp;
 	char	*exepath;
 	char	*history;
@@ -194,6 +208,6 @@ char		*array_join_c(char **array, int count);
 
 // error.c
 
-void		print_error_msg(int ecode);
+void		print_error_msg(int ecode, char *opt);
 
 #endif

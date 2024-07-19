@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipex.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rkorhone <rkorhone@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/10 16:07:23 by rkorhone          #+#    #+#             */
+/*   Updated: 2023/11/13 15:51:26 by rkorhone         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #include "../minishell.h"
 #include "../libft/libft.h"
 #include <unistd.h>
@@ -6,27 +17,27 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 
-static void	child(t_process *process, t_runtime *runtime, int builtin_id)
+static void	child(t_process *p, t_runtime *runtime, int builtin_id)
 {
 	if (builtin_id)
 	{
-		do_builtin(process, builtin_id, runtime, STDOUT_FILENO);
+		do_builtin(p, builtin_id, runtime, STDOUT_FILENO);
 		exit (EXIT_SUCCESS);
 	}
-	if (process->path == NULL || access(process->path, F_OK) || !is_executable(process->path))
+	if (p->path == NULL || access(p->path, F_OK | X_OK) || !is_executable(p->path))
 	{
-		ft_printf_fd(STDERR_FILENO, "idleshell: %s: command not found\n", process->args[0]);
+		ft_printf_fd(STDERR_FILENO, "idleshell: %s: command not found\n", p->args[0]);
 		exit(127);
 	}
-	if (is_directory(process->path))
+	if (is_directory(p->path))
 	{
-		ft_printf_fd(STDERR_FILENO, "idleshell: %s: is a directory\n", process->args[0]);
+		ft_printf_fd(STDERR_FILENO, "idleshell: %s: is a directory\n", p->args[0]);
 		exit(127);
 	}
 	runtime->envp = convert_environ(runtime->env_struct);
 	if (runtime->envp == NULL)
 		exit(EXIT_FAILURE);
-	if (execve(process->path, process->args, runtime->envp) == -1)
+	if (execve(p->path, p->args, runtime->envp) == -1)
 	{
 		perror("execve");
 		exit(EXIT_FAILURE);

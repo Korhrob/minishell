@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rkorhone <rkorhone@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/10 16:07:23 by rkorhone          #+#    #+#             */
+/*   Updated: 2023/11/13 15:51:26 by rkorhone         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #include "../minishell.h"
 #include "../libft/libft.h"
 #include <stdlib.h>
@@ -36,7 +46,8 @@ static int	print_syntax_error(char *cur, char *prev)
 		return (0);
 	if (*prev == '|' && *cur != '|')
 		return (0);
-	ft_printf_fd(STDERR_FILENO, "idleshell: syntax error near unexpected token `%s'\n", cur);
+	ft_printf_fd(STDERR_FILENO,
+		"idleshell: syntax error near unexpected token `%s'\n", cur);
 	return (1);
 }
 
@@ -47,7 +58,8 @@ static int	empty_pipe(char *line)
 		line++;
 	if (*line == '|')
 	{
-		ft_printf_fd(STDERR_FILENO, "idleshell: syntax error near unexpected token `|'\n");
+		ft_printf_fd(STDERR_FILENO,
+			"idleshell: syntax error near unexpected token `|'\n");
 		return (1);
 	}
 	return (0);
@@ -87,14 +99,16 @@ int	syntax_error(char *line)
 		return (1);
 	if (!ft_quote_check(line))
 	{
-		ft_printf_fd(STDERR_FILENO, "idleshell: syntax error unclosed quote\n");
+		ft_printf_fd(STDERR_FILENO,
+			"idleshell: syntax error unclosed quote\n");
 		return (1);
 	}
 	if (check_syntax(line, &cur, &prev))
 		return (1);
 	if (cur != NULL && cur == prev)
 	{
-		ft_printf_fd(STDERR_FILENO, "idleshell: syntax error near unexpected token `newline'\n");
+		ft_printf_fd(STDERR_FILENO,
+			"idleshell: syntax error near unexpected token `newline'\n");
 		return (1);
 	}
 	return (0);

@@ -93,7 +93,8 @@ static void	*ft_clean(char **arr, int cur)
 	return (0);
 }
 
-/// @brief Split string s into an array, seperated by delimiter c, while respecting quotation
+/// @brief Split string s into an array, seperated by delimiter c, 
+/// while respecting quotation
 /// @param s input string
 /// @param c delimiter
 /// @param flag 0 retain quotes, 1 trim quotes

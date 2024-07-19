@@ -1,11 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strtim_quote.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rkorhone <rkorhone@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/10 16:07:23 by rkorhone          #+#    #+#             */
+/*   Updated: 2023/11/13 15:51:26 by rkorhone         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft.h"
 #include <stdlib.h>
-
 #include <unistd.h>
 
 static size_t	ft_trim_len(const char *str)
 {
-	int	i;
+	int		i;
 	size_t	len;
 
 	i = 0;
@@ -18,7 +29,7 @@ static size_t	ft_trim_len(const char *str)
 			{
 				i += len - 2;
 				str += len;
-				continue;
+				continue ;
 			}
 		}
 		i++;
@@ -27,8 +38,8 @@ static size_t	ft_trim_len(const char *str)
 	return (i);
 }
 
-// trims outer quotes from str and returns a new string, should return NULL on allocation failure
-// TODO: double tripple test this
+// trims outer quotes from str and returns a new string, 
+// should return NULL on allocation failure
 char	*ft_strtrim_quote(const char *str)
 {
 	char	*out;
@@ -49,7 +60,7 @@ char	*ft_strtrim_quote(const char *str)
 			{
 				out += ft_strncpy(out, str + 1, len - 2);
 				str += len;
-				continue;
+				continue ;
 			}
 		}
 		*out++ = *str++;

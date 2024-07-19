@@ -1,12 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redirect.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rkorhone <rkorhone@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/10 16:07:23 by rkorhone          #+#    #+#             */
+/*   Updated: 2023/11/13 15:51:26 by rkorhone         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #include "../minishell.h"
 #include "../libft/libft.h"
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdio.h>
 
-static int set_infile(int fd_in, t_process *p)
+static int	set_infile(int fd_in, t_process *p)
 {
-	int fd;
+	int	fd;
 
 	if (p->infile != NULL)
 	{
@@ -27,9 +38,9 @@ static int set_infile(int fd_in, t_process *p)
 	return (1);
 }
 
-static int  set_outfile(int pipe[2], t_process *p)
+static int	set_outfile(int pipe[2], t_process *p)
 {
-	int fd;
+	int	fd;
 
 	if (p->outfile != NULL)
 	{
@@ -53,7 +64,7 @@ static int  set_outfile(int pipe[2], t_process *p)
 	return (1);
 }
 
-int do_redirect(int fd_in, int pipe[2], t_process *p)
+int	do_redirect(int fd_in, int pipe[2], t_process *p)
 {
 	if (set_infile(fd_in, p) == -1)
 	{
