@@ -9,12 +9,15 @@
 /*   Updated: 2023/11/13 15:51:26 by rkorhone         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+#include "../minishell.h"
 #include <stdio.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 
-int is_directory(const char *path) {
-	struct stat statbuf;
+int	is_directory(const char *path)
+{
+	struct stat	statbuf;
 
 	if (stat(path, &statbuf) != 0)
 	{
@@ -24,8 +27,9 @@ int is_directory(const char *path) {
 	return (S_ISDIR(statbuf.st_mode));
 }
 
-int is_executable(const char *path) {
-	struct stat statbuf;
+int	is_executable(const char *path)
+{
+	struct stat	statbuf;
 
 	if (stat(path, &statbuf) != 0)
 	{
@@ -37,4 +41,21 @@ int is_executable(const char *path) {
 		return (1);
 	else
 		return (0);
+}
+
+int	file_checks(t_process *p)
+{
+	if (p->path == NULL
+		|| access(p->path, F_OK | X_OK) || !is_executable(p->path))
+	{
+		ft_printf_fd(STDERR_FILENO,
+			"idleshell: %s: command not found\n", p->args[0]);
+		exit(127);
+	}
+	if (is_directory(p->path))
+	{
+		ft_printf_fd(STDERR_FILENO,
+			"idleshell: %s: is a directory\n", p->args[0]);
+		exit(127);
+	}
 }

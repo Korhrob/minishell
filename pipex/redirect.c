@@ -30,7 +30,9 @@ static int	set_infile(int fd_in, t_process *p)
 			return (-1);
 		}
 		close(fd);
-	} else if (!(p->pflag & PF_FIRST)) {
+	}
+	else if (!(p->pflag & PF_FIRST))
+	{
 		if (dup2(fd_in, STDIN_FILENO) == -1)
 			return (-1);
 		close(fd_in);

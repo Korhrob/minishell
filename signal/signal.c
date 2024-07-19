@@ -18,7 +18,7 @@
 #include <termios.h>
 #include <sys/ioctl.h>
 
-volatile sig_atomic_t 	g_exit_status;
+volatile sig_atomic_t	g_exit_status;
 
 /*
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣤⣤⣤⣤⣤⣶⣦⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀ 
@@ -57,7 +57,7 @@ void	signal_init(int flag)
 	tcsetattr(STDIN_FILENO, TCSAFLUSH, &attributes);
 }
 
-int close_signals(void)
+int	close_signals(void)
 {
 	struct sigaction	sa;
 

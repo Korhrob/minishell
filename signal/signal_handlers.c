@@ -28,7 +28,7 @@ void	handle_sigint(int sig)
 	rl_redisplay();
 }
 
-void handle_sigint_child(int sig)
+void	handle_sigint_child(int sig)
 {
 	g_exit_status = sig;
 	rl_replace_line("", 0);

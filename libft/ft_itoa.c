@@ -61,7 +61,7 @@ char	*ft_itoa(int i)
 	return (s);
 }
 
-// convert int into an allocated string
+// convert int into string buffer s
 void	ft_itoa_buf(char *s, int i)
 {
 	char	*s;

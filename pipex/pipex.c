@@ -24,16 +24,7 @@ static void	child(t_process *p, t_runtime *runtime, int builtin_id)
 		do_builtin(p, builtin_id, runtime, STDOUT_FILENO);
 		exit (EXIT_SUCCESS);
 	}
-	if (p->path == NULL || access(p->path, F_OK | X_OK) || !is_executable(p->path))
-	{
-		ft_printf_fd(STDERR_FILENO, "idleshell: %s: command not found\n", p->args[0]);
-		exit(127);
-	}
-	if (is_directory(p->path))
-	{
-		ft_printf_fd(STDERR_FILENO, "idleshell: %s: is a directory\n", p->args[0]);
-		exit(127);
-	}
+	file_check(p);
 	runtime->envp = convert_environ(runtime->env_struct);
 	if (runtime->envp == NULL)
 		exit(EXIT_FAILURE);
@@ -45,7 +36,7 @@ static void	child(t_process *p, t_runtime *runtime, int builtin_id)
 	exit(EXIT_SUCCESS);
 }
 
-static void end_pipe(int fd[2], t_pipe *pipe_info, t_process *p)
+static void	end_pipe(int fd[2], t_pipe *pipe_info, t_process *p)
 {
 	if (!(p->pflag & PF_FIRST))
 		close(pipe_info->fd_in);
@@ -56,7 +47,7 @@ static void end_pipe(int fd[2], t_pipe *pipe_info, t_process *p)
 	}
 }
 
-static void do_pipe(t_pipe *pipe_info, t_process *p, t_runtime *runtime)
+static void	do_pipe(t_pipe *pipe_info, t_process *p, t_runtime *runtime)
 {
 	int	fd[2];
 	int	pid;
@@ -66,7 +57,8 @@ static void do_pipe(t_pipe *pipe_info, t_process *p, t_runtime *runtime)
 		perror("pipe");
 		exit(EXIT_FAILURE);
 	}
-	if ((pid = fork()) == -1)
+	pid = fork();
+	if (pid == -1)
 	{
 		perror("fork");
 		exit(EXIT_FAILURE);
@@ -84,7 +76,7 @@ static void do_pipe(t_pipe *pipe_info, t_process *p, t_runtime *runtime)
 }
 
 // pipe once and and execute all child processes in forks
-void pipex(t_list *list, t_runtime *runtime)
+void	pipex(t_list *list, t_runtime *runtime)
 {
 	t_pipe	pipe_info;
 	int		pid;
@@ -103,4 +95,3 @@ void pipex(t_list *list, t_runtime *runtime)
 	while (pid > 0)
 		pid = wait(&runtime->exit_status);
 }
-
