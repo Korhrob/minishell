@@ -15,7 +15,7 @@
 #include "builtins/builtins.h"
 
 // Used to create envp for the pipex
-char	**convert_environ(t_env **environ)
+char	**convert_environ(t_env **e)
 {
 	char	**envp;
 	char	*env;
@@ -23,21 +23,21 @@ char	**convert_environ(t_env **environ)
 	int		i;
 
 	i = 0;
-	envp = (char **)ft_calloc(sizeof(char *), (ft_array_len((void **)environ) + 1));
+	envp = (char **)ft_calloc(sizeof(char *), (ft_array_len((void **)e) + 1));
 	if (!envp)
 		return (NULL);
-	while (environ[i] != NULL)
+	while (e[i] != NULL)
 	{
-		len = ft_strlen(environ[i]->key) + ft_strlen(environ[i]->value);
+		len = ft_strlen(e[i]->key) + ft_strlen(e[i]->value);
 		env = (char *)ft_calloc(sizeof(char *), (len + 2));
 		if (!env)
 		{
 			ft_free_arr(envp);
 			return (NULL);
 		}
-		ft_strncpy(env, environ[i]->key, ft_strlen(environ[i]->key));
+		ft_strncpy(env, e[i]->key, ft_strlen(e[i]->key));
 		env[ft_strlen(env)] = '=';
-		ft_strncpy(env + ft_strlen(env), environ[i]->value, ft_strlen(environ[i]->value));
+		ft_strncpy(env + ft_strlen(env), e[i]->value, ft_strlen(e[i]->value));
 		envp[i] = env;
 		i++;
 	}
@@ -56,7 +56,7 @@ static void	malloc_env_fail(t_env **environ, int i)
 		i--;
 	}
 	free(environ);
-	ft_printf_fd(STDERR_FILENO, "idleshell: cannot create process: Not enough memory");
+	ft_printf_fd(2, "idleshell: cannot create process: Not enough memory");
 	exit(1);
 }
 
@@ -121,8 +121,9 @@ t_env	**set_env_struct(char **envp)
 	t_env	*env_new;
 	int		i;
 
+	i = ft_array_len((void **)envp);
+	environ = (t_env **)ft_calloc(sizeof(t_env *), i + 1);
 	i = 0;
-	environ = (t_env **)ft_calloc(sizeof(t_env *), (ft_array_len((void **)envp) + 1));
 	if (!environ)
 		malloc_env_fail(environ, i);
 	while (envp[i] != NULL)

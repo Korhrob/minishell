@@ -59,24 +59,26 @@ static int	check_extra(char *pipe)
 }
 
 // base logic behind expanding the pipes
-static char	*expand_logic(char *pipe, t_env **environ)
+static char	*expand_logic(char *pipe, t_env **environ, t_runtime *runtime)
 {
 	char	**splitpipe;
 	char	*ret;
 	int		count;
+	int		extra;
 
+	extra = 0;
 	count = count_expands(pipe);
 	if (count == 0)
 		return (pipe);
 	splitpipe = (char **)ft_calloc(
-		(sizeof(char *)),
-		4 * (count * 2 + check_extra(pipe) + 1));
+			(sizeof(char *)),
+			4 * (count * 2 + check_extra(pipe) + 1));
 	if (!splitpipe)
 		return (NULL);
-	create_strings(splitpipe, pipe, environ);
+	extra += create_strings(splitpipe, pipe, environ, runtime);
 	if (!splitpipe)
 		return (NULL);
-	ret = array_join_c(splitpipe, count * 2);
+	ret = array_join_c(splitpipe, (count * 2) + extra);
 	if (!ret)
 		return (NULL);
 	free (pipe);
@@ -85,14 +87,14 @@ static char	*expand_logic(char *pipe, t_env **environ)
 }
 
 // iterates every single pipe string and expands $ signs with environments
-int	expand_dollars(char **pipes, t_env **environ)
+int	expand_dollars(char **pipes, t_env **environ, t_runtime *runtime)
 {
 	int	i;
 
 	i = 0;
 	while (pipes[i] != NULL)
 	{
-		pipes[i] = expand_logic(pipes[i], environ);
+		pipes[i] = expand_logic(pipes[i], environ, runtime);
 		if (!pipes[i])
 			return (MALLOC_FAIL);
 		i++;

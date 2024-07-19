@@ -19,6 +19,11 @@
 # include "../libft/libft.h"
 # include "../minishell.h"
 
+// Builtin
+int		do_builtin(t_process *p, int cmd, t_runtime *runtime, int fd);
+int		get_builtin(char *args);
+int		single_builtin(t_process *process, t_runtime *runtime);
+
 // Builtin pwd
 void	cmd_pwd(int fd);
 

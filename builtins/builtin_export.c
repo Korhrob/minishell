@@ -95,7 +95,6 @@ int	cmd_export(char *env, t_runtime *runtime)
 	t_env	*temp_env;
 	int		old_i;
 
-	printf("debug\n");
 	if (env[0] == '\"')
 		env = minitrim(env, '\"');
 	else

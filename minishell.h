@@ -85,6 +85,7 @@ typedef struct s_runtime
 	char	*exepath;
 	char	*history;
 	char	*heredoc;
+	char	errorcode[12];
 }	t_runtime;
 
 // args		= arg array
@@ -201,13 +202,18 @@ char		**convert_environ(t_env **environ);
 
 // expansions.c
 
-int			expand_dollars(char **pipes, t_env **environ);
-char		**create_strings(char **splitpipe, char *pipe, t_env **environ);
+int			expand_dollars(char **pipes, t_env **environ, t_runtime *runtime);
+int			create_strings(char **splitpipe, char *pipe, t_env **environ, t_runtime *runtime);
 void		*free_expands(char **array, int index);
 char		*array_join_c(char **array, int count);
 
 // error.c
 
 void		print_error_msg(int ecode, char *opt);
+
+// runtime.c
+
+void	free_runtime(t_runtime *runtime);
+void	init_runtime(t_runtime *runtime, char **envp);
 
 #endif
