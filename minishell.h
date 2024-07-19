@@ -109,9 +109,6 @@ typedef struct s_exp
 	char	*pipe;
 }	t_exp;
 
-// minishell_utils.c
-void		*ft_free(void *ptr);
-
 // main.c
 
 int			get_builtin(char *args);
@@ -122,13 +119,15 @@ int			do_builtin(t_process *p, int cmd, t_runtime *runtime, int fd);
 void		record_history(char *line, t_runtime *runtime);
 void		print_history(char **args, t_runtime *runtime, int fd);
 
-// signals.c
+// signal/signal.c
 
 void		signal_init(int flag);
 int			main_signals(void);
 int			child_signals(void);
 int			heredoc_signals(void);
 int			close_signals(void);
+
+// signal/signal_handlers.c
 void		handle_sigint(int sig);
 void		handle_sigint_child(int sig);
 void		handle_sigint_heredoc(int sig);
@@ -164,13 +163,21 @@ void		file_redirection(t_process *process, t_runtime *runtime);
 
 void		rebind_args(char **args, t_process *p);
 
-// pipex.c
+// pipex/pipex.c
 
 void		pipex(t_list *process_list, t_runtime *runtime);
 
-// pipex.c
+// pipex/pipex_utils.c
+
+int			is_directory(const char *path);
+int			is_executable(const char *path);
+
+// pipex/path.c
 
 char		*get_cmd_path(char **args, t_env **envp);
+
+// pipex/redirect.c
+
 int			do_redirect(int fd_in, int pipe[2], t_process *p);
 
 // environment.c

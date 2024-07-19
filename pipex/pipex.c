@@ -4,24 +4,23 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/wait.h>
-#include <elf.h>
 #include <fcntl.h>
 
-static void	child(t_process *process, t_runtime *runtime)
+static void	child(t_process *process, t_runtime *runtime, int builtin_id)
 {
-	int builtin; 
-
-	if (process->args[0] == NULL || *(process->args[0]) == 0)
-		exit(EXIT_FAILURE);
-	builtin = get_builtin(process->args[0]);
-	if (builtin)
+	if (builtin_id)
 	{
-		do_builtin(process, builtin, runtime, STDOUT_FILENO);
+		do_builtin(process, builtin_id, runtime, STDOUT_FILENO);
 		exit (EXIT_SUCCESS);
 	}
-	if (process->path == NULL || access(process->path, F_OK))
+	if (process->path == NULL || access(process->path, F_OK) || !is_executable(process->path))
 	{
 		ft_printf_fd(STDERR_FILENO, "idleshell: %s: command not found\n", process->args[0]);
+		exit(127);
+	}
+	if (is_directory(process->path))
+	{
+		ft_printf_fd(STDERR_FILENO, "idleshell: %s: is a directory\n", process->args[0]);
 		exit(127);
 	}
 	runtime->envp = convert_environ(runtime->env_struct);
@@ -54,19 +53,21 @@ static void do_pipe(t_pipe *pipe_info, t_process *p, t_runtime *runtime)
 	if (!(p->pflag & PF_LAST) && pipe(fd) == -1)
 	{
 		perror("pipe");
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 	if ((pid = fork()) == -1)
 	{
 		perror("fork");
-		exit(1);
+		exit(EXIT_FAILURE);
 	}
 	if (pid == 0)
 	{
 		child_signals();
 		if (do_redirect(pipe_info->fd_in, fd, p) == -1)
-			exit(1);
-		child(p, runtime);
+			exit(EXIT_FAILURE);
+		if (p->args[0] == NULL || *(p->args[0]) == 0)
+			exit(EXIT_FAILURE);
+		child(p, runtime, get_builtin(p->args[0]));
 	}
 	end_pipe(fd, pipe_info, p);
 }
