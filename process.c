@@ -49,7 +49,7 @@ static t_process	*new_process(char *line, t_runtime *runtime)
 	p->path = get_cmd_path(p->args, runtime->env_struct);
 	if (p->eflag != 0)
 	{
-		print_error_msg(p->eflag, "");
+		print_error_msg(p->eflag, runtime);
 		ft_free_arr(p->args);
 		return (ft_free(p));
 	}

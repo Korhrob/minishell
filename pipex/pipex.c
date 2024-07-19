@@ -24,7 +24,7 @@ static void	child(t_process *p, t_runtime *runtime, int builtin_id)
 		do_builtin(p, builtin_id, runtime, STDOUT_FILENO);
 		exit (EXIT_SUCCESS);
 	}
-	file_check(p);
+	file_checks(p);
 	runtime->envp = convert_environ(runtime->env_struct);
 	if (runtime->envp == NULL)
 		exit(EXIT_FAILURE);

@@ -12,6 +12,7 @@
 #include "../minishell.h"
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -43,7 +44,7 @@ int	is_executable(const char *path)
 		return (0);
 }
 
-int	file_checks(t_process *p)
+void	file_checks(t_process *p)
 {
 	if (p->path == NULL
 		|| access(p->path, F_OK | X_OK) || !is_executable(p->path))

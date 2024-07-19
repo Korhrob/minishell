@@ -15,9 +15,8 @@
 
 /// @brief print error msg to STDERR_FILENO
 /// @param ecode our custom error code
-void	print_error_msg(int ecode, char *opt)
+void	print_error_msg(int ecode, t_runtime *runtime)
 {
-	(void)opt;
 	if (ecode & MALLOC_FAIL)
 		ft_printf_fd(STDERR_FILENO, "idleshell: malloc fail\n");
 	else if (ecode == FILE_FAIL)
@@ -26,4 +25,5 @@ void	print_error_msg(int ecode, char *opt)
 		ft_printf_fd(STDERR_FILENO, "idleshell: initializing pipe failed\n");
 	else
 		ft_printf("idleshell: error code: %d\n", ecode);
+	ft_itoa_buf(runtime->errorcode, ecode);
 }

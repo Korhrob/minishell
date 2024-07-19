@@ -88,7 +88,7 @@ static int	check_syntax(char *line, char **cur, char **prev)
 // check if str is invalid
 // return 1 if syntax error is found
 // NOTE: after syntax there must be a non syntax character
-int	syntax_error(char *line)
+int	syntax_error(char *line, t_runtime *runtime)
 {
 	char	*cur;
 	char	*prev;
@@ -101,14 +101,16 @@ int	syntax_error(char *line)
 	{
 		ft_printf_fd(STDERR_FILENO,
 			"idleshell: syntax error unclosed quote\n");
+		ft_itoa_buf(runtime->errorcode, 2);
 		return (1);
 	}
-	if (check_syntax(line, &cur, &prev))
+	if (check_syntax(line, &cur, &prev)) // add error code here
 		return (1);
 	if (cur != NULL && cur == prev)
 	{
 		ft_printf_fd(STDERR_FILENO,
 			"idleshell: syntax error near unexpected token `newline'\n");
+		ft_itoa_buf(runtime->errorcode, 2);
 		return (1);
 	}
 	return (0);

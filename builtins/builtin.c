@@ -12,13 +12,32 @@
 
 #include "builtins.h"
 #include <fcntl.h>
+#include <errno.h>
+
+static int	ft_exit(t_process *p, t_runtime *runtime)
+{
+	int	ecode;
+
+	ecode = EXIT_SUCCESS;
+	if (!ft_isdigit_str(p->args[1]))
+	{
+		ecode = 2;
+		errno = 2;
+		ft_printf_fd(STDERR_FILENO,
+			"idleshell: exit: numeric argument required\n");
+		ft_itoa_buf(runtime->errorcode, 2);
+	}
+	if (p->args[1])
+		ecode = ft_atoi(p->args[1]);
+	exit(ecode);
+}
 
 // exectue all builtin commands here
 // should return int back to main
 int	do_builtin(t_process *p, int cmd, t_runtime *runtime, int fd)
 {
 	if (cmd == EXIT)
-		return (1);
+		ft_exit(p, runtime);
 	else if (cmd == PWD)
 		cmd_pwd(fd);
 	else if (cmd == CD)

@@ -64,11 +64,10 @@ char	*ft_itoa(int i)
 // convert int into string buffer s
 void	ft_itoa_buf(char *s, int i)
 {
-	char	*s;
 	int		depth;
 
 	if (!s)
-		return (NULL);
+		return ;
 	ft_memset(s, 0, 12);
 	if (i == -2147483648)
 	{
