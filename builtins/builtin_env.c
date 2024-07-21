@@ -28,19 +28,19 @@ static int	existing_path(t_env **environ, char *env)
 }
 
 // Prints all the environments that have a value
-void	cmd_env(t_runtime *runtime, int fd)
+int	cmd_env(t_runtime *runtime, int fd)
 {
 	int	i;
 
 	i = 0;
 	if (runtime == NULL)
-		return ;
+		return (0);
 	if (runtime->env_struct == NULL)
-		return ;
+		return (0);
 	if (existing_path(runtime->env_struct, "PATH") == FAIL)
 	{
 		ft_printf_fd(2, "idleshell: env: No such file or directory\n");
-		return ;
+		return (1);
 	}
 	while (runtime->env_struct[i] != NULL)
 	{
@@ -51,4 +51,5 @@ void	cmd_env(t_runtime *runtime, int fd)
 		}
 		i++;
 	}
+	return (0);
 }

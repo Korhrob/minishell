@@ -119,12 +119,12 @@ int	cmd_export(char *env, t_runtime *runtime)
 
 // Will change name later to be inline with other builtins, this function was
 // made to perform multiple arguments passed to the function
-void	export_main(char **args, t_runtime *runtime, int fd)
+int	export_main(char **args, t_runtime *runtime, int fd)
 {
 	if (!args[1])
 	{
 		cmd_export_info(runtime, fd);
-		return ;
+		return (0);
 	}
 	args++;
 	while (*args != NULL)
@@ -132,10 +132,11 @@ void	export_main(char **args, t_runtime *runtime, int fd)
 		if (cmd_export(*args, runtime) == MALLOC_FAIL)
 		{
 			ft_printf_fd(2, "idleshell: export: not enough memory\n");
-			return ;
+			return (1);
 		}
 		args++;
 	}
+	return (0);
 }
 
 // Add quotation character remover
