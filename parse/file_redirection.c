@@ -34,9 +34,9 @@ static int	in_file(t_process *p, char *line)
 
 	if (p->infile != NULL)
 		free(p->infile);
-	fd = open(filename, O_RDONLY);
-	filename = get_filename(line);
 	p->inflag = O_RDONLY;
+	filename = get_filename(line);
+	fd = open(filename, p->inflag);
 	if (fd == -1)
 	{
 		free(filename);
@@ -60,7 +60,7 @@ static int	out_file_append(t_process *p, char *line)
 		free(p->outfile);
 	p->outflag = O_WRONLY | O_CREAT | O_APPEND;
 	filename = get_filename(line);
-	fd = open(filename, O_RDONLY);
+	fd = open(filename, p->outflag, 0777);
 	if (fd == -1)
 	{
 		free(filename);
@@ -83,7 +83,7 @@ static int	out_file(t_process *p, char *line)
 		free(p->outfile);
 	p->outflag = O_WRONLY | O_CREAT | O_TRUNC;
 	filename = get_filename(line);
-	fd = open(filename, O_RDONLY);
+	fd = open(filename, p->outflag, 0777);
 	if (fd == -1)
 	{
 		free(filename);
@@ -118,7 +118,7 @@ void	file_redirection(t_process *p, t_runtime *runtime)
 			ptr += out_file(p, ptr + 1);
 		else
 			ptr++;
-		if (p->eflag == -1)
+		if (p->eflag != 0)
 			break ;
 	}
 }

@@ -19,7 +19,7 @@ static int	ft_exit(t_process *p, t_runtime *runtime)
 	int	ecode;
 
 	ecode = EXIT_SUCCESS;
-	if (!ft_isdigit_str(p->args[1]))
+	if (p->args[1] && !ft_isdigit_str(p->args[1]))
 	{
 		ecode = 2;
 		errno = 2;
@@ -29,6 +29,7 @@ static int	ft_exit(t_process *p, t_runtime *runtime)
 	}
 	if (p->args[1])
 		ecode = ft_atoi(p->args[1]);
+	ft_printf_fd(STDOUT_FILENO, "exit\n");
 	exit(ecode);
 }
 

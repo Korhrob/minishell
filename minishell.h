@@ -186,7 +186,7 @@ void		pipex(t_list *process_list, t_runtime *runtime);
 
 int			is_directory(const char *path);
 int			is_executable(const char *path);
-void		file_checks(t_process *p);
+int			file_checks(t_process *p);
 
 // pipex/path.c
 

@@ -19,12 +19,16 @@
 
 static void	child(t_process *p, t_runtime *runtime, int builtin_id)
 {
+	int	err;
+
 	if (builtin_id)
 	{
 		do_builtin(p, builtin_id, runtime, STDOUT_FILENO);
 		exit (EXIT_SUCCESS);
 	}
-	file_checks(p);
+	err = file_checks(p);
+	if (err)
+		exit(err);
 	runtime->envp = convert_environ(runtime->env_struct);
 	if (runtime->envp == NULL)
 		exit(EXIT_FAILURE);
@@ -94,4 +98,5 @@ void	pipex(t_list *list, t_runtime *runtime)
 	pid = wait(&runtime->exit_status);
 	while (pid > 0)
 		pid = wait(&runtime->exit_status);
+	ft_itoa_buf(runtime->errorcode, WEXITSTATUS(runtime->exit_status));
 }

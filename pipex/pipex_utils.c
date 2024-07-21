@@ -44,19 +44,25 @@ int	is_executable(const char *path)
 		return (0);
 }
 
-void	file_checks(t_process *p)
+int	file_checks(t_process *p)
 {
-	if (p->path == NULL
-		|| access(p->path, F_OK | X_OK) || !is_executable(p->path))
+	if (!p->path || access(p->path, F_OK) || !is_executable(p->path))
 	{
 		ft_printf_fd(STDERR_FILENO,
-			"idleshell: %s: command not found\n", p->args[0]);
-		exit(127);
+			"idleshell: %s: command not found\n", p->path);
+		return (127);
 	}
-	if (is_directory(p->path))
+	else if (access(p->path, X_OK))
+	{
+		ft_printf_fd(STDERR_FILENO,
+			"idleshell: %s: no permission\n", p->args[0]);
+		return (127);
+	}
+	else if (is_directory(p->path))
 	{
 		ft_printf_fd(STDERR_FILENO,
 			"idleshell: %s: is a directory\n", p->args[0]);
-		exit(127);
+		return (127);
 	}
+	return (0);
 }
