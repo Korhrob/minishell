@@ -28,7 +28,7 @@ int		single_builtin(t_process *process, t_runtime *runtime);
 void	cmd_pwd(int fd);
 
 // Builtin cd
-void	cmd_cd(char **args, t_runtime *runtime);
+int	cmd_cd(char **args, t_runtime *runtime);
 
 // Builtin env
 void	cmd_env(t_runtime *runtime, int fd);
