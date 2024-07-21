@@ -60,3 +60,26 @@ char	*ft_itoa(int i)
 	ft_recursion(i, s, &depth);
 	return (s);
 }
+
+// convert int into string buffer s
+void	ft_itoa_buf(char *s, int i)
+{
+	int		depth;
+
+	if (!s)
+		return ;
+	ft_memset(s, 0, 12);
+	if (i == -2147483648)
+	{
+		ft_strlcpy(s, "-2147483648", 12);
+		return ;
+	}
+	depth = 0;
+	if (i < 0)
+	{
+		i = -i;
+		s[depth++] = '-';
+	}
+	ft_recursion(i, s, &depth);
+	return ;
+}

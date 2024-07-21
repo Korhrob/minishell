@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_utils.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rkorhone <rkorhone@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/10 16:07:23 by rkorhone          #+#    #+#             */
+/*   Updated: 2023/11/13 15:51:26 by rkorhone         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #include "../libft/libft.h"
 #include <unistd.h>
 #include <stdlib.h>
@@ -19,7 +30,7 @@ int	is_charset(char c, const char *set)
 
 static char	*unquote_filename(char *str)
 {
-	char *out;
+	char	*out;
 
 	out = ft_strtrim_quote(str);
 	free(str);
@@ -46,7 +57,7 @@ char	*get_filename(char *str)
 			len += ft_strlen_t(str + len, str[len]);
 			continue ;
 		}
-		if (is_charset(str[len], "|<> ")) //
+		if (is_charset(str[len], "|<> "))
 			break ;
 		len++;
 	}
