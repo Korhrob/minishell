@@ -16,7 +16,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-int	is_directory(const char *path)
+static int	is_directory(const char *path)
 {
 	struct stat	statbuf;
 
@@ -28,7 +28,7 @@ int	is_directory(const char *path)
 	return (S_ISDIR(statbuf.st_mode));
 }
 
-int	is_executable(const char *path)
+static int	is_executable(const char *path)
 {
 	struct stat	statbuf;
 
