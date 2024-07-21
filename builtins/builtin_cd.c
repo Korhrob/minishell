@@ -70,7 +70,7 @@ static int	correct_wd(t_runtime *runtime)
 }
 
 // Changes to home directory
-static void	home_dir(t_runtime *runtime)
+static int	home_dir(t_runtime *runtime)
 {
 	char	*home;
 
@@ -78,33 +78,42 @@ static void	home_dir(t_runtime *runtime)
 	if (home == NULL)
 	{
 		ft_printf_fd(STDERR_FILENO, "idleshell: cd: HOME not set\n");
-		return ;
+		return (1);
 	}
 	else
 	{
 		if (chdir(home) == 0)
 		{
 			if (correct_wd(runtime) == MALLOC_FAIL)
+			{
 				ft_printf_fd(STDERR_FILENO, "idleshell: cd: not enough memory");
+				return (1);
+			}
+			return (0);
 		}
 		else
 			perror("cd");
 	}
+	return (1);
 }
 
 // Changes working directory to the provided path
-void	cmd_cd(char **args, t_runtime *runtime)
+int	cmd_cd(char **args, t_runtime *runtime)
 {
 	if (args[1] == NULL)
-	{
-		home_dir(runtime);
-		return ;
-	}
+		return (home_dir(runtime));
 	if (chdir(args[1]) == 0)
 	{
 		if (correct_wd(runtime) == MALLOC_FAIL)
+		{
 			ft_printf_fd(STDERR_FILENO, "idleshell: cd: not enough memory");
+			return (1);
+		}
 	}
 	else
+	{
 		perror("cd");
+		return (1);
+	}
+	return (0);
 }

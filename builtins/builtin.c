@@ -40,20 +40,21 @@ int	do_builtin(t_process *p, int cmd, t_runtime *runtime, int fd)
 	if (cmd == EXIT)
 		ft_exit(p, runtime);
 	else if (cmd == PWD)
-		cmd_pwd(fd);
+		runtime->exit_status = cmd_pwd(fd);
 	else if (cmd == CD)
-		cmd_cd(p->args, runtime);
+		runtime->exit_status = cmd_cd(p->args, runtime);
 	else if (cmd == ENV)
-		cmd_env(runtime, fd);
+		runtime->exit_status = cmd_env(runtime, fd);
 	else if (cmd == UNSET)
-		unset_main(p->args, runtime);
+		runtime->exit_status = unset_main(p->args, runtime);
 	else if (cmd == EXPORT)
-		export_main(p->args, runtime, fd);
+		runtime->exit_status = export_main(p->args, runtime, fd);
 	else if (cmd == ECHO)
-		cmd_echo(p->args, fd);
+		runtime->exit_status = cmd_echo(p->args, fd);
 	else if (cmd == HISTORY)
 		print_history((p->args + 1), runtime, fd);
-	return (-1);
+	ft_itoa_buf(runtime->errorcode, runtime->exit_status);
+	return (runtime->exit_status);
 }
 
 // gets and returns enum if current string is builtin command

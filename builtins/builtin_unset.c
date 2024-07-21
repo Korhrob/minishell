@@ -59,7 +59,7 @@ int	cmd_unset(char *env_line, t_runtime *runtime)
 
 // Will change name later to be inline with other builtins, this function was
 // made to perform multiple arguments passed to the function
-void	unset_main(char **args, t_runtime *runtime)
+int	unset_main(char **args, t_runtime *runtime)
 {
 	args++;
 	while (*args != NULL)
@@ -69,9 +69,10 @@ void	unset_main(char **args, t_runtime *runtime)
 			if (cmd_unset(*args, runtime) == MALLOC_FAIL)
 			{
 				ft_printf_fd(2, "idleshell: unset: not enough memory\n");
-				return ;
+				return (1);
 			}
 		}
 		args++;
 	}
+	return (0);
 }

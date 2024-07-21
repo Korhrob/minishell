@@ -14,7 +14,7 @@
 
 // prints on standard output all strings from an array except
 // the first and any -n flags that remove newline
-void	cmd_echo(char **args, int fd)
+int	cmd_echo(char **args, int fd)
 {
 	int	i;
 
@@ -40,4 +40,5 @@ void	cmd_echo(char **args, int fd)
 	}
 	else
 		ft_printf_fd(fd, "\n");
+	return (0);
 }

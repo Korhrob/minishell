@@ -15,14 +15,18 @@
 #include <linux/limits.h>
 
 // Fetches the current directory and prints it
-void	cmd_pwd(int fd)
+int	cmd_pwd(int fd)
 {
 	char	cwd[PATH_MAX];
 
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
 		ft_printf_fd(fd, "%s\n", cwd);
 	else
+	{
 		perror("pwd");
+		return (1);
+	}
+	return (0);
 }
 
 // gets pwd and returns it as allocated string
