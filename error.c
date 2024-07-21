@@ -12,6 +12,7 @@
 #include "libft/libft.h"
 #include "minishell.h"
 #include <unistd.h>
+#include <stdlib.h>
 
 /// @brief print error msg to STDERR_FILENO
 /// @param ecode our custom error code
@@ -25,5 +26,5 @@ void	print_error_msg(int ecode, t_runtime *runtime)
 		ft_printf_fd(STDERR_FILENO, "idleshell: initializing pipe failed\n");
 	else
 		ft_printf("idleshell: error code: %d\n", ecode);
-	ft_itoa_buf(runtime->errorcode, 1);
+	ft_itoa_buf(runtime->errorcode, EXIT_FAILURE);
 }

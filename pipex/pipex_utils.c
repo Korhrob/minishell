@@ -49,7 +49,7 @@ int	file_checks(t_process *p)
 	if (!p->path || access(p->path, F_OK) || !is_executable(p->path))
 	{
 		ft_printf_fd(STDERR_FILENO,
-			"idleshell: %s: command not found\n", p->path);
+			"idleshell: %s: command not found\n", p->args[0]);
 		return (127);
 	}
 	else if (access(p->path, X_OK))
