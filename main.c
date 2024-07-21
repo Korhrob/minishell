@@ -26,7 +26,7 @@ int	execute_args(char **pipes, t_runtime *runtime)
 	t_list	*list;
 	int		return_flag;
 
-	return_flag = -1;
+	return_flag = 0;
 	if (pipes == NULL)
 		return (return_flag);
 	if (expand_dollars(pipes, runtime->env_struct, runtime) == MALLOC_FAIL)
@@ -53,8 +53,8 @@ static void	shell_interactive(t_runtime *runtime)
 	int		status;
 	int		syntax;
 
-	status = -1;
-	while (status == -1)
+	status = 0;
+	while (status == 0)
 	{
 		main_signals();
 		line = readline("idleshell$ ");

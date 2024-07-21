@@ -72,6 +72,8 @@ static int	check_syntax(char *line, char **cur, char **prev)
 	{
 		if (*line == '\'' || *line == '\"')
 			line += ft_strlen_t(line, *line);
+		if (*line == 0)
+			break ;
 		*cur = syntax_cmp(line);
 		if (print_syntax_error(*cur, *prev))
 			return (1);
