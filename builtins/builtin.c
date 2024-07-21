@@ -22,7 +22,7 @@ int	do_builtin(t_process *p, int cmd, t_runtime *runtime, int fd)
 	else if (cmd == PWD)
 		cmd_pwd(fd);
 	else if (cmd == CD)
-		cmd_cd(p->args, runtime);
+		runtime->exit_status = cmd_cd(p->args, runtime);
 	else if (cmd == ENV)
 		cmd_env(runtime, fd);
 	else if (cmd == UNSET)
