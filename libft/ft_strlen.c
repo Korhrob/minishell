@@ -32,7 +32,7 @@ size_t	ft_strlen(const char *str)
 size_t	ft_strlen_t(const char *str, char c)
 {
 	size_t	size;
-	
+
 	if (str == NULL || *str == 0)
 		return (0);
 	str++;

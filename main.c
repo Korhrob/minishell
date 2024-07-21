@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rkorhone <rkorhone@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/10 16:07:23 by rkorhone          #+#    #+#             */
+/*   Updated: 2023/11/13 15:51:26 by rkorhone         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #include "minishell.h"
 #include "libft/libft.h"
 #include "builtins/builtins.h"
@@ -25,7 +36,8 @@ int	execute_args(char **pipes, t_runtime *runtime)
 	list = create_process_list(pipes, runtime);
 	if (list == NULL)
 		return (return_flag);
-	if (runtime->pipe_count <= 1 && get_builtin(((t_process*)list->content)->args[0]))
+	if (runtime->pipe_count <= 1
+		&& get_builtin(((t_process *)list->content)->args[0]))
 		return_flag = single_builtin(list->content, runtime);
 	else
 		pipex(list, runtime);
@@ -51,7 +63,7 @@ static void	shell_interactive(t_runtime *runtime)
 		if (*line != 0)
 		{
 			record_history(line, runtime);
-			syntax = syntax_error(line);
+			syntax = syntax_error(line, runtime);
 			pipes = ft_split_quotes(line, '|', 0);
 			if (!syntax)
 				status = execute_args(pipes, runtime);
@@ -61,32 +73,16 @@ static void	shell_interactive(t_runtime *runtime)
 	}
 }
 
-// non interactive (use argument), might not need
-static void	shell_nointeractive(char *line, t_runtime *runtime)
-{
-	char	**pipes;
-
-	main_signals();
-	if (line == NULL)
-		return ;
-	if (*line == 0)
-		return ;
-	pipes = ft_split_quotes(line, '|', 0);
-	if (!syntax_error(line))
-		execute_args(pipes, runtime);
-	ft_free_arr(pipes);
-}
-
 int	main(int argc, char **argv, char **envp)
 {
 	t_runtime	runtime;
 
+	(void)argc;
+	(void)argv;
 	signal_init(0);
 	init_runtime(&runtime, envp);
-	if (isatty(STDIN_FILENO) == 1 && argc <= 1)
-	 	shell_interactive(&runtime);
-	else
-		shell_nointeractive(argv[1], &runtime);
+	if (isatty(STDIN_FILENO) == 1)
+		shell_interactive(&runtime);
 	free_runtime(&runtime);
 	return (EXIT_SUCCESS);
 }

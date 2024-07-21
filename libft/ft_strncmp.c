@@ -12,7 +12,8 @@
 
 #include "libft.h"
 
-// return difference where strings s1 and s2 dont match until length of n, or 0 if strings match
+// return difference where strings s1 and s2 dont match until length of n, 
+// or 0 if strings match
 int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
 	unsigned char	*us1;

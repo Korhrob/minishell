@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rkorhone <rkorhone@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/10 16:07:23 by rkorhone          #+#    #+#             */
+/*   Updated: 2023/11/13 15:51:26 by rkorhone         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -45,6 +56,8 @@ typedef enum e_error_code
 	FAIL		= 1,
 	MALLOC_FAIL = 2,
 	WRITE_FAIL	= 4,
+	FILE_FAIL	= 8,
+	PIPE_FAIL	= 16,
 }	t_error_code;
 
 typedef enum e_pflag
@@ -83,6 +96,7 @@ typedef struct s_runtime
 // outflag	= output file flags
 // pflag	= process flag bitmask, PF_FIRST, PF_MIDDLE, PF_LAST
 // fflag	= file flag, 1 = use heredoc
+// eflag	= process error flag
 typedef struct s_process
 {
 	char	**args;
@@ -149,7 +163,7 @@ void		*clean_process_list(t_list *list);
 
 // parse.c
 
-int			syntax_error(char *line);
+int			syntax_error(char *line, t_runtime *runtime);
 
 // parse_utils.c
 
@@ -170,8 +184,7 @@ void		pipex(t_list *process_list, t_runtime *runtime);
 
 // pipex/pipex_utils.c
 
-int			is_directory(const char *path);
-int			is_executable(const char *path);
+int			file_checks(t_process *p);
 
 // pipex/path.c
 
@@ -189,17 +202,18 @@ char		**convert_environ(t_env **environ);
 // expansions.c
 
 int			expand_dollars(char **pipes, t_env **environ, t_runtime *runtime);
-int			create_strings(char **splitpipe, char *pipe, t_env **environ, t_runtime *runtime);
+int			create_strings(char **splitpipe, char *pipe,
+				t_env **environ, t_runtime *runtime);
 void		*free_expands(char **array, int index);
 char		*array_join_c(char **array, int count);
 
 // error.c
 
-void		print_error_msg(int ecode);
+void		print_error_msg(int ecode, t_runtime *runtime);
 
 // runtime.c
 
-void	free_runtime(t_runtime *runtime);
-void	init_runtime(t_runtime *runtime, char **envp);
+void		free_runtime(t_runtime *runtime);
+void		init_runtime(t_runtime *runtime, char **envp);
 
 #endif

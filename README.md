@@ -64,6 +64,9 @@ DOUBLE CHECK THIS BRANCH THAT LIBFT WORKS AS EXPECTED
 
 heredoc opens without delimiter same as any redirection
 
+quote spaghetti segfault
+./ path.c "./ls" abs path
+
 ## NON MANDATORY
 
 unset HOME  

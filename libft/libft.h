@@ -51,6 +51,7 @@ char		*ft_strtrim(const char *s1, const char *set);
 char		**ft_split(const char *s, char c);
 char		**ft_split_quotes(const char *s, char c, int flag);
 char		*ft_itoa(int n);
+void		ft_itoa_buf(char *s, int i);
 char		*ft_strmapi(const char *s, char (*f)(unsigned int, char));
 void		ft_striteri(char *s, void (*f)(unsigned int, char*));
 void		ft_putchar_fd(char c, int fd);
@@ -62,7 +63,7 @@ int			ft_quote_check(const char *str);
 int			ft_quote_check_arr(char **arr);
 char		*ft_strtrim_quote(const char *str);
 char		**ft_strtrim_quote_arr(char **arr, int flag);
-void		*ft_free(void *);
+void		*ft_free(void *ptr);
 void		*ft_free_arr(char **arr);
 void		ft_clear_arr(char **arr);
 int			ft_array_len(void **array);
@@ -86,12 +87,12 @@ void		ft_lstiter(t_list *list, void (*f)(void *));
 t_list		*ft_lstmap(t_list *lst, void *(*f)(void*), void (*del)(void *));
 void		*ft_lst_clean(t_list **list, int mode);
 
-#ifndef LOWERCASE
-# define LOWERCASE "0123456789abcdef"
-#endif
-#ifndef UPPERCASE
-# define UPPERCASE "0123456789ABCDEF"
-#endif
+# ifndef LOWERCASE
+#  define LOWERCASE "0123456789abcdef"
+# endif
+# ifndef UPPERCASE
+#  define UPPERCASE "0123456789ABCDEF"
+# endif
 
 // ft_printf
 

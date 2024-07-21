@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signal_handlers.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rkorhone <rkorhone@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/10 16:07:23 by rkorhone          #+#    #+#             */
+/*   Updated: 2023/11/13 15:51:26 by rkorhone         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #include "../libft/libft.h"
 #include "../minishell.h"
 #include <unistd.h>
@@ -17,7 +28,7 @@ void	handle_sigint(int sig)
 	rl_redisplay();
 }
 
-void handle_sigint_child(int sig)
+void	handle_sigint_child(int sig)
 {
 	g_exit_status = sig;
 	rl_replace_line("", 0);

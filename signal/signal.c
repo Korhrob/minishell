@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signal.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rkorhone <rkorhone@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/10 16:07:23 by rkorhone          #+#    #+#             */
+/*   Updated: 2023/11/13 15:51:26 by rkorhone         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #include "../minishell.h"
 #include <unistd.h>
 #include <stdlib.h>
@@ -7,7 +18,7 @@
 #include <termios.h>
 #include <sys/ioctl.h>
 
-volatile sig_atomic_t 	g_exit_status;
+volatile sig_atomic_t	g_exit_status;
 
 /*
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣤⣤⣤⣤⣤⣶⣦⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀ 
@@ -46,7 +57,7 @@ void	signal_init(int flag)
 	tcsetattr(STDIN_FILENO, TCSAFLUSH, &attributes);
 }
 
-int close_signals(void)
+int	close_signals(void)
 {
 	struct sigaction	sa;
 

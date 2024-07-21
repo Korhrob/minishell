@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   path.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rkorhone <rkorhone@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/11/10 16:07:23 by rkorhone          #+#    #+#             */
+/*   Updated: 2023/11/13 15:51:26 by rkorhone         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #include "../minishell.h"
 #include "../libft/libft.h"
 #include <stdlib.h>
@@ -16,7 +27,7 @@ static char	*get_path(t_env **envp, const char *name)
 	i = 0;
 	while (envp[i] != NULL)
 	{
-		if (ft_strncmp(envp[i]->key, name, 4) == 0)
+		if (ft_strcmp(envp[i]->key, name) == 0)
 			return (envp[i]->value);
 		i++;
 	}
@@ -47,7 +58,7 @@ static char	*try_path(char *out, char *path)
 		}
 		free(temp);
 	}
-    ft_free_arr(path_arr);
+	ft_free_arr(path_arr);
 	return (out);
 }
 
@@ -55,7 +66,7 @@ static char	*try_path(char *out, char *path)
 char	*get_cmd_path(char **args, t_env **envp)
 {
 	char	*out;
-    char    *path;
+	char	*path;
 
 	out = NULL;
 	path = NULL;

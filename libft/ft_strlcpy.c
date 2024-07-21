@@ -34,7 +34,7 @@ size_t	ft_strncpy(char *dst, const char *src, size_t n)
 {
 	size_t	i;
 	size_t	len;
-	
+
 	len = 0;
 	if (n <= 0)
 		return (len);
