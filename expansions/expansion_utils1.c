@@ -72,8 +72,7 @@ static int	create_duo(t_exp *exp, t_env **environ,
 			free_expands(splitpipe, exp->i);
 			return (MALLOC_FAIL);
 		}
-		while (ft_isalnum(*(exp->pipe + 1))
-			|| *(exp->pipe + 1) == '-' || *(exp->pipe + 1) == '_')
+		while (ft_isalnum(*(exp->pipe + 1)) || *(exp->pipe + 1) == '_')
 			exp->pipe++;
 		if (*(exp->pipe + 1) == '?')
 			exp->pipe++;
