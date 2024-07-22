@@ -53,14 +53,8 @@ static void	end_pipe(int fd[2], t_pipe *pipe_info, t_process *p)
 
 static void	do_pipe(t_pipe *pipe_info, t_process *p, t_runtime *runtime)
 {
-	int	fd[2];
 	int	pid;
 
-	if (!(p->pflag & PF_LAST) && pipe(fd) == -1)
-	{
-		perror("pipe");
-		exit(EXIT_FAILURE);
-	}
 	if (p->eflag == 0)
 	{
 		pid = fork();
@@ -72,28 +66,35 @@ static void	do_pipe(t_pipe *pipe_info, t_process *p, t_runtime *runtime)
 		if (pid == 0)
 		{
 			child_signals();
-			if (do_redirect(pipe_info->fd_in, fd, p) == -1)
+			if (do_redirect(pipe_info->fd_in, pipe_info->fd, p) == -1)
 				exit(EXIT_FAILURE);
 			if (p->args[0] == NULL || *(p->args[0]) == 0)
 				exit(EXIT_FAILURE);
 			child(p, runtime, get_builtin(p->args[0]));
 		}
 	}
-	end_pipe(fd, pipe_info, p);
+	end_pipe(pipe_info->fd, pipe_info, p);
 }
 
 // pipe once and and execute all child processes in forks
 void	pipex(t_list *list, t_runtime *runtime)
 {
-	t_pipe	pipe_info;
-	int		pid;
+	t_process	*p;
+	t_pipe		pipe_info;
+	int			pid;
 
 	pipe_info.fd_in = -1;
 	pipe_info.fd_out = -1;
 	close_signals();
 	while (list != NULL)
 	{
-		do_pipe(&pipe_info, list->content, runtime);
+		p = list->content;
+		if (!(p->pflag & PF_LAST) && pipe(pipe_info.fd) == -1)
+		{
+			perror("pipe");
+			exit(EXIT_FAILURE);
+		}
+		do_pipe(&pipe_info, p, runtime);
 		list = list->next;
 		if (pipe_info.fd_out != -1)
 			pipe_info.fd_in = pipe_info.fd_out;

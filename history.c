@@ -63,7 +63,7 @@ static int	print_history_all(t_runtime *runtime, int fd_out)
 	return (EXIT_SUCCESS);
 }
 
-// reads all history and saves lines to list
+// reads all history and saves lines to list and close the fd
 // requires fd where to read from
 // mode 0 = ascending
 // mode 1 = descending (reverse)
@@ -86,6 +86,7 @@ static t_list	*read_to_list(int fd, int mode)
 			ft_lstadd_front(&list, ele);
 		line = get_next_line(fd);
 	}
+	close(fd);
 	return (list);
 }
 
@@ -104,7 +105,6 @@ static int	print_history_n(int n, t_runtime *runtime, int fd_out)
 		return (EXIT_FAILURE);
 	}
 	list = read_to_list(fd, 0);
-	close(fd);
 	if (list == NULL)
 		return (MALLOC_FAIL);
 	cur = list;

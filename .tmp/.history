@@ -1,0 +1,7 @@
+  1  asd
+  2  qwe
+  3  echo
+  4  history
+  5  history 3
+  6  history 3 | history 5
+  7  bash

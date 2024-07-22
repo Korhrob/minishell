@@ -29,6 +29,7 @@ void	print_error_msg(int ecode, t_runtime *runtime)
 	ft_itoa_buf(runtime->errorcode, EXIT_FAILURE);
 }
 
+// code two is no error msg
 void	print_syntax_msg(int code, t_runtime *runtime)
 {
 	if (code == 1)

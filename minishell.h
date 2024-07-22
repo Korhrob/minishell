@@ -113,6 +113,7 @@ typedef struct s_process
 
 typedef struct s_pipe
 {
+	int	fd[2];
 	int	fd_in;
 	int	fd_out;
 }	t_pipe;

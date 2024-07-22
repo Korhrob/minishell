@@ -51,20 +51,6 @@ static int	print_syntax_error(char *cur, char *prev)
 	return (1);
 }
 
-// ||
-static int	empty_pipe(char *line)
-{
-	while (*line == ' ')
-		line++;
-	if (*line == '|')
-	{
-		ft_printf_fd(STDERR_FILENO,
-			"idleshell: syntax error near unexpected token `|'\n");
-		return (1);
-	}
-	return (0);
-}
-
 // main syntax check logic
 static int	check_syntax(char *line, char **cur, char **prev)
 {
@@ -94,25 +80,21 @@ int	syntax_error(char *line, t_runtime *runtime)
 {
 	char	*cur;
 	char	*prev;
+	int		err;
 
 	cur = NULL;
 	prev = NULL;
-	if (empty_pipe(line))  // maybe
-		return (1);
-	if (!ft_quote_check(line))
+	err = 0;
+	if (!err && !ft_quote_check(line))
+		err = 1;
+	if (!err && check_syntax(line, &cur, &prev))
+		err = 2;
+	if (!err && cur != NULL && cur == prev)
+		err = 3;
+	if (err)
 	{
-		print_syntax_msg(1, runtime);
-		return (1);
+		print_syntax_msg(err, runtime);
+		return (EXIT_FAILURE);
 	}
-	if (check_syntax(line, &cur, &prev))
-	{
-		print_syntax_msg(2, runtime);
-		return (1);
-	}
-	if (cur != NULL && cur == prev)
-	{
-		print_syntax_msg(3, runtime);
-		return (1);
-	}
-	return (0);
+	return (EXIT_SUCCESS);
 }
