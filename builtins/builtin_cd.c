@@ -52,7 +52,8 @@ static int	correct_wd(t_runtime *runtime)
 	temp_wd = find_env(runtime->env_struct, "PWD");
 	if (!temp_wd)
 	{
-		cmd_unset("OLDPWD", runtime);
+		if (find_env(runtime->env_struct, "OLDPWD") != NULL)
+			cmd_unset("OLDPWD", runtime);
 		return (SUCCESS);
 	}
 	if (find_env(runtime->env_struct, "OLDPWD") != NULL)
