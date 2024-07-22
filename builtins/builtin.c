@@ -38,7 +38,7 @@ static int	ft_exit(t_process *p, t_runtime *runtime)
 // should return int back to main
 int	do_builtin(t_process *p, int cmd, t_runtime *runtime, int fd)
 {
-	int ret;
+	int	ret;
 
 	if (cmd == EXIT)
 		ft_exit(p, runtime);

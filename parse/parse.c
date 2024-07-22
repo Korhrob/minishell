@@ -97,22 +97,21 @@ int	syntax_error(char *line, t_runtime *runtime)
 
 	cur = NULL;
 	prev = NULL;
-	if (empty_pipe(line))
+	if (empty_pipe(line))  // maybe
 		return (1);
 	if (!ft_quote_check(line))
 	{
-		ft_printf_fd(STDERR_FILENO,
-			"idleshell: syntax error unclosed quote\n");
-		ft_itoa_buf(runtime->errorcode, 2);
+		print_syntax_msg(1, runtime);
 		return (1);
 	}
-	if (check_syntax(line, &cur, &prev)) // add error code here
+	if (check_syntax(line, &cur, &prev))
+	{
+		print_syntax_msg(2, runtime);
 		return (1);
+	}
 	if (cur != NULL && cur == prev)
 	{
-		ft_printf_fd(STDERR_FILENO,
-			"idleshell: syntax error near unexpected token `newline'\n");
-		ft_itoa_buf(runtime->errorcode, 2);
+		print_syntax_msg(3, runtime);
 		return (1);
 	}
 	return (0);

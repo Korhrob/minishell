@@ -28,3 +28,18 @@ void	print_error_msg(int ecode, t_runtime *runtime)
 		ft_printf("idleshell: error code: %d\n", ecode);
 	ft_itoa_buf(runtime->errorcode, EXIT_FAILURE);
 }
+
+void	print_syntax_msg(int code, t_runtime *runtime)
+{
+	if (code == 1)
+	{
+		ft_printf_fd(STDERR_FILENO,
+			"idleshell: syntax error unclosed quote\n");
+	}
+	else if (code == 3)
+	{
+		ft_printf_fd(STDERR_FILENO,
+			"idleshell: syntax error near unexpected token `newline'\n");
+	}
+	ft_itoa_buf(runtime->errorcode, 2);
+}

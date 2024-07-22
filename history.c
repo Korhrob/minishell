@@ -103,7 +103,7 @@ static int	print_history_n(int n, t_runtime *runtime, int fd_out)
 		ft_printf_fd(STDERR_FILENO, "history: no history file\n");
 		return (EXIT_FAILURE);
 	}
-	list = read_to_list(fd, 0); 
+	list = read_to_list(fd, 0);
 	close(fd);
 	if (list == NULL)
 		return (MALLOC_FAIL);

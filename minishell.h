@@ -210,6 +210,7 @@ char		*array_join_c(char **array, int count);
 // error.c
 
 void		print_error_msg(int ecode, t_runtime *runtime);
+void		print_syntax_msg(int code, t_runtime *runtime);
 
 // runtime.c
 
