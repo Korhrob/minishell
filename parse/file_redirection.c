@@ -19,6 +19,11 @@ static int	in_heredoc(t_process *p, t_runtime *runtime)
 {
 	if (p->infile != NULL)
 		free(p->infile);
+	if  (runtime->heredoc == NULL || access(".tmp", F_OK))
+	{
+		p->eflag = FILE_FAIL;
+		return (2);
+	}
 	p->infile = ft_strdup(runtime->heredoc);
 	if (p->infile == NULL && !(p->eflag & MALLOC_FAIL))
 		p->eflag |= MALLOC_FAIL;

@@ -67,6 +67,7 @@ static void	shell_interactive(t_runtime *runtime)
 		}
 		free(line);
 	}
+	ft_printf_fd(STDOUT_FILENO, "exit\n");
 }
 
 int	main(int argc, char **argv, char **envp)
