@@ -34,11 +34,14 @@ static void	execute_args(char **pipes, t_runtime *runtime)
 	list = create_process_list(pipes, runtime);
 	if (list == NULL)
 		return ;
-	if (runtime->pipe_count <= 1
-		&& get_builtin(((t_process *)list->content)->args[0]))
-		single_builtin(list->content, runtime);
-	else
-		pipex(list, runtime);
+	if (((t_process *)list->content)->args)
+	{
+		if (runtime->pipe_count <= 1
+			&& get_builtin(((t_process *)list->content)->args[0]))
+			single_builtin(list->content, runtime);
+		else
+			pipex(list, runtime);
+	}
 	clean_process_list(list);
 	return ;
 }

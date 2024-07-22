@@ -61,20 +61,23 @@ static void	do_pipe(t_pipe *pipe_info, t_process *p, t_runtime *runtime)
 		perror("pipe");
 		exit(EXIT_FAILURE);
 	}
-	pid = fork();
-	if (pid == -1)
+	if (p->eflag == 0)
 	{
-		perror("fork");
-		exit(EXIT_FAILURE);
-	}
-	if (pid == 0)
-	{
-		child_signals();
-		if (do_redirect(pipe_info->fd_in, fd, p) == -1)
+		pid = fork();
+		if (pid == -1)
+		{
+			perror("fork");
 			exit(EXIT_FAILURE);
-		if (p->args[0] == NULL || *(p->args[0]) == 0)
-			exit(EXIT_FAILURE);
-		child(p, runtime, get_builtin(p->args[0]));
+		}
+		if (pid == 0)
+		{
+			child_signals();
+			if (do_redirect(pipe_info->fd_in, fd, p) == -1)
+				exit(EXIT_FAILURE);
+			if (p->args[0] == NULL || *(p->args[0]) == 0)
+				exit(EXIT_FAILURE);
+			child(p, runtime, get_builtin(p->args[0]));
+		}
 	}
 	end_pipe(fd, pipe_info, p);
 }

@@ -103,6 +103,8 @@ int	single_builtin(t_process *process, t_runtime *runtime)
 
 	fd = STDOUT_FILENO;
 	return_flag = -1;
+	if (process->eflag != 0)
+		return (EXIT_FAILURE);
 	if (process->outfile != NULL)
 	{
 		fd = open(process->outfile, process->outflag, 0777);

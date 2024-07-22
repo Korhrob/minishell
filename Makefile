@@ -1,5 +1,5 @@
 CC			=	cc
-CFLAGS		=	-Wall -Werror -Wextra
+CFLAGS		=	-Wall -Werror -Wextra -g
 LDFLAG		=	#-g -fsanitize=address
 NAME		=	minishell
 SRC			=	main.c history.c process.c heredoc.c environments.c error.c runtime.c

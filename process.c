@@ -47,13 +47,13 @@ static t_process	*new_process(char *line, t_runtime *runtime)
 		rebind_args(p->args, p);
 	p->args = ft_strtrim_quote_arr(p->args, 1);
 	p->path = get_cmd_path(p->args, runtime->env_struct);
-	if (g_exit_status || p->eflag != 0)
+	if (g_exit_status)
 	{
-		if (p->eflag != 0)
-			print_error_msg(p->eflag, runtime);
 		ft_free_arr(p->args);
 		return (ft_free(p));
 	}
+	if (p->eflag != 0)
+		print_error_msg(p->eflag, runtime);
 	return (p);
 }
 
@@ -66,6 +66,7 @@ static void	clean_process(t_process *p)
 	{
 		if (p->fflag == 1)
 			unlink(p->infile);
+		ft_putstr_fd(p->infile, 2);
 		free(p->infile);
 	}
 	if (p->outfile != NULL)

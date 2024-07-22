@@ -34,21 +34,21 @@ static int	in_heredoc(t_process *p, t_runtime *runtime)
 
 static int	in_file(t_process *p, char *line)
 {
-	char	*filename;
 	int		fd;
 
 	if (p->infile != NULL)
+	{
 		free(p->infile);
+		p->infile = NULL;
+	}
 	p->inflag = O_RDONLY;
-	filename = get_filename(line);
-	fd = open(filename, p->inflag);
+	p->infile = get_filename(line);
+	fd = open(p->infile, p->inflag);
 	if (fd == -1)
 	{
-		free(filename);
 		p->eflag = FILE_FAIL;
 		return (1);
 	}
-	p->infile = filename;
 	if (p->infile == NULL && !(p->eflag & MALLOC_FAIL))
 		p->eflag |= MALLOC_FAIL;
 	p->fflag = 0;
@@ -58,21 +58,18 @@ static int	in_file(t_process *p, char *line)
 
 static int	out_file_append(t_process *p, char *line)
 {
-	char	*filename;
 	int		fd;
 
 	if (p->outfile != NULL)
 		free(p->outfile);
 	p->outflag = O_WRONLY | O_CREAT | O_APPEND;
-	filename = get_filename(line);
-	fd = open(filename, p->outflag, 0777);
+	p->outfile = get_filename(line);
+	fd = open(p->outfile, p->outflag, 0777);
 	if (fd == -1)
 	{
-		free(filename);
 		p->eflag |= FILE_FAIL;
 		return (2);
 	}
-	p->outfile = filename;
 	if (p->outfile == NULL && !(p->eflag & MALLOC_FAIL))
 		p->eflag |= MALLOC_FAIL;
 	close(fd);
@@ -81,21 +78,18 @@ static int	out_file_append(t_process *p, char *line)
 
 static int	out_file(t_process *p, char *line)
 {
-	char	*filename;
 	int		fd;
 
 	if (p->outfile != NULL)
 		free(p->outfile);
 	p->outflag = O_WRONLY | O_CREAT | O_TRUNC;
-	filename = get_filename(line);
-	fd = open(filename, p->outflag, 0777);
+	p->outfile = get_filename(line);
+	fd = open(p->outfile, p->outflag, 0777);
 	if (fd == -1)
 	{
-		free(filename);
 		p->eflag |= FILE_FAIL;
 		return (1);
 	}
-	p->outfile = filename;
 	if (p->outfile == NULL && !(p->eflag & MALLOC_FAIL))
 		p->eflag |= MALLOC_FAIL;
 	close (fd);
