@@ -46,7 +46,7 @@ int	cmd_env(t_runtime *runtime, int fd)
 	{
 		if (runtime->env_struct[i]->value)
 		{
-			ft_printf_fd(fd, "\033[1;31m%s\033[0m", runtime->env_struct[i]->key);
+			ft_printf_fd(fd, "%s", runtime->env_struct[i]->key);
 			ft_printf_fd(fd, "=%s\n", runtime->env_struct[i]->value);
 		}
 		i++;
