@@ -18,6 +18,11 @@ void	ft_lstadd_front(t_list **lst, t_list *new)
 {
 	if (lst == NULL || new == NULL)
 		return ;
+	if (*lst == NULL)
+	{
+		*lst = new;
+		return ;
+	}
 	new->next = *lst;
 	*lst = new;
 }
@@ -26,7 +31,7 @@ void	ft_lstadd_front(t_list **lst, t_list *new)
 // mode = 0 doesnt free node contents
 // mode = 1 free node contents
 // return NULL
-void	*ft_lst_clean(t_list **list, int mode)
+void	*ft_lst_clean(t_list **list)
 {
 	t_list	*next;
 	t_list	*cur;
@@ -37,11 +42,10 @@ void	*ft_lst_clean(t_list **list, int mode)
 	while (cur != NULL)
 	{
 		next = cur->next;
-		if (mode)
+		if (cur->content)
 			free(cur->content);
 		free(cur);
 		cur = next;
 	}
-	free(list);
 	return (NULL);
 }

@@ -113,6 +113,7 @@ int	cmd_cd(char **args, t_runtime *runtime)
 	}
 	else
 	{
+		runtime->exit_status = MALLOC_FAIL;
 		perror("cd");
 		return (1);
 	}

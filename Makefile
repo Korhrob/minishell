@@ -3,7 +3,7 @@ CFLAGS		=	-Wall -Werror -Wextra -g
 LDFLAG		=	#-g -fsanitize=address
 RL_INC		=	#-I ~/.brew/opt/readline/include/readline
 RL_LIB		=	#-L ~/.brew/opt/readline/lib
-NAME		=	idleshell #rename to minishell later
+NAME		=	minishell
 SRC			=	main.c history.c process.c heredoc.c environments.c error.c runtime.c
 SIGNAL		=	signal/signal.c signal/signal_handlers.c
 PARSE		=	parse/parse.c parse/file_redirection.c parse/array_handler.c parse/parse_utils.c

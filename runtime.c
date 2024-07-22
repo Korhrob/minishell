@@ -19,7 +19,7 @@
 // clean tmp folder
 static void	clean_tmp(t_runtime *runtime)
 {
-	if (runtime->history && access(runtime->history, F_OK))
+	if (runtime->history && !access(runtime->history, F_OK))
 		unlink(runtime->history);
 }
 

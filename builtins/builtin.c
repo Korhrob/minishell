@@ -30,6 +30,7 @@ static int	ft_exit(t_process *p, t_runtime *runtime)
 	if (p->args[1])
 		ecode = ft_atoi(p->args[1]);
 	ft_printf_fd(STDOUT_FILENO, "exit\n");
+	free_runtime(runtime);
 	exit(ecode);
 }
 
@@ -37,24 +38,31 @@ static int	ft_exit(t_process *p, t_runtime *runtime)
 // should return int back to main
 int	do_builtin(t_process *p, int cmd, t_runtime *runtime, int fd)
 {
+	int ret;
+
 	if (cmd == EXIT)
 		ft_exit(p, runtime);
 	else if (cmd == PWD)
-		runtime->exit_status = cmd_pwd(fd);
+		ret = cmd_pwd(fd);
 	else if (cmd == CD)
-		runtime->exit_status = cmd_cd(p->args, runtime);
+		ret = cmd_cd(p->args, runtime);
 	else if (cmd == ENV)
-		runtime->exit_status = cmd_env(runtime, fd);
+		ret = cmd_env(runtime, fd);
 	else if (cmd == UNSET)
-		runtime->exit_status = unset_main(p->args, runtime);
+		ret = unset_main(p->args, runtime);
 	else if (cmd == EXPORT)
-		runtime->exit_status = export_main(p->args, runtime, fd);
+		ret = export_main(p->args, runtime, fd);
 	else if (cmd == ECHO)
-		runtime->exit_status = cmd_echo(p->args, fd);
+		ret = cmd_echo(p->args, fd);
 	else if (cmd == HISTORY)
-		print_history((p->args + 1), runtime, fd);
-	ft_itoa_buf(runtime->errorcode, runtime->exit_status);
-	return (runtime->exit_status);
+		ret = print_history((p->args + 1), runtime, fd);
+	if (runtime->exit_status == MALLOC_FAIL)
+	{
+		free_runtime(runtime);
+		exit(runtime->exit_status);
+	}
+	ft_itoa_buf(runtime->errorcode, ret);
+	return (ret);
 }
 
 // gets and returns enum if current string is builtin command
@@ -97,7 +105,7 @@ int	single_builtin(t_process *process, t_runtime *runtime)
 	return_flag = -1;
 	if (process->outfile != NULL)
 	{
-		fd = open(process->outfile, process->outflag, 0644);
+		fd = open(process->outfile, process->outflag, 0777);
 		if (fd == -1)
 			return (EXIT_FAILURE);
 	}

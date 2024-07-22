@@ -132,7 +132,7 @@ int			do_builtin(t_process *p, int cmd, t_runtime *runtime, int fd);
 // history.c
 
 void		record_history(char *line, t_runtime *runtime);
-void		print_history(char **args, t_runtime *runtime, int fd);
+int			print_history(char **args, t_runtime *runtime, int fd);
 
 // signal/signal.c
 

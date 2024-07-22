@@ -41,14 +41,17 @@ void	record_history(char *line, t_runtime *runtime)
 }
 
 // print all history starting from the beginning
-static void	print_history_all(t_runtime *runtime, int fd_out)
+static int	print_history_all(t_runtime *runtime, int fd_out)
 {
 	int		fd;
 	char	*line;
 
 	fd = open(runtime->history, O_RDONLY);
 	if (fd == -1)
-		return ;
+	{
+		ft_printf_fd(STDERR_FILENO, "history: no history file\n");
+		return (EXIT_SUCCESS);
+	}
 	line = get_next_line(fd);
 	while (line != NULL)
 	{
@@ -57,6 +60,7 @@ static void	print_history_all(t_runtime *runtime, int fd_out)
 		line = get_next_line(fd);
 	}
 	close(fd);
+	return (EXIT_SUCCESS);
 }
 
 // reads all history and saves lines to list
@@ -86,7 +90,7 @@ static t_list	*read_to_list(int fd, int mode)
 }
 
 // print n number of most recent history
-static void	print_history_n(int n, t_runtime *runtime, int fd_out)
+static int	print_history_n(int n, t_runtime *runtime, int fd_out)
 {
 	int		fd;
 	int		skip;
@@ -97,12 +101,12 @@ static void	print_history_n(int n, t_runtime *runtime, int fd_out)
 	if (fd == -1)
 	{
 		ft_printf_fd(STDERR_FILENO, "history: no history file\n");
-		return ;
+		return (EXIT_FAILURE);
 	}
-	list = read_to_list(fd, 0);
+	list = read_to_list(fd, 0); 
 	close(fd);
 	if (list == NULL)
-		return ;
+		return (MALLOC_FAIL);
 	cur = list;
 	skip = ft_lstsize(list) - n;
 	while (skip-- > 0 && cur->next != NULL)
@@ -112,14 +116,16 @@ static void	print_history_n(int n, t_runtime *runtime, int fd_out)
 		ft_printf_fd(fd_out, "%s", cur->content);
 		cur = cur->next;
 	}
-	ft_lst_clean(&list, 1);
+	ft_lst_clean(&list);
+	return (EXIT_SUCCESS);
 }
 
 // print history, if next arg is set to integer
 // print only most recently history until n
-void	print_history(char **next_arg, t_runtime *runtime, int fd)
+int	print_history(char **next_arg, t_runtime *runtime, int fd)
 {
 	int		count;
+	int		ret;
 
 	count = -1;
 	if (*next_arg != NULL)
@@ -129,16 +135,17 @@ void	print_history(char **next_arg, t_runtime *runtime, int fd)
 		else
 		{
 			ft_printf_fd(STDERR_FILENO, "history: numeric argument required\n");
-			return ;
+			return (EXIT_FAILURE);
 		}
 	}
 	if (runtime->history == NULL)
 	{
 		ft_printf_fd(STDERR_FILENO, "history: null history file\n");
-		return ;
+		return (EXIT_FAILURE);
 	}
 	if (count == -1)
-		print_history_all(runtime, fd);
+		ret = print_history_all(runtime, fd);
 	else
-		print_history_n(count, runtime, fd);
+		ret = print_history_n(count, runtime, fd);
+	return (ret);
 }

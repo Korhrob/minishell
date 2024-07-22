@@ -21,28 +21,26 @@
 #include <readline/history.h>
 
 // expand $, execute logic
-int	execute_args(char **pipes, t_runtime *runtime)
+static void	execute_args(char **pipes, t_runtime *runtime)
 {
 	t_list	*list;
-	int		return_flag;
 
-	return_flag = 0;
 	if (pipes == NULL)
-		return (return_flag);
+		return ;
 	if (expand_dollars(pipes, runtime->env_struct, runtime) == MALLOC_FAIL)
-		return (return_flag);
+		return ;
 	runtime->pipe_index = 0;
 	runtime->pipe_count = ft_array_len((void **)pipes);
 	list = create_process_list(pipes, runtime);
 	if (list == NULL)
-		return (return_flag);
+		return ;
 	if (runtime->pipe_count <= 1
 		&& get_builtin(((t_process *)list->content)->args[0]))
-		return_flag = single_builtin(list->content, runtime);
+		single_builtin(list->content, runtime);
 	else
 		pipex(list, runtime);
 	clean_process_list(list);
-	return (return_flag);
+	return ;
 }
 
 // main readline loop
@@ -50,11 +48,9 @@ static void	shell_interactive(t_runtime *runtime)
 {
 	char	*line;
 	char	**pipes;
-	int		status;
 	int		syntax;
 
-	status = 0;
-	while (status == 0)
+	while (1)
 	{
 		main_signals();
 		line = readline("idleshell$ ");
@@ -66,7 +62,7 @@ static void	shell_interactive(t_runtime *runtime)
 			syntax = syntax_error(line, runtime);
 			pipes = ft_split_quotes(line, '|', 0);
 			if (!syntax)
-				status = execute_args(pipes, runtime);
+				execute_args(pipes, runtime);
 			ft_free_arr(pipes);
 		}
 		free(line);
@@ -77,12 +73,15 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_runtime	runtime;
 
-	(void)argc;
 	(void)argv;
-	signal_init(0);
-	init_runtime(&runtime, envp);
-	if (isatty(STDIN_FILENO) == 1)
-		shell_interactive(&runtime);
-	free_runtime(&runtime);
-	return (EXIT_SUCCESS);
+	if (argc == 1)
+	{
+		signal_init(0);
+		init_runtime(&runtime, envp);
+		if (isatty(STDIN_FILENO) == 1)
+			shell_interactive(&runtime);
+		free_runtime(&runtime);
+		return (EXIT_SUCCESS);
+	}
+	return (EXIT_FAILURE);
 }
