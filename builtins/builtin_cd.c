@@ -60,7 +60,10 @@ static int	correct_wd(t_runtime *runtime)
 		if (update_oldpwd(runtime, temp_wd) == MALLOC_FAIL)
 			return (MALLOC_FAIL);
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
+	{
 		perror("working directory fail");
+		return (MALLOC_FAIL);
+	}
 	temp_wd = ft_strjoin("PWD=", cwd);
 	if (!temp_wd)
 		return (MALLOC_FAIL);
