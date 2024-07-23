@@ -37,18 +37,12 @@ If there are no pipes, handle builtins in the parent and non builtins in a singl
 
 ## Signals
 
-!!!NOTE: TODO!!!  
-Signal ctrl + c should immediately close all heredocs  
 
 ## Heredoc
-
-!!!NOTE: TODO!!!  
-Should only execute the last pipe with heredoc  
+ 
 
 ## History
 
-!!!NOTE: TODO!!!
-Should only execute history and none of the other pipes
 
 ## Signals
 
@@ -60,12 +54,9 @@ ctrl-\ (SIGQUIT), does nothing
 
 ## MANDATORY 
 
-DOUBLE CHECK THIS BRANCH THAT LIBFT WORKS AS EXPECTED
-
-heredoc opens without delimiter same as any redirection
-
-quote spaghetti segfault
-./ path.c "./ls" abs path
+heredoc handles $ expansions (check if possible)
+opening a new shell should create a new history file based on shlvl(?)
+double check expansions anyways
 
 ## NON MANDATORY
 
