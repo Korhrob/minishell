@@ -86,7 +86,8 @@ static int	create_duo(t_exp *exp, t_env **environ,
 
 void	iterate(t_exp *exp)
 {
-	if (*exp->pipe == '\'')
+	exp->flag ^= (*exp->pipe == '\"');
+	if (*exp->pipe == '\'' && exp->flag == 0)
 	{
 		exp->len += ft_strlen_t(exp->pipe, '\'');
 		exp->pipe += ft_strlen_t(exp->pipe, '\'');
@@ -104,9 +105,10 @@ int	create_strings(char **splitpipe, char *pipe,
 	t_exp	exp;
 	int		extra;
 
+	exp = (t_exp){0};
 	extra = 0;
-	exp.i = 0;
-	exp.len = 0;
+	// exp.i = 0;
+	// exp.len = 0;
 	exp.pipe = pipe;
 	while (*exp.pipe != 0)
 	{

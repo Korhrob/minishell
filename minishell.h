@@ -122,6 +122,7 @@ typedef struct s_exp
 {
 	int		len;
 	int		i;
+	int		flag;
 	char	*pipe;
 }	t_exp;
 

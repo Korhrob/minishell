@@ -19,14 +19,17 @@ static int	count_expands(char *pipe)
 {
 	int	i;
 	int	count;
+	int	flag;
 
 	i = 0;
 	count = 0;
+	flag = 0;
 	while (pipe[i] != 0)
 	{
 		if ((pipe[i] == '$') && (pipe[i - 1] != '$' || pipe[i + 1] != '$'))
 			count++;
-		if (pipe[i] == '\'')
+		flag ^= (pipe[i] == '\"');
+		if (pipe[i] == '\'' && flag == 0)
 		{
 			i++;
 			while (pipe[i] != '\'')
