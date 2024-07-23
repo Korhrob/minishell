@@ -66,7 +66,6 @@ static void	clean_process(t_process *p)
 	{
 		if (p->fflag == 1)
 			unlink(p->infile);
-		ft_putstr_fd(p->infile, 2);
 		free(p->infile);
 	}
 	if (p->outfile != NULL)

@@ -39,23 +39,23 @@ static void	ft_swap_ptr(void **s1, void **s2)
 }
 
 // "cut" of any part of string after <>
-static void	ft_cut_str(char **str, const char *set)
+static void	ft_cut_str(char *str, const char *set)
 {
 	int	i;
 
 	i = 0;
-	while ((*str)[i] != 0)
+	while (str[i] != 0)
 	{
-		if ((*str)[i] == '\'' || (*str)[i] == '\"')
+		if (str[i] == '\'' || str[i] == '\"')
 		{	
-			i += ft_strlen_t((*str + i), (*str)[i]);
+			i += ft_strlen_t(str + i, str[i]);
 			continue ;
 		}
-		if (is_charset((*str)[i], set))
+		if (is_charset(str[i], set))
 		{
-			while ((*str)[i] != 0)
+			while (str[i] != 0)
 			{
-				(*str)[i] = 0;
+				str[i] = 0;
 				i++;
 			}
 			continue ;
@@ -63,6 +63,9 @@ static void	ft_cut_str(char **str, const char *set)
 		i++;
 	}
 }
+
+// >>           EOF flag 1
+// >>        a flag 0
 
 // rebind command and its args to the start of arg, free redirections
 void	rebind_args(char **args, t_process *p)
@@ -83,7 +86,7 @@ void	rebind_args(char **args, t_process *p)
 		{
 			if (flag == 0)
 			{
-				ft_cut_str(&p->args[i], "<>");
+				ft_cut_str(p->args[i], "<>");
 				ft_swap_ptr((void *)&p->args[i], (void *)&args[0]);
 				i++;
 			}
