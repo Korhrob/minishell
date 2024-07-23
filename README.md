@@ -57,6 +57,7 @@ ctrl-\ (SIGQUIT), does nothing
 heredoc handles $ expansions (check if possible)
 opening a new shell should create a new history file based on shlvl(?)
 double check expansions anyways
+"'$asd'" should expand
 
 ## NON MANDATORY
 
