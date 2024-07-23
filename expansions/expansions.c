@@ -50,7 +50,7 @@ static int	check_extra(char *pipe)
 			count--;
 		i++;
 	}
-	while (ft_isalnum(pipe[i]) || pipe[i] == '-' || pipe[i] == '_')
+	while (ft_isalnum(pipe[i]) || pipe[i] == '_')
 		i++;
 	if (pipe[i] == 0)
 		return (0);
@@ -93,6 +93,7 @@ int	expand_dollars(char **pipes, t_env **environ, t_runtime *runtime)
 	i = 0;
 	while (pipes[i] != NULL)
 	{
+		printf("pipe = [%s]", pipes[i]);
 		temp = ft_strjoin(" ", pipes[i]);
 		if (!temp)
 			return (MALLOC_FAIL);

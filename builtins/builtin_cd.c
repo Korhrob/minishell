@@ -61,8 +61,8 @@ static int	correct_wd(t_runtime *runtime)
 			return (MALLOC_FAIL);
 	if (getcwd(cwd, sizeof(cwd)) == NULL)
 	{
-		perror("working directory fail");
-		return (MALLOC_FAIL);
+		perror("getcwd");
+		return (EXIT_FAILURE);
 	}
 	temp_wd = ft_strjoin("PWD=", cwd);
 	if (!temp_wd)
@@ -77,26 +77,24 @@ static int	correct_wd(t_runtime *runtime)
 static int	home_dir(t_runtime *runtime)
 {
 	char	*home;
+	int		ret;
 
+	ret = 0;
 	home = find_env(runtime->env_struct, "HOME");
 	if (home == NULL)
-	{
 		ft_printf_fd(STDERR_FILENO, "idleshell: cd: HOME not set\n");
-		return (1);
-	}
 	else
 	{
 		if (chdir(home) == 0)
 		{
-			if (correct_wd(runtime) == MALLOC_FAIL)
-			{
-				ft_printf_fd(STDERR_FILENO, "idleshell: cd: not enough memory");
+			ret = correct_wd(runtime);
+			if (ret == 2)
+				ft_printf_fd(STDERR_FILENO, "idleshell: cd: not enough memory\n");
+			if (ret > 0)
 				return (1);
-			}
 			return (0);
 		}
-		else
-			perror("cd");
+		perror("cd");
 	}
 	return (1);
 }
@@ -110,13 +108,12 @@ int	cmd_cd(char **args, t_runtime *runtime)
 	{
 		if (correct_wd(runtime) == MALLOC_FAIL)
 		{
-			ft_printf_fd(STDERR_FILENO, "idleshell: cd: not enough memory");
+			ft_printf_fd(STDERR_FILENO, "idleshell: cd: not enough memory\n");
 			return (1);
 		}
 	}
 	else
 	{
-		runtime->exit_status = MALLOC_FAIL;
 		perror("cd");
 		return (1);
 	}

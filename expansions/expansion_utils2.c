@@ -24,7 +24,7 @@ static int	calculate_len(char **array, int count)
 	len = 0;
 	while (count > 0)
 	{
-		len = len + ft_strlen(array[i]);
+		len += ft_strlen(array[i]);
 		i++;
 		count--;
 	}

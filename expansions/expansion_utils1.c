@@ -26,7 +26,9 @@ static char	*find_expansion(char *key, t_env **environ)
 		if (ft_strcmp(environ[i]->key, key) == 0)
 		{
 			free (key);
-			return (environ[i]->value);
+			if (environ[i]->value)
+				return (environ[i]->value);
+			return ("");
 		}
 		i++;
 	}
@@ -44,7 +46,7 @@ static char	*expand(char *pipe, t_env **environ, t_runtime *runtime)
 	key = NULL;
 	if (pipe[i] == '?')
 		return (runtime->errorcode);
-	while (ft_isalnum(pipe[i]) || pipe[i] == '-' || pipe[i] == '_')
+	while (ft_isalnum(pipe[i]) || pipe[i] == '_')
 		i++;
 	key = (char *)malloc(i + 1);
 	if (!key)
