@@ -96,7 +96,6 @@ int	expand_dollars(char **pipes, t_env **environ, t_runtime *runtime)
 	i = 0;
 	while (pipes[i] != NULL)
 	{
-		printf("pipe = [%s]", pipes[i]);
 		temp = ft_strjoin(" ", pipes[i]);
 		if (!temp)
 			return (MALLOC_FAIL);
