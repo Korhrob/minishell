@@ -54,10 +54,14 @@ ctrl-\ (SIGQUIT), does nothing
 
 ## MANDATORY 
 
-heredoc handles $ expansions (check if possible)
-opening a new shell should create a new history file based on shlvl(?)
-double check expansions anyways
-"'$asd'" should expand
+export var=something
+echo bla ble $var bla bla
+
+exports two bla's
+var catches something\necho
+
+2nd bla has '\n' in key? somehow prints it with echo $bla
+
 
 ## NON MANDATORY
 

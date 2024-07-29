@@ -100,6 +100,8 @@ static int	assign_shlvl(t_env ***environ)
 		if (ft_strcmp((*environ)[i]->key, "SHLVL") == 0)
 		{
 			value = ft_atoi((*environ)[i]->value) + 1;
+			if (value < 0)
+				value = 0;
 			new_value = ft_itoa(value);
 			if (!new_value)
 				return (MALLOC_FAIL);
