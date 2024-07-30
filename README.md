@@ -54,20 +54,4 @@ ctrl-\ (SIGQUIT), does nothing
 
 ## MANDATORY 
 
-export var=something
-echo bla ble $var bla bla
-
-exports two bla's
-var catches something\necho
-
-2nd bla has '\n' in key? somehow prints it with echo $bla
-
-
 ## NON MANDATORY
-
-unset HOME  
-cd ~  
-should work  
-
-ls |  
-should wait for input cmd?  
