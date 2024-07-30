@@ -10,10 +10,6 @@ The entire string is processed for syntax errors and heredocs before passing the
 The string is iterated and compared to a set of strings such as "<<" ">>" "<" ">" "|" and if the previous and current portion of
 the string are both syntax strings, we can assume there is a syntax error.  
 
-!!!NOTE: TODO!!!  
-Any syntax string should be followed up by a non syntax and non whitespace character to be valid, (except '|')  
-A string ending with a pipe char '|' should ask for cmd args in stdin. (?)  
-
 ## Expansion
 Before a process is created the string handles any expansion of $var.  
 
